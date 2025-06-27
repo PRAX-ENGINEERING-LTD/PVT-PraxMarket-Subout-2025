@@ -1,0 +1,43 @@
+# Ignore system files
+.env
+.env.example
+*.log
+*.key
+*.pem
+*.crt
+
+# Ignore vendor and node_modules
+/vendor
+/node_modules
+
+# Ignore IDE/editor files
+.idea
+.vscode
+.DS_Store
+Thumbs.db
+
+# Ignore compiled files and cache
+/storage/*.key
+/storage/*.log
+/storage/debugbar
+/storage/oauth-private.key
+/storage/oauth-public.key
+/storage/*.sqlite
+/storage/framework/cache/*
+/storage/framework/sessions/*
+/storage/framework/testing/*
+/storage/framework/views/*
+/storage/logs/*
+/bootstrap/cache/*
+
+# Ignore deployment files
+/.phpunit.result.cache
+/public/hot
+/public/storage
+/build
+/.husky
+.phpstorm.meta.php
+.phpunit.result.cache
+composer.lock
+npm-debug.log
+yarn-error.log
