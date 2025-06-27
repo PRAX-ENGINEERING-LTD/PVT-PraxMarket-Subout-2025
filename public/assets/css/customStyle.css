@@ -1,0 +1,119 @@
+.decolorAnchorTag {
+    text-decoration: none !important;
+    color: inherit;
+}
+
+.showRowHead {
+    /* font-weight: bold; */
+    color: #000000;
+}
+
+#showPageTools {
+    text-align: right;
+}
+
+.pointer {
+    cursor: pointer;
+}
+
+.tooltip-inner {
+    /* background-color: black !important;
+    color: white !important;
+    border: 1px solid white;  */
+}
+
+.tooltip .arrow::before {
+    /* border-top-color: black !important;
+    border-bottom-color: black !important; */
+}
+
+
+.showToolTip {
+    padding-top: 15px;
+}
+
+#tbdItems tr:hover {
+    background-color: rgb(245, 245, 245);
+    /* Change this to your desired hover color */
+    cursor: pointer;
+}
+
+.adjustInputColor {
+    color: #6d6d74 !important;
+}
+
+
+.text-danger-custom {
+    color: #fc564a !important;
+}
+
+.improveSpace {
+    margin-top: 10px !important;
+}
+
+
+/* Default styles for larger screens */
+#companyLogo img {
+    height: 200px;
+    width: 510px;
+    /* Default size for large screens */
+}
+
+#map {
+    height: 211px;
+    width: 510px;
+    /* Default size for large screens */
+}
+
+/* For small laptops (up to 1024px wide) */
+@media only screen and (max-width: 1024px) {
+    #companyLogo img {
+        width: 400px;
+        /* Adjust image width */
+    }
+
+    #map {
+        height: 180px;
+        /* Adjust map height */
+        width: 400px;
+        /* Adjust map width */
+    }
+}
+
+/* For tablets and smaller laptops (up to 768px wide) */
+@media only screen and (max-width: 768px) {
+    #companyLogo img {
+        width: 100%;
+        /* Make image fully responsive */
+    }
+
+    #map {
+        height: 150px;
+        /* Further reduce map height */
+        width: 100%;
+        /* Map adjusts to container width */
+    }
+}
+
+/* For mobile devices (up to 480px wide) */
+@media only screen and (max-width: 480px) {
+    #companyLogo img {
+        width: 100%;
+        /* Full-width image for small screens */
+    }
+
+    #map {
+        height: 120px;
+        /* Optimize map height for mobile */
+        width: 100%;
+        /* Full-width map */
+    }
+
+    .col-12.col-sm-6.col-md-6.col-lg-6.mb-3 {
+        padding: 10px;
+        /* Add spacing for compact screens */
+    }
+
+  
+
+}
