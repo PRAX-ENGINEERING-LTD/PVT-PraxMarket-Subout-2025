@@ -1,0 +1,57 @@
+:root {
+  --hover-color: #7366FF;
+  --primary-color: #563EE0;
+}
+@font-face {
+  font-family: 'Manrope-Semi';
+  src: url('../fonts/Manrope-SemiBold.ttf') format('truetype'); /* Go up one folder */
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Manrope-Bold';
+  src: url('../fonts/Manrope-Bold.ttf') format('truetype'); /* Go up one folder */
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Manrope-Light-Extra';
+  src: url('../fonts/Manrope-ExtraLight.ttf') format('truetype'); /* Go up one folder */
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope-Light';
+  src: url('../fonts/Manrope-Light.ttf') format('truetype'); /* Go up one folder */
+  font-display: swap;
+}
+
+@font-face {
+  font-family: 'Manrope-Medium';
+  src: url('../fonts/Manrope-Medium.ttf') format('truetype'); /* Go up one folder */
+  font-display: swap;
+}
+@font-face {
+  font-family: 'Manrope-Regular';
+  src: url('../fonts/Manrope-Regular.ttf') format('truetype'); /* Go up one folder */
+  font-display: swap;
+}
+
+/* .home-content{
+  padding: 0px 80px !important;
+} */
+h1,h2,h3,h4 {
+  font-family: 'Manrope-Bold' !important;
+}
+p {
+  font-family: 'Manrope-Medium' !important;
+
+}
+
+
+
+
+
+
+
+
+
+
