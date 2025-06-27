@@ -34,6 +34,7 @@ Thumbs.db
 /.phpunit.result.cache
 /public/hot
 /public/storage
+/public/build
 /build
 /.husky
 .phpstorm.meta.php
