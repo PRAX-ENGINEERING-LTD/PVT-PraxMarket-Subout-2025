@@ -26,7 +26,6 @@ class BookmarkController extends Controller
 
     public function index(Request $request)
     {
-        return view('staticPages.comingSoon.index');
 
         return view('bookmark.index');
         $params = array();
