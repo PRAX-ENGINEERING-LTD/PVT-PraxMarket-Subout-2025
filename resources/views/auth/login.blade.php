@@ -47,10 +47,7 @@
         <div class="col-xl-7 p-0">
             <div class="login-card login-dark">
                 <div>
-                    <!-- <div><a class="logo text-start" href="{{ route('network.index') }}"><img class="img-fluid for-light"
-                                src="{{ asset('assets/images/logo/praxlogo.png') }}" alt="looginpage"><img
-                                class="img-fluid for-dark" src="{{ asset('assets/images/logo/logo_dark.png') }}"
-                                alt="looginpage"></a></div> -->
+                  
                                 <h1 class="head-sign-new">Sign in to explore the industries</h1>
                     @if (session('status'))
                     @include('appLayouts.addedLayouts._alert',

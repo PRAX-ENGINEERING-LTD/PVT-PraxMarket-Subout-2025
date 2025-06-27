@@ -117,7 +117,7 @@
             </div>
         </form>
         <div class="header-logo-wrapper col-auto p-0">
-            <div class="logo-wrapper"><a href="{{ route('network.index') }}"><img class="img-fluid for-light"
+            <div class="logo-wrapper"><a href="#"><img class="img-fluid for-light"
                         src="{{ asset('assets/images/logo/logo.png') }}" alt=""><img
                         class="img-fluid for-dark" src="{{ asset('assets/images/logo/logo_dark.png') }}"
                         alt=""></a></div>
@@ -181,7 +181,7 @@
                     <div class="d-flex profile-media">
 
                         <div class="avatar-circle">
-                            <span class="avatar-text">{{ strtoupper(substr(Auth::user()->name, 0, 1)) }}</span>
+                            <span class="avatar-text">{{ strtoupper(substr(Auth::user()->name ?? 'User', 0, 1)) }}</span>
                         </div>
                         <div class="head-icon">
                             <span class="auth-name">{{ !empty(Auth::user()) ? ucfirst(substr(Auth::user()->name, 0, 8)) : null }}</span>
@@ -192,23 +192,7 @@
                     </div>
 
                     <ul class="profile-dropdown onhover-show-div profile-dropdown-1">
-                        <li><a href="{{route('profile.showMyAccountPage')}}"><i data-feather="user"></i><span>My Account </span></a></li>
-
-                        <li class="sidebar-list d-none"><i class="fa-solid fa-thumbtack"></i><a class="sidebar-link sidebar-title">
-                                <i data-feather="settings"></i>
-                                <span class="lan-611">Console Settings</span></a>
-                            <ul class="sidebar-submenu">
-                                <li><a href="{{ route('dataForPremiumProfile') }}">My Premium Profile</a></li>
-                                <li><a href="{{ route('profile.basicDetails') }}">Profile Contents</a></li>
-                                <li><a href="{{ route('companyUsers.index') }}">Company Users</a></li>
-                                <li><a href="{{ route('companyMachines.index') }}">Company Machines</a></li>
-                                <li><a href="{{ route('sliders.index') }}">Sliders</a></li>
-
-                            </ul>
-                        </li>
-
-                        <li><a href="{{ route('logout') }}"><i data-feather="log-out"> </i><span>Log out</span></a></li>
-
+                        <li><a href="#"><i data-feather="log-out"> </i><span>Log out</span></a></li>
                     </ul>
                 </li>
             </ul>
@@ -272,7 +256,7 @@
             </div>
             <div class="modal-footer"> <button class="btn btn-secondary" type="button"
                     data-bs-dismiss="modal">No, I'll do it later</button><a class="btn btn-primary"
-                    type="button" href="{{ route('profile.basicDetails') }}">Proceed to edit</a></div>
+                    type="button" href="#">Proceed to edit</a></div>
         </div>
     </div>
 </div>
@@ -285,111 +269,10 @@
             var myModal = new bootstrap.Modal(document.getElementById('premiumprofilemodal'));
             myModal.show();
         });
-        $.ajax({
-            url: "{{ route('getPremiumProfileStatus') }}", // Replace with your actual Laravel route URL
-            type: 'GET',
-            success: function(response) {
-                $("#premiumProfileNotificationIdentifier").show();
-                if (response == "FIRST_TIME_SHOW") {
-                    var myModal = new bootstrap.Modal(document.getElementById('premiumprofilemodal'));
-                    myModal.show();
-                }
-
-                if (response == "PREMIUM_PROFILE_NOT_FOUND") {
-                    $("#premiumProfileNotificationIdentifier").show();
-                }
-
-                if (response == "PREMIUM_PROFILE_FOUND") {
-
-                    $("#notoficationSpanIdentifer").hide();
-                    $("#premiumProfileNotificationIdentifier").hide();
-                }
-
-
-            },
-            error: function(xhr, status, error) {
-                console.error('AJAX Error:', error);
-            }
-        });
+      
     });
-    $(document).ready(function () {
-    $.ajax({
-        url: "{{ route('profile.getSubscriptionStatus') }}",
-        type: 'GET',
-        success: function (response) {
-            var subscriptionStatus = response.status;
-            var subscriptionEndsIn = response.pendingDays;
+    $(document).ready(function() {
+        var $button = $(`<button class="btn btn-pill btn-outline-primary">Active</button>`);
 
-            // Set initial button class based on status
-            var originalClass = '';
-            switch (subscriptionStatus) {
-                case 'FREE TRIAL':
-                    originalClass = 'btn-outline-primary';
-                    break;
-                case 'active':
-                    originalClass = 'btn-outline-success';
-                    break;
-                case 'ended':
-                    originalClass = 'btn-outline-danger';
-                    break;
-                case 'inactive':
-                    originalClass = 'btn-outline-success';
-                    break;
-                default:
-                    originalClass = 'btn-outline-danger';
-                    return;
-            }
-
-            // Create button
-            var $button = $(`<button class="btn btn-pill ${originalClass}">${subscriptionStatus}</button>`);
-
-            // Mouse enter: change text and class based on pendingDays
-            $button.on('mouseenter', function () {
-                var $this = $(this);
-                $this.fadeOut(200, function () {
-                    let newClass = '';
-                    let hoverText = subscriptionEndsIn;
-
-                    // Determine class based on content
-                    if (typeof subscriptionEndsIn === "string" && subscriptionEndsIn.includes("today")) {
-                        newClass = 'btn-outline-danger';
-                    } else if (typeof subscriptionEndsIn === "string" && subscriptionEndsIn.includes("ended")) {
-                        newClass = 'btn-outline-danger';
-                    } else {
-                        // Extract number from string if needed
-                        let match = subscriptionEndsIn.match(/(\d+)/);
-                        if (match && match[1]) {
-                            let days = parseInt(match[1]);
-                            if (days === 1) {
-                                newClass = 'btn-outline-warning';
-                            } else if (days > 1) {
-                                newClass = 'btn-outline-success';
-                            } else {
-                                newClass = 'btn-outline-danger';
-                            }
-                        } else {
-                            newClass = 'btn-outline-danger';
-                        }
-                    }
-
-                    $this.removeClass().addClass(`btn btn-pill ${newClass}`).text(hoverText).fadeIn(200);
-                });
-            });
-
-            // Mouse leave: restore original text and class
-            $button.on('mouseleave', function () {
-                var $this = $(this);
-                $this.fadeOut(200, function () {
-                    $this.removeClass().addClass(`btn btn-pill ${originalClass}`).text(subscriptionStatus).fadeIn(200);
-                });
-            });
-
-            $('.subscriptionStatusNotifier').append($button);
-        },
-        error: function (xhr, status, error) {
-            console.error('Error:', error);
-        }
     });
-});
-
 </script>

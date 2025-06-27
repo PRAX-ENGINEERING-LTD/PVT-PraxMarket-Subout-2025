@@ -13,11 +13,11 @@ use Exception;
 
 class BookmarkController extends Controller
 {
-    public function __construct(WebServiceHelper $webServiceHelper)
-    {
-        $this->webServiceHelper = $webServiceHelper;
-        $this->middleware('auth');
-    }
+    // public function __construct(WebServiceHelper $webServiceHelper)
+    // {
+    //     $this->webServiceHelper = $webServiceHelper;
+    //     $this->middleware('auth');
+    // }
     /**
      * Display a listing of the resource.
      *
