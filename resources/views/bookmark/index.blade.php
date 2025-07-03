@@ -19,10 +19,9 @@
 @section('main_content')
 <body>
   
-    <main>
+    <main class="w-full">
         <!-- React components will be rendered into these divs -->
-        <div id="bookmark"></div>
-        <div class="text-red-500">adasdsadasd</div>
+        <div id="bookmark" class="w-full"></div>
     
     </main>
 </body>
