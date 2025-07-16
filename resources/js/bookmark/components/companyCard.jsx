@@ -34,6 +34,11 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended })
             <div className="p-3 font-bold text-base line-clamp-1 truncate">
                 {name}
             </div>
+             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 mb-2 z-50 px-3 py-1 bg-purple-600 text-white text-base rounded shadow hidden group-hover:block transition-opacity duration-300 whitespace-nowrap pointer-events-none">
+                {name}
+                {/* Tooltip arrow */}
+                <div className="absolute top-7 left-1/2 -translate-x-1/2 w-2 h-2 bg-purple-600 rotate-45"></div>
+            </div>
         </div>
     )
 }
