@@ -4,19 +4,19 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuArrowLeftRight } from "react-icons/lu";
 
 
-const CompanyCard = ({ imageUrl, name, distance, id, onDelete, recommended }) => {
+const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended }) => {
     return (
         <div
             className="group border border-gray-200 rounded-xl shadow-sm bg-white transform transition duration-300 hover:-translate-y-1 cursor-pointer"
         >
             <div className="relative h-[132px] w-full overflow-hidden rounded-t-xl">
                 <img
-                    src={imageUrl}
+                    src={path}
                     alt={name}
                     className="w-full h-full object-cover"
                 />
                 <div className="group-hover:hidden absolute top-2 left-2 bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow flex items-center gap-1 font-medium">
-                    <MdOutlineLocationOn /> {distance}
+                    <MdOutlineLocationOn /> {distanceFromYou}
                 </div>
                 <div className="hidden group-hover:flex absolute top-2 items-center justify-between gap-1 font-medium px-3 w-full">
                     {!recommended ? (

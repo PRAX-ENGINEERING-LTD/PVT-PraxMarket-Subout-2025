@@ -19,13 +19,20 @@
 @section('main_content')
 
 <script>
-    var getBookmarkedCompaniesUrl = "{{ route('bookmark.getBookmarkedCompanies') }}"
+    var selectedTemplateId = 123;
 </script>
 <body>
   
     <main class="w-full">
         <!-- React components will be rendered into these divs -->
-        <div id="bookmark" class="w-full"></div>
+        <div id="bookmark" class="w-full"
+                data-get-recommended-suppliers="{{ route('bookmark.getRecomendedSuppliers') }}"
+                data-get-bookmarked-companies="{{ route('bookmark.getBookmarkedCompanies') }}"
+                data-get-approved-suppliers="{{ route('bookmark.getApprovedSuppliers') }}"
+                data-get-selected-suppliers="{{ route('bookmark.getSelectedSuppliers') }}"
+                >
+        </div>
+
     
     </main>
 </body>

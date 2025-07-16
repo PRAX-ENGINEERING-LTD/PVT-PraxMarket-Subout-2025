@@ -1,4 +1,4 @@
-import React, { useMemo, useState } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
@@ -10,38 +10,38 @@ import { LuPlus } from "react-icons/lu";
 import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 
-const suppliers = [
-    {
-        id: 1,
-        imageUrl: '/images/sample.jpg',
-        name: 'Dyfed Precision Pvt Ltd (DEMO)',
-        distance: '800 m',
-    },
-    {
-        id: 2,
-        imageUrl: '/images/sample.jpg',
-        name: 'A-Tek Engineering Limited',
-        distance: '2.6 km',
-    },
-    {
-        id: 3,
-        imageUrl: '/images/sample.jpg',
-        name: 'Hereford Engineering Ltd (DEMO)',
-        distance: '9 km',
-    },
-    {
-        id: 4,
-        imageUrl: '/images/sample.jpg',
-        name: 'Dyfed Precision Pvt Ltd (DEMO)',
-        distance: '800 m',
-    },
-    {
-        id: 5,
-        imageUrl: '/images/sample.jpg',
-        name: 'A-Tek Engineering Limited',
-        distance: '2.6 km',
-    },
-];
+// const suppliers = [
+//     {
+//         id: 1,
+//         imageUrl: '/images/sample.jpg',
+//         name: 'Dyfed Precision Pvt Ltd (DEMO)',
+//         distance: '800 m',
+//     },
+//     {
+//         id: 2,
+//         imageUrl: '/images/sample.jpg',
+//         name: 'A-Tek Engineering Limited',
+//         distance: '2.6 km',
+//     },
+//     {
+//         id: 3,
+//         imageUrl: '/images/sample.jpg',
+//         name: 'Hereford Engineering Ltd (DEMO)',
+//         distance: '9 km',
+//     },
+//     {
+//         id: 4,
+//         imageUrl: '/images/sample.jpg',
+//         name: 'Dyfed Precision Pvt Ltd (DEMO)',
+//         distance: '800 m',
+//     },
+//     {
+//         id: 5,
+//         imageUrl: '/images/sample.jpg',
+//         name: 'A-Tek Engineering Limited',
+//         distance: '2.6 km',
+//     },
+// ];
 const bookmark = [
     {
         id: 1,
@@ -105,10 +105,67 @@ const bookmark = [
     },
 ];
 
-const Bookmark = () => {
+const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers }) => {
+    const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
+    const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
+    const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
+    const [approvedSuppliers, setApprovedSuppliers] = useState([]);
+    const [approvedSuppliersCount, setApprovedSuppliersCount] = useState(0);
+    const [selectedSuppliers, setSelectedSuppliers] = useState([]);
+    const [selectedSuppliersCount, setSelectedSuppliersCount] = useState(0);
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
+
+    useEffect(() => {
+        $.ajax({
+            url: getRecommendedSuppliers,
+            method: 'GET',
+            success: (response) => {
+                console.log('RecommendedSuppliers:', response);
+                setRecommendedSuppliers(response.recomendedCompanies);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading suppliers:', error);
+            },
+        });
+        $.ajax({
+            url: getBookmarkedCompanies,
+            method: 'GET',
+            success: (response) => {
+                console.log('BookmarkSuppliers:', response);
+                setBookmarkSuppliers(response.bookmarkedCompanies);
+                setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading suppliers:', error);
+            },
+        });
+        $.ajax({
+            url: getApprovedSuppliers,
+            method: 'GET',
+            success: (response) => {
+                console.log('ApprovedSuppliers:', response);
+                setApprovedSuppliers(response.approvedCompanies);
+                setApprovedSuppliersCount(response.approvedCompaniesCount);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading suppliers:', error);
+            },
+        });
+        $.ajax({
+            url: getSelectedSuppliers,
+            method: 'GET',
+            success: (response) => {
+                console.log('SelectedSuppliers:', response);
+                setSelectedSuppliers(response.selectedCompanies);
+                setSelectedSuppliersCount(response.selectedCompaniesCount);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading suppliers:', error);
+            },
+        });
+    }, [getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers]);
 
     const responsive = {
         desktop: {
@@ -173,6 +230,9 @@ const Bookmark = () => {
     };
     const grouped = chunkArray(bookmark, 2);
 
+    const bookmarkgrouped = chunkArray(bookmarkSuppliers, 2);
+    const approvedgrouped = chunkArray(approvedSuppliers, 2);
+
     const EmptyItemsMessage = () => (
         <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 py-10 h-[400px]">
             <FaRegHandshake className='text-black text-2xl' />
@@ -208,7 +268,7 @@ const Bookmark = () => {
                                 itemClass="px-2"
                                 swipeable
                             >
-                                {suppliers.map((supplier) => (
+                                {recommendedSuppliers.map((supplier) => (
                                     <CompanyCard
                                         key={supplier.id}
                                         {...supplier}
@@ -258,7 +318,7 @@ const Bookmark = () => {
                             {/* Distance Filter */}
                             <div className="relative">
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"                    
+                                    className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"
                                 >
                                     <option value="">Distance</option>
                                     <option value="1">Within 1 km</option>
@@ -284,9 +344,9 @@ const Bookmark = () => {
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
                                 </span>
-                                <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{grouped.length}</div>
+                                <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{bookmarkSuppliersCount}</div>
                             </div>
-                            {grouped.length === 0 ? (
+                            {bookmarkgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
                             ) : (
                                 <Carousel
@@ -304,7 +364,7 @@ const Bookmark = () => {
                                     itemClass="px-2"
                                     swipeable
                                 >
-                                    {grouped.map((pair, index) => (
+                                    {bookmarkgrouped.map((pair, index) => (
                                         <div key={index} className="flex flex-col gap-4">
                                             {pair.map((bookmark) => (
                                                 <CompanyCard
@@ -335,7 +395,7 @@ const Bookmark = () => {
                             {/* Distance Filter */}
                             <div className="relative">
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"                    
+                                    className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"
                                 >
                                     <option value="">Distance</option>
                                     <option value="1">Within 1 km</option>
@@ -361,9 +421,9 @@ const Bookmark = () => {
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
                                 </span>
-                                <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{grouped.length}</div>
+                                <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{approvedSuppliersCount}</div>
                             </div>
-                            {grouped.length === 0 ? (
+                            {approvedgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
                             ) : (
                                 <Carousel
@@ -381,7 +441,7 @@ const Bookmark = () => {
                                     itemClass="px-2"
                                     swipeable
                                 >
-                                    {grouped.map((pair, index) => (
+                                    {approvedgrouped.map((pair, index) => (
                                         <div key={index} className="flex flex-col gap-4">
                                             {pair.map((bookmark) => (
                                                 <CompanyCard
@@ -404,7 +464,7 @@ const Bookmark = () => {
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
                             </span>
-                            <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{grouped.length}</div>
+                            <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{selectedSuppliersCount}</div>
                         </div>
                         <div className='group-hover/main:flex hidden absolute z-50 top-4 right-32 gap-2'>
                             <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-red-600 cursor-pointer hover:bg-gray-100 hover:scale-105' onClick={() => setIsDeleteConfirmationModalOpen(true)}>
@@ -414,7 +474,7 @@ const Bookmark = () => {
                                 <MdOutlineDriveFileRenameOutline className='text-sm' />
                             </div>
                         </div>
-                        {bookmark.length === 0 ? (
+                        {selectedSuppliers.length === 0 ? (
                             <EmptyItemsMessage />
                         ) : (
                             <Carousel
@@ -432,7 +492,7 @@ const Bookmark = () => {
                                 itemClass="px-2"
                                 swipeable
                             >
-                                {bookmark.map((bookmark, index) => (
+                                {selectedSuppliers.map((bookmark, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         <CompanyCard
                                             key={bookmark.id}

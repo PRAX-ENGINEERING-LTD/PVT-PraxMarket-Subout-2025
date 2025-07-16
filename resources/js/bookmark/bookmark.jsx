@@ -1,10 +1,16 @@
-
 import ReactDOM from 'react-dom/client';
 import Bookmark from './components/Bookmark';
 
+const element = document.getElementById('bookmark');
 
-const machineryDetailsElement = document.getElementById('bookmark');
-if (machineryDetailsElement) {
-    const root = ReactDOM.createRoot(machineryDetailsElement);
-    root.render(<Bookmark />);
+if (element) {
+    const props = {
+        getRecommendedSuppliers: element.dataset.getRecommendedSuppliers,
+        getBookmarkedCompanies: element.dataset.getBookmarkedCompanies,
+        getApprovedSuppliers: element.dataset.getApprovedSuppliers,
+        getSelectedSuppliers: element.dataset.getSelectedSuppliers,
+    };
+
+    const root = ReactDOM.createRoot(element);
+    root.render(<Bookmark {...props} />);
 }
