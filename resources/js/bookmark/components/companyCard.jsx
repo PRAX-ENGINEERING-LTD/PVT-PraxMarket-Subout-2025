@@ -1,10 +1,9 @@
-import React from 'react'
 import { MdOutlineLocationOn } from "react-icons/md";
 import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuArrowLeftRight } from "react-icons/lu";
 
 
-const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended }) => {
+const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked,moveToApproved,moveToSelected }) => {
     return (
         <div
             className="group border border-gray-200 rounded-xl shadow-sm bg-white transform transition duration-300 hover:-translate-y-1 cursor-pointer"
@@ -26,15 +25,23 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended })
                     ) : (
                         <div></div>
                     )}
-                    <div className='flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center'>
+                    <div className='relative group/sub flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center cursor-pointer'>
                         <LuArrowLeftRight className='text-base' />
+
+                        {/* Dropdown text, initially hidden */}
+                        <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-9999'>
+                            {moveToBookmarked && (<span className='hover:text-purple-600 hover:underline'>Move To Bookmarked</span>)}
+                            {moveToApproved && (<span className='hover:text-purple-600 hover:underline'>Move To Approved</span>)}
+                            {moveToSelected && (<span className='hover:text-purple-600 hover:underline'>Move To Selected</span>)}
+                        </div>
                     </div>
+
                 </div>
             </div>
             <div className="p-3 font-bold text-base line-clamp-1 truncate">
                 {name}
             </div>
-             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 mb-2 z-50 px-3 py-1 bg-purple-600 text-white text-base rounded shadow hidden group-hover:block transition-opacity duration-300 whitespace-nowrap pointer-events-none">
+            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 mb-2 z-50 px-3 py-1 bg-purple-600 text-white text-base rounded shadow hidden group-hover:block transition-opacity duration-300 whitespace-nowrap pointer-events-none">
                 {name}
                 {/* Tooltip arrow */}
                 <div className="absolute top-7 left-1/2 -translate-x-1/2 w-2 h-2 bg-purple-600 rotate-45"></div>
