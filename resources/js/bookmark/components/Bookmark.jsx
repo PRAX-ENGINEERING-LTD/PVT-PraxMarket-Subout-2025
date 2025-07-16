@@ -25,6 +25,20 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
     const [onDeleteCompany, setOnDeleteCompany] = useState({});
 
+    // Filter states for bookmarked suppliers
+    const [bookmarkedFilters, setBookmarkedFilters] = useState({
+        catagoryID: '',
+        availablityStatus: '',
+        distance: ''
+    });
+
+    // Filter states for approved suppliers
+    const [approvedFilters, setApprovedFilters] = useState({
+        catagoryID: '',
+        availablityStatus: '',
+        distance: ''
+    });
+
     useEffect(() => {
         $.ajax({
             url: getRecommendedSuppliers,
@@ -37,30 +51,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 console.error('Error loading RecommendedSuppliers:', error);
             },
         });
-        $.ajax({
-            url: getBookmarkedCompanies,
-            method: 'GET',
-            success: (response) => {
-                console.log('BookmarkSuppliers:', response);
-                setBookmarkSuppliers(response.bookmarkedCompanies);
-                setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
-            },
-            error: (xhr, status, error) => {
-                console.error('Error loading BookmarkSuppliers:', error);
-            },
-        });
-        $.ajax({
-            url: getApprovedSuppliers,
-            method: 'GET',
-            success: (response) => {
-                console.log('ApprovedSuppliers:', response);
-                setApprovedSuppliers(response.approvedCompanies);
-                setApprovedSuppliersCount(response.approvedCompaniesCount);
-            },
-            error: (xhr, status, error) => {
-                console.error('Error loading ApprovedSuppliers:', error);
-            },
-        });
+        fetchBookmarkedCompanies();
+        fetchApprovedCompanies();
         $.ajax({
             url: getSelectedSuppliers,
             method: 'GET',
@@ -85,6 +77,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             },
         });
     }, [getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds]);
+
+    // Effect to refetch bookmarked companies when filters change
+    useEffect(() => {
+        fetchBookmarkedCompanies(bookmarkedFilters);
+    }, [bookmarkedFilters]);
+
+    // Effect to refetch approved companies when filters change
+    useEffect(() => {
+        fetchApprovedCompanies(approvedFilters);
+    }, [approvedFilters]);
 
     const responsive = {
         desktop: {
@@ -147,7 +149,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
         return chunked;
     };
-    
+
 
     const bookmarkgrouped = chunkArray(bookmarkSuppliers, 2);
     const approvedgrouped = chunkArray(approvedSuppliers, 2);
@@ -169,28 +171,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     console.log('Company deleted successfully:', response);
                     setIsDeleteCompanyConfirmationModalOpen(false);
                     setOnDeleteCompany({});
-                    
-                    // Refresh the data after successful deletion
-                    // Re-fetch bookmarked companies
-                    $.ajax({
-                        url: getBookmarkedCompanies,
-                        method: 'GET',
-                        success: (response) => {
-                            setBookmarkSuppliers(response.bookmarkedCompanies);
-                            setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
-                        }
-                    });
-                    
-                    // Re-fetch approved companies
-                    $.ajax({
-                        url: getApprovedSuppliers,
-                        method: 'GET',
-                        success: (response) => {
-                            setApprovedSuppliers(response.approvedCompanies);
-                            setApprovedSuppliersCount(response.approvedCompaniesCount);
-                        }
-                    });
-                    
+
+                    // Refresh the data after successful deletion using filter-aware functions
+                    fetchBookmarkedCompanies(bookmarkedFilters);
+                    fetchApprovedCompanies(approvedFilters);
+
                     // Re-fetch selected companies
                     $.ajax({
                         url: getSelectedSuppliers,
@@ -209,6 +194,78 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             });
         }
     }
+
+    const fetchBookmarkedCompanies = (filters = {}) => {
+        const queryParams = new URLSearchParams();
+
+        if (filters.catagoryID) {
+            queryParams.append('catagoryID', filters.catagoryID);
+        }
+        if (filters.availablityStatus) {
+            queryParams.append('availablityStatus', filters.availablityStatus);
+        }
+        if (filters.distance) {
+            queryParams.append('distance', filters.distance);
+        }
+
+        const url = queryParams.toString() ? `${getBookmarkedCompanies}?${queryParams.toString()}` : getBookmarkedCompanies;
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: (response) => {
+                console.log('BookmarkSuppliers:', response);
+                setBookmarkSuppliers(response.bookmarkedCompanies);
+                setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading BookmarkSuppliers:', error);
+            },
+        });
+    };
+
+    const fetchApprovedCompanies = (filters = {}) => {
+        const queryParams = new URLSearchParams();
+
+        if (filters.catagoryID) {
+            queryParams.append('catagoryID', filters.catagoryID);
+        }
+        if (filters.availablityStatus) {
+            queryParams.append('availablityStatus', filters.availablityStatus);
+        }
+        if (filters.distance) {
+            queryParams.append('distance', filters.distance);
+        }
+
+        const url = queryParams.toString() ? `${getApprovedSuppliers}?${queryParams.toString()}` : getApprovedSuppliers;
+
+        $.ajax({
+            url: url,
+            method: 'GET',
+            success: (response) => {
+                console.log('ApprovedSuppliers:', response);
+                setApprovedSuppliers(response.approvedCompanies);
+                setApprovedSuppliersCount(response.approvedCompaniesCount);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading ApprovedSuppliers:', error);
+            },
+        });
+    };
+
+    const handleBookmarkedFilterChange = (filterName, value) => {
+        setBookmarkedFilters(prev => ({
+            ...prev,
+            [filterName]: value
+        }));
+    };
+
+    const handleApprovedFilterChange = (filterName, value) => {
+        setApprovedFilters(prev => ({
+            ...prev,
+            [filterName]: value
+        }));
+    };
 
 
 
@@ -284,10 +341,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div className="relative">
                                 <select
                                     className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    value={bookmarkedFilters.catagoryID}
+                                    onChange={(e) => handleBookmarkedFilterChange('catagoryID', e.target.value)}
                                 >
                                     <option value="">Category</option>
-                                    <option value="Engineering">Engineering</option>
-                                    <option value="Fabrication">Fabrication</option>
+                                    <option value="67c85d62ffbee109920dd5e2">sample 133</option>
+                                    <option value="67c86253179ba1a66e0a5192">sddsds</option>
+                                    <option value="67e3bc5c0e460de8090dcbe2">Sample</option>
                                 </select>
                             </div>
 
@@ -295,6 +355,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div className="relative">
                                 <select
                                     className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"
+                                    value={bookmarkedFilters.distance}
+                                    onChange={(e) => handleBookmarkedFilterChange('distance', e.target.value)}
                                 >
                                     <option value="">Distance</option>
                                     <option value="1">Within 1 km</option>
@@ -307,6 +369,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div className="relative">
                                 <select
                                     className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    value={bookmarkedFilters.availablityStatus}
+                                    onChange={(e) => handleBookmarkedFilterChange('availablityStatus', e.target.value)}
                                 >
                                     <option value="">Availability</option>
                                     <option value="available">Available</option>
@@ -364,10 +428,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div className="relative">
                                 <select
                                     className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    value={approvedFilters.catagoryID}
+                                    onChange={(e) => handleApprovedFilterChange('catagoryID', e.target.value)}
                                 >
                                     <option value="">Category</option>
-                                    <option value="Engineering">Engineering</option>
-                                    <option value="Fabrication">Fabrication</option>
+                                    <option value="67c85d62ffbee109920dd5e2">sample 133</option>
+                                    <option value="67c86253179ba1a66e0a5192">sddsds</option>
+                                    <option value="67e3bc5c0e460de8090dcbe2">Sample</option>
                                 </select>
                             </div>
 
@@ -375,6 +442,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div className="relative">
                                 <select
                                     className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"
+                                    value={approvedFilters.distance}
+                                    onChange={(e) => handleApprovedFilterChange('distance', e.target.value)}
                                 >
                                     <option value="">Distance</option>
                                     <option value="1">Within 1 km</option>
@@ -387,6 +456,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div className="relative">
                                 <select
                                     className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    value={approvedFilters.availablityStatus}
+                                    onChange={(e) => handleApprovedFilterChange('availablityStatus', e.target.value)}
                                 >
                                     <option value="">Availability</option>
                                     <option value="available">Available</option>
