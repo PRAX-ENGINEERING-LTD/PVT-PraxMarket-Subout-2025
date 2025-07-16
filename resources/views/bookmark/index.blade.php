@@ -30,6 +30,7 @@
                 data-get-bookmarked-companies="{{ route('bookmark.getBookmarkedCompanies') }}"
                 data-get-approved-suppliers="{{ route('bookmark.getApprovedSuppliers') }}"
                 data-get-selected-suppliers="{{ route('bookmark.getSelectedSuppliers') }}"
+                data-get-bookmark-ads="{{ route('bookmark.getBookmarkAds') }}"
                 >
         </div>
 

@@ -9,6 +9,7 @@ if (element) {
         getBookmarkedCompanies: element.dataset.getBookmarkedCompanies,
         getApprovedSuppliers: element.dataset.getApprovedSuppliers,
         getSelectedSuppliers: element.dataset.getSelectedSuppliers,
+        getBookmarkAds: element.dataset.getBookmarkAds,
     };
 
     const root = ReactDOM.createRoot(element);

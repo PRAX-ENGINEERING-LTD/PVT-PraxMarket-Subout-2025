@@ -105,7 +105,7 @@ const bookmark = [
     },
 ];
 
-const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers }) => {
+const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds }) => {
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
     const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
     const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
@@ -113,6 +113,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [approvedSuppliersCount, setApprovedSuppliersCount] = useState(0);
     const [selectedSuppliers, setSelectedSuppliers] = useState([]);
     const [selectedSuppliersCount, setSelectedSuppliersCount] = useState(0);
+    const [bookmarkAds, setBookmarkAds] = useState({});
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
@@ -126,7 +127,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setRecommendedSuppliers(response.recomendedCompanies);
             },
             error: (xhr, status, error) => {
-                console.error('Error loading suppliers:', error);
+                console.error('Error loading RecommendedSuppliers:', error);
             },
         });
         $.ajax({
@@ -138,7 +139,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
             },
             error: (xhr, status, error) => {
-                console.error('Error loading suppliers:', error);
+                console.error('Error loading BookmarkSuppliers:', error);
             },
         });
         $.ajax({
@@ -150,7 +151,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setApprovedSuppliersCount(response.approvedCompaniesCount);
             },
             error: (xhr, status, error) => {
-                console.error('Error loading suppliers:', error);
+                console.error('Error loading ApprovedSuppliers:', error);
             },
         });
         $.ajax({
@@ -162,10 +163,21 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setSelectedSuppliersCount(response.selectedCompaniesCount);
             },
             error: (xhr, status, error) => {
-                console.error('Error loading suppliers:', error);
+                console.error('Error loading SelectedSuppliers:', error);
             },
         });
-    }, [getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers]);
+        $.ajax({
+            url: getBookmarkAds,
+            method: 'GET',
+            success: (response) => {
+                console.log('BookmarkADD:', response);
+                setBookmarkAds(response);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading BookmarkADD:', error);
+            },
+        });
+    }, [getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds]);
 
     const responsive = {
         desktop: {
@@ -282,10 +294,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     <div className="md:col-span-3 col-span-12">
                         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
                             <img
-                                src="/images/ad.avif"
+                                src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
                                 alt="Pine Forest"
-                                className="object-cover w-full h-full rounded-2xl"
+                                className="object-cover w-full h-full rounded-2xl cursor-pointer"
                                 style={{ maxHeight: '239px' }}
+                                onClick={() => {
+                                    const url = bookmarkAds?.adPointingUrl?.startsWith('http')
+                                        ? bookmarkAds.adPointingUrl
+                                        : `https://${bookmarkAds.adPointingUrl}`;
+                                    window.open(url, '_blank');
+                                }}
                             />
                         </div>
                     </div>
