@@ -10,14 +10,16 @@ use Illuminate\Support\Facades\Config;
 use App\Helpers\WebServiceHelper;
 use Illuminate\Support\Facades\Auth;
 use Exception;
+use stdClass;
+use Illuminate\Support\Str;
 
 class BookmarkController extends Controller
 {
-    // public function __construct(WebServiceHelper $webServiceHelper)
-    // {
-    //     $this->webServiceHelper = $webServiceHelper;
-    //     $this->middleware('auth');
-    // }
+    public function __construct(WebServiceHelper $webServiceHelper)
+    {
+        $this->webServiceHelper = $webServiceHelper;
+        // $this->middleware('auth');
+    }
     /**
      * Display a listing of the resource.
      *
@@ -26,6 +28,7 @@ class BookmarkController extends Controller
 
     public function index(Request $request)
     {
+        // return view('staticPages.comingSoon.index');
 
         return view('bookmark.index');
         $params = array();
@@ -160,7 +163,383 @@ class BookmarkController extends Controller
 
 
         return false;
+    }
 
-        
+
+    public function getBookmarkedCompanies(Request $request)
+    {
+        $params = array();
+        $catagoryID = $request->query('catagoryID');
+        $availablityStatus = $request->query('availablityStatus');
+        $distance = $request->query('distance');
+
+        // $baseUrl = Config::get("app.apiUrl") . "v1/get-my-bookmarked-companies/" . Auth::user()->id;
+
+        $baseUrl = Config::get("app.apiUrl") . "v1/get-my-bookmarked-companies/686ba4de940660836707450d";
+
+        $queryParams = [];
+
+        if (!is_null($catagoryID)) {
+            $queryParams['catagoryID'] = $catagoryID;
+        }
+
+        if (!is_null($availablityStatus)) {
+            $queryParams['availablityStatus'] = $availablityStatus;
+        }
+
+        if (!is_null($distance)) {
+            $queryParams['distance'] = $distance;
+        }
+
+        $endpoint = $baseUrl;
+
+        if (!empty($queryParams)) {
+            $endpoint .= '?' . http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
+        }
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+
+    public function getApprovedSuppliers(Request $request)
+    {
+        $params = array();
+        $catagoryID = $request->query('catagoryID');
+        $availablityStatus = $request->query('availablityStatus');
+        $distance = $request->query('distance');
+
+        // $baseUrl = Config::get("app.apiUrl") . "v1/get-my-bookmarked-companies/" . Auth::user()->id;
+
+        $baseUrl = Config::get("app.apiUrl") . "v1/get-my-approved-companies/686ba4de940660836707450d";
+
+        $queryParams = [];
+
+        if (!is_null($catagoryID)) {
+            $queryParams['catagoryID'] = $catagoryID;
+        }
+
+        if (!is_null($availablityStatus)) {
+            $queryParams['availablityStatus'] = $availablityStatus;
+        }
+
+        if (!is_null($distance)) {
+            $queryParams['distance'] = $distance;
+        }
+
+        $endpoint = $baseUrl;
+
+        if (!empty($queryParams)) {
+            $endpoint .= '?' . http_build_query($queryParams, '', '&', PHP_QUERY_RFC3986);
+        }
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+
+    public function getRecomendedSuppliers(Request $request)
+    {
+        $params = array();
+
+        // $baseUrl = Config::get("app.apiUrl") . "v1/get-my-recomended-companies/" . Auth::user()->id;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/get-my-recomended-companies/686ba4de940660836707450d";
+
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+    public function getSelectedSuppliers(Request $request)
+    {
+        $params = array();
+
+        // $baseUrl = Config::get("app.apiUrl") . "v1/get-my-recomended-companies/" . Auth::user()->id;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/get-my-selected-companies/686ba4de940660836707450d";
+
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+    public function getBookmarkAds(Request $request)
+    {
+        $params = array();
+
+        // $baseUrl = Config::get("app.apiUrl") . "v1/get-my-recomended-companies/" . Auth::user()->id;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/get-bookmark-ads/686ba4de940660836707450d";
+
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            return $exception;
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+    public function addNewBookmarkFolder(Request $request)
+    {
+
+        // $authID = Auth::user()->id;
+        $folderName = $request->post('folderName') ?? 'CustomFolder - ' . str::random(7);
+        $authID = "686ba4de940660836707450d";
+
+        $params = array();
+        $params["folderName"] = $folderName;
+        $params["authID"] = $authID;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/add-new-bookmark-folder";
+        $headers = $this->webServiceHelper->httpPostHeaders;
+        $method = $this->webServiceHelper->httpPostMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $bookmarkResponse = $response->data;
+
+            if (isset($bookmarkResponse)) {
+                return $bookmarkResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return false;
+    }
+
+    public function updateBookmarkFolder(Request $request)
+    {
+
+        // $authID = Auth::user()->id;
+        $folderName = $request->post('folderName') ?? 'CustomFolder - ' . str::random(7);
+        $authID = "686ba4de940660836707450d";
+        $folderID = $request->post('folderID') ?? '6874ce7aca1ec02795081282';
+
+        $params = array();
+        $params["folderName"] = $folderName;
+        $params["authID"] = $authID;
+        $params["folderID"] = $folderID;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/update-bookmark-folder-name";
+        $headers = $this->webServiceHelper->httpPostHeaders;
+        $method = $this->webServiceHelper->httpPostMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $bookmarkResponse = $response->data;
+
+            if (isset($bookmarkResponse)) {
+                return $bookmarkResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return false;
+    }
+
+    public function deleteBookmarkFolder(Request $request)
+    {
+
+        // $authID = Auth::user()->id;
+        $authID = "686ba4de940660836707450d";
+        $folderID = $request->post('folderID') ?? '6874ce7aca1ec02795081282';
+
+        $params = array();
+        $params["authID"] = $authID;
+        $params["folderID"] = $folderID;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/delete-bookmark-folder";
+        $headers = $this->webServiceHelper->httpPostHeaders;
+        $method = $this->webServiceHelper->httpPostMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $bookmarkResponse = $response->data;
+
+            if (isset($bookmarkResponse)) {
+                return $bookmarkResponse;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return false;
+    }
+
+
+    public function getAvailableCustomBookmarkApis(Request $request)
+    {
+        $params = array();
+
+        // $baseUrl = Config::get("app.apiUrl") . "v1/get-my-recomended-companies/" . Auth::user()->id;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/get-available-custom-bookmark-folder-api/686ba4de940660836707450d";
+
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $folderIDs = $response->data;
+
+            if (isset($folderIDs) && count($folderIDs) > 0) {
+                $responseUrlArray = [];
+                foreach ($folderIDs as $folderID) {
+                    array_push($responseUrlArray, Config::get("constants.websiteConfigurations.appUrl") . "get-custom-bookmark-folder-details/" . $folderID);
+                }
+                return $responseUrlArray;
+            }
+        } catch (Exception $exception) {
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+    public function getCustomBookmarkFolderDetails(Request $request)
+    {
+        // $authID = Auth::user()->id;
+        $authID = "686ba4de940660836707450d";
+        $folderID = $request->route('folderID') ?? '6874ce7aca1ec02795081282';
+
+        $params = array();
+
+        $endpoint = Config::get("app.apiUrl") . "v1/get-custom-bookmark-folder-details/686ba4de940660836707450d/$folderID";
+
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, $params);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            return $exception;
+            $customerDevices = [];
+        }
+
+        return [];
+    }
+
+    public function removeFromFolder(Request $request)
+    {
+        // $authID = Auth::user()->id;
+        $authID = "686ba4de940660836707450d";
+        $companyID  = $request->route('companyID');
+        $fromFolder = $request->route('fromFolder');
+
+        $endpoint = Config::get("app.apiUrl") . "v1/remove-company-from-folder/686ba4de940660836707450d/" . $fromFolder . "/" . $companyID;
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, []);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            return $exception;
+            $customerDevices = [];
+        }
+    }
+
+    public function moveFolder(Request $request)
+    {
+        // $authID = Auth::user()->id;
+        $authID = "686ba4de940660836707450d";
+        $companyID  = $request->route('companyID');
+        $fromFolder = $request->route('fromFolder');
+        $toFolder = $request->route('toFolder');
+
+        $endpoint = Config::get("app.apiUrl") . "v1/move-folder/686ba4de940660836707450d/" . $fromFolder . "/" . $toFolder . "/" . $companyID . "/" . $authID;
+
+        $headers = $this->webServiceHelper->httpGetHeaders;
+        $method = $this->webServiceHelper->httpGetMethod;
+        try {
+            $response = $this->webServiceHelper->call($method, $endpoint, $headers, []);
+            $response = json_decode($response);
+            $companyResponse = $response->data;
+
+            if (isset($companyResponse)) {
+                return $companyResponse;
+            }
+        } catch (Exception $exception) {
+            return $exception;
+            $customerDevices = [];
+        }
     }
 }

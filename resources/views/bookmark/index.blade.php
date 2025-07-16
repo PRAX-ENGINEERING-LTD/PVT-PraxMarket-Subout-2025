@@ -17,6 +17,10 @@
     @vite(['resources/css/app.css', 'resources/js/app.jsx'])
 </head>
 @section('main_content')
+
+<script>
+    var getBookmarkedCompaniesUrl = "{{ route('bookmark.getBookmarkedCompanies') }}"
+</script>
 <body>
   
     <main class="w-full">
