@@ -10,100 +10,6 @@ import { LuPlus } from "react-icons/lu";
 import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 
-// const suppliers = [
-//     {
-//         id: 1,
-//         imageUrl: '/images/sample.jpg',
-//         name: 'Dyfed Precision Pvt Ltd (DEMO)',
-//         distance: '800 m',
-//     },
-//     {
-//         id: 2,
-//         imageUrl: '/images/sample.jpg',
-//         name: 'A-Tek Engineering Limited',
-//         distance: '2.6 km',
-//     },
-//     {
-//         id: 3,
-//         imageUrl: '/images/sample.jpg',
-//         name: 'Hereford Engineering Ltd (DEMO)',
-//         distance: '9 km',
-//     },
-//     {
-//         id: 4,
-//         imageUrl: '/images/sample.jpg',
-//         name: 'Dyfed Precision Pvt Ltd (DEMO)',
-//         distance: '800 m',
-//     },
-//     {
-//         id: 5,
-//         imageUrl: '/images/sample.jpg',
-//         name: 'A-Tek Engineering Limited',
-//         distance: '2.6 km',
-//     },
-// ];
-const bookmark = [
-    {
-        id: 1,
-        imageUrl: '/images/sample.jpg',
-        name: 'Dyfed Precision Pvt Ltd (DEMO)',
-        distance: '800 m',
-    },
-    {
-        id: 2,
-        imageUrl: '/images/sample.jpg',
-        name: 'A-Tek Engineering Limited',
-        distance: '2.6 km',
-    },
-    {
-        id: 3,
-        imageUrl: '/images/sample.jpg',
-        name: 'Hereford Engineering Ltd (DEMO)',
-        distance: '9 km',
-    },
-    {
-        id: 4,
-        imageUrl: '/images/sample.jpg',
-        name: 'Dyfed Precision Pvt Ltd (DEMO)',
-        distance: '800 m',
-    },
-    {
-        id: 5,
-        imageUrl: '/images/sample.jpg',
-        name: 'A-Tek Engineering Limited',
-        distance: '2.6 km',
-    },
-    {
-        id: 6,
-        imageUrl: '/images/sample.jpg',
-        name: 'Dyfed Precision Pvt Ltd (DEMO)',
-        distance: '800 m',
-    },
-    {
-        id: 7,
-        imageUrl: '/images/sample.jpg',
-        name: 'A-Tek Engineering Limited',
-        distance: '2.6 km',
-    },
-    {
-        id: 8,
-        imageUrl: '/images/sample.jpg',
-        name: 'Hereford Engineering Ltd (DEMO)',
-        distance: '9 km',
-    },
-    {
-        id: 9,
-        imageUrl: '/images/sample.jpg',
-        name: 'Dyfed Precision Pvt Ltd (DEMO)',
-        distance: '800 m',
-    },
-    {
-        id: 10,
-        imageUrl: '/images/sample.jpg',
-        name: 'A-Tek Engineering Limited',
-        distance: '2.6 km',
-    },
-];
 
 const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds }) => {
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
@@ -117,6 +23,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isCreateFolderModalOpen, setIsCreateFolderModalOpen] = useState(false);
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
+    const [onDeleteCompany, setOnDeleteCompany] = useState({});
 
     useEffect(() => {
         $.ajax({
@@ -240,7 +147,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
         return chunked;
     };
-    const grouped = chunkArray(bookmark, 2);
+    
 
     const bookmarkgrouped = chunkArray(bookmarkSuppliers, 2);
     const approvedgrouped = chunkArray(approvedSuppliers, 2);
@@ -252,6 +159,57 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
         </div>
     )
+
+    const onClickDeleteCompany = () => {
+        if (onDeleteCompany && onDeleteCompany.deleteUrl) {
+            $.ajax({
+                url: onDeleteCompany.deleteUrl,
+                method: 'POST',
+                success: (response) => {
+                    console.log('Company deleted successfully:', response);
+                    setIsDeleteCompanyConfirmationModalOpen(false);
+                    setOnDeleteCompany({});
+                    
+                    // Refresh the data after successful deletion
+                    // Re-fetch bookmarked companies
+                    $.ajax({
+                        url: getBookmarkedCompanies,
+                        method: 'GET',
+                        success: (response) => {
+                            setBookmarkSuppliers(response.bookmarkedCompanies);
+                            setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
+                        }
+                    });
+                    
+                    // Re-fetch approved companies
+                    $.ajax({
+                        url: getApprovedSuppliers,
+                        method: 'GET',
+                        success: (response) => {
+                            setApprovedSuppliers(response.approvedCompanies);
+                            setApprovedSuppliersCount(response.approvedCompaniesCount);
+                        }
+                    });
+                    
+                    // Re-fetch selected companies
+                    $.ajax({
+                        url: getSelectedSuppliers,
+                        method: 'GET',
+                        success: (response) => {
+                            setSelectedSuppliers(response.selectedCompanies);
+                            setSelectedSuppliersCount(response.selectedCompaniesCount);
+                        }
+                    });
+                },
+                error: (xhr, status, error) => {
+                    console.error('Error deleting company:', error);
+                    setIsDeleteCompanyConfirmationModalOpen(false);
+                    // You might want to show an error message to the user here
+                },
+            });
+        }
+    }
+
 
 
     return (
@@ -388,7 +346,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 <CompanyCard
                                                     key={bookmark.id}
                                                     {...bookmark}
-                                                    onDelete={() => setIsDeleteCompanyConfirmationModalOpen(true)}
+                                                    onDelete={() => {
+                                                        setOnDeleteCompany(bookmark);
+                                                        setIsDeleteCompanyConfirmationModalOpen(true)
+                                                    }}
                                                 />
                                             ))}
                                         </div>
@@ -465,7 +426,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 <CompanyCard
                                                     key={bookmark.id}
                                                     {...bookmark}
-                                                    onDelete={() => setIsDeleteCompanyConfirmationModalOpen(true)}
+                                                    onDelete={() => {
+                                                        setOnDeleteCompany(bookmark);
+                                                        setIsDeleteCompanyConfirmationModalOpen(true)
+                                                    }}
                                                 />
                                             ))}
                                         </div>
@@ -515,7 +479,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         <CompanyCard
                                             key={bookmark.id}
                                             {...bookmark}
-                                            onDelete={() => setIsDeleteCompanyConfirmationModalOpen(true)}
+                                            onDelete={() => {
+                                                setOnDeleteCompany(bookmark);
+                                                setIsDeleteCompanyConfirmationModalOpen(true)
+                                            }}
                                         />
                                     </div>
                                 ))}
@@ -543,7 +510,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <DeleteConfirmationModal
                 isOpen={isDeleteCompanyConfirmationModalOpen}
                 onClose={() => { setIsDeleteCompanyConfirmationModalOpen(false) }}
-                onConfirm={() => { }}
+                onConfirm={onClickDeleteCompany}
                 subtitle="This company will also be removed from all customised group."
             />
         </>
