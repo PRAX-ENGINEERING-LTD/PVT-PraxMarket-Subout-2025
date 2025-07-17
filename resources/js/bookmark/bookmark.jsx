@@ -12,7 +12,8 @@ if (element) {
         getBookmarkAds: element.dataset.getBookmarkAds,
         getAvailableCustomBookmarkApis: element.dataset.getCustomApis,
         addNewBookmarkFolder: element.dataset.addNewBookmarkFolder,
-        deleteBookmarkFolder: element.dataset.deleteBookmarkFolder
+        deleteBookmarkFolder: element.dataset.deleteBookmarkFolder,
+        updateBookmarkFolder: element.dataset.updateBookmarkFolder
     };
 
 

@@ -11,7 +11,7 @@ import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 
 
-const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis,addNewBookmarkFolder,deleteBookmarkFolder }) => {
+const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis,addNewBookmarkFolder,deleteBookmarkFolder,updateBookmarkFolder }) => {
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
     const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
     const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
@@ -28,6 +28,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isCreatingFolder, setIsCreatingFolder] = useState(false);
     const [isDeletingFolder, setIsDeletingFolder] = useState(false);
     const [folderToDelete, setFolderToDelete] = useState(null);
+    const [isUpdatingFolder, setIsUpdatingFolder] = useState(false);
+    const [folderToUpdate, setFolderToUpdate] = useState(null);
+    const [modalMode, setModalMode] = useState('create'); // 'create' or 'update'
     const [customFolder, setCustomFolder] = useState([]);
     const [customFolderData, setCustomFolderData] = useState([]);
 
@@ -420,6 +423,65 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
     };
 
+    const onUpdateFolder = async (folderName, folderData) => {
+        const folderID = folderData.folderUrl.split('/').pop();
+        
+        setIsUpdatingFolder(true);
+        
+        try {
+            const response = await new Promise((resolve, reject) => {
+                $.ajax({
+                    url: updateBookmarkFolder,
+                    method: 'POST',
+                    data: {
+                        folderName: folderName,
+                        folderID: folderID,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (response) => {
+                        console.log('Folder updated successfully:', response);
+                        resolve(response);
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('Error updating folder:', error);
+                        reject(error);
+                    }
+                });
+            });
+
+            // Refresh the custom folders list after updating a folder
+            $.ajax({
+                url: getAvailableCustomBookmarkApis,
+                method: 'GET',
+                success: (response) => {
+                    console.log('Refreshed custom folders after update:', response);
+                    setCustomFolder(response);
+                },
+                error: (xhr, status, error) => {
+                    console.error('Error refreshing custom folders:', error);
+                }
+            });
+
+            setIsCreateFolderModalOpen(false);
+            setFolderToUpdate(null);
+            setModalMode('create');
+            
+        } catch (error) {
+            console.error('Error updating folder:', error);
+            alert('Failed to update folder. Please try again.');
+        } finally {
+            setIsUpdatingFolder(false);
+        }
+    };
+
+    const handleFolderModalSubmit = (folderName, folderData) => {
+        if (modalMode === 'create') {
+            onCreateFolder(folderName);
+        } else {
+            onUpdateFolder(folderName, folderData);
+        }
+    };
+
     const onDeleteFolder = async (folderUrl) => {
         // Extract folder ID from URL
         const folderID = folderUrl.split('/').pop();
@@ -796,7 +858,17 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     >
                                         <RiDeleteBin5Line className='text-sm' />
                                     </div>
-                                    <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-blue-600 cursor-pointer hover:bg-gray-100 hover:scale-105'>
+                                    <div 
+                                        className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-blue-600 cursor-pointer hover:bg-gray-100 hover:scale-105'
+                                        onClick={() => {
+                                            setFolderToUpdate({
+                                                folderUrl: folderUrl,
+                                                folderName: folder.folderName
+                                            });
+                                            setModalMode('update');
+                                            setIsCreateFolderModalOpen(true);
+                                        }}
+                                    >
                                         <MdOutlineDriveFileRenameOutline className='text-sm' />
                                     </div>
                                 </div>
@@ -841,7 +913,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
 
                 <div className='w-full mt-5 flex justify-center'>
-                    <button className="mt-5 bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer" onClick={() => setIsCreateFolderModalOpen(true)}>
+                    <button 
+                        className="mt-5 bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer" 
+                        onClick={() => {
+                            setModalMode('create');
+                            setFolderToUpdate(null);
+                            setIsCreateFolderModalOpen(true);
+                        }}
+                    >
                         <LuPlus className="text-lg" />
                         <p className="!mb-0 text-white">Create Folder</p>
                     </button>
@@ -849,9 +928,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             </div>
             <CreateFolderModal
                 isOpen={isCreateFolderModalOpen}
-                onClose={() => setIsCreateFolderModalOpen(false)}
-                onSubmit={onCreateFolder}
-                isLoading={isCreatingFolder}
+                onClose={() => {
+                    setIsCreateFolderModalOpen(false);
+                    setFolderToUpdate(null);
+                    setModalMode('create');
+                }}
+                onSubmit={handleFolderModalSubmit}
+                isLoading={modalMode === 'create' ? isCreatingFolder : isUpdatingFolder}
+                mode={modalMode}
+                initialFolderName={folderToUpdate?.folderName || ''}
+                folderData={folderToUpdate}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}

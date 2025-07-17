@@ -1,14 +1,32 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 
-const CreateFolderModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => {
+const CreateFolderModal = ({ 
+  isOpen, 
+  onClose, 
+  onSubmit, 
+  isLoading = false, 
+  mode = 'create', // 'create' or 'update'
+  initialFolderName = '',
+  folderData = null // Contains folder info for update mode
+}) => {
   const [folderName, setFolderName] = useState("");
+
+  useEffect(() => {
+    if (isOpen) {
+      if (mode === 'update' && initialFolderName) {
+        setFolderName(initialFolderName);
+      } else {
+        setFolderName("");
+      }
+    }
+  }, [isOpen, mode, initialFolderName]);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
     e.preventDefault();
     if (folderName.trim()) {
-      onSubmit(folderName.trim());
+      onSubmit(folderName.trim(), folderData);
     }
   };
 
@@ -16,6 +34,11 @@ const CreateFolderModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => 
     setFolderName("");
     onClose();
   };
+
+  const isCreateMode = mode === 'create';
+  const title = isCreateMode ? "Create Folder" : "Update Folder";
+  const buttonText = isCreateMode ? "Submit" : "Update";
+  const loadingText = isCreateMode ? "Creating..." : "Updating...";
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 bg-opacity-50">
@@ -43,7 +66,7 @@ const CreateFolderModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => 
         </button>
 
         {/* Header */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-4">Create Folder</h2>
+        <h2 className="text-xl font-semibold text-gray-800 mb-4">{title}</h2>
         <hr className="mb-4" />
 
         <form onSubmit={handleSubmit}>
@@ -84,7 +107,7 @@ const CreateFolderModal = ({ isOpen, onClose, onSubmit, isLoading = false }) => 
               {isLoading && (
                 <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
               )}
-              {isLoading ? 'Creating...' : 'Submit'}
+              {isLoading ? loadingText : buttonText}
             </button>
           </div>
         </form>
