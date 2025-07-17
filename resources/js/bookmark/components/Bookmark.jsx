@@ -1,11 +1,11 @@
-import React, { useEffect, useMemo, useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
 import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
 import CompanyCard from './companyCard';
 import { FaRegHandshake } from "react-icons/fa6";
-import { RiDeleteBin5Line } from "react-icons/ri";
-import { MdOutlineDriveFileRenameOutline } from "react-icons/md";
+import { AiOutlineDelete } from "react-icons/ai";
+import { FiEdit } from "react-icons/fi";
 import { LuPlus } from "react-icons/lu";
 import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
@@ -543,7 +543,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 <div className="grid grid-cols-12 gap-4">
                     <div className="md:col-span-9 col-span-12">
                         <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4">
-                            <div className="">
+                            <div className="flex sm:mb-0 mb-6">
                                 <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Recommended Suppliers
                                 </span>
@@ -652,7 +652,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             </div>
                         </div>
                         <div className="relative border border-gray-300 rounded-lg px-4 pb-4 bg-gradient-to-br from-violet-100 to-violet-600">
-                            <div className="flex gap-5">
+                            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
                                 </span>
@@ -742,7 +742,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             </div>
                         </div>
                         <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
-                            <div className="flex gap-5">
+                            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
                                 </span>
@@ -791,7 +791,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                 <div className='w-full mt-5'>
                     <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
-                        <div className="flex gap-5">
+                        <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
                             </span>
@@ -844,7 +844,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
                             <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
-                                <div className="flex gap-5">
+                                <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         {folder.folderName}
                                     </span>
@@ -852,18 +852,18 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         {formatCountWithLeadingZero(folder.totalSupplierCount)}
                                     </div>
                                 </div>
-                                <div className='group-hover/main:flex hidden absolute z-50 top-4 right-32 gap-2'>
+                                <div className='group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 right-32 gap-2'>
                                     <div 
-                                        className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-red-600 cursor-pointer hover:bg-gray-100 hover:scale-105'
+                                        className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
                                         onClick={() => {
                                             setFolderToDelete(folderUrl);
                                             setIsDeleteConfirmationModalOpen(true);
                                         }}
                                     >
-                                        <RiDeleteBin5Line className='text-sm' />
+                                        <AiOutlineDelete className='text-sm' />
                                     </div>
                                     <div 
-                                        className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-blue-600 cursor-pointer hover:bg-gray-100 hover:scale-105'
+                                        className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                         onClick={() => {
                                             setFolderToUpdate({
                                                 folderUrl: folderUrl,
@@ -873,7 +873,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                             setIsCreateFolderModalOpen(true);
                                         }}
                                     >
-                                        <MdOutlineDriveFileRenameOutline className='text-sm' />
+                                        <FiEdit className='text-sm' />
                                     </div>
                                 </div>
                                 {folderSuppliersGrouped.length === 0 ? (
