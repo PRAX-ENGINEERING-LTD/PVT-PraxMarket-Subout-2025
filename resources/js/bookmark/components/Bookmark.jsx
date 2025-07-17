@@ -11,7 +11,8 @@ import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 
 
-const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds }) => {
+const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis }) => {
+    console.log(getAvailableCustomBookmarkApis,"getAvailableCustomBookmarkApis")
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
     const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
     const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
@@ -25,6 +26,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
     const [onDeleteCompany, setOnDeleteCompany] = useState({});
     const [isDeleting, setIsDeleting] = useState(false);
+    const [customFolder, setCustomFolder] = useState([]);
 
     // Filter states for bookmarked suppliers
     const [bookmarkedFilters, setBookmarkedFilters] = useState({
@@ -50,6 +52,17 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             },
             error: (xhr, status, error) => {
                 console.error('Error loading RecommendedSuppliers:', error);
+            },
+        });
+        $.ajax({
+            url: getAvailableCustomBookmarkApis,
+            method: 'GET',
+            success: (response) => {
+                console.log('getAvailableCustomBookmarkApis:', response);
+                setCustomFolder(response);
+            },
+            error: (xhr, status, error) => {
+                console.error('Error loading getAvailableCustomBookmarkApis:', error);
             },
         });
         fetchBookmarkedCompanies();
@@ -273,7 +286,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const onClickMove = (company, targetFolder) => {
         let moveUrl = '';
-        
+
         switch (targetFolder) {
             case 'BOOKMARKED':
                 moveUrl = company.moveToBookmarked;
@@ -295,11 +308,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 method: 'GET',
                 success: (response) => {
                     console.log(`Company moved to ${targetFolder} successfully:`, response);
-                    
+
                     // Refresh all sections after successful move
                     fetchBookmarkedCompanies(bookmarkedFilters);
                     fetchApprovedCompanies(approvedFilters);
-                    
+
                     // Re-fetch selected companies
                     $.ajax({
                         url: getSelectedSuppliers,
@@ -317,6 +330,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
     };
 
+
+
+    console.log('customFolder:', customFolder);
 
 
     return (

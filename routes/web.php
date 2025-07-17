@@ -23,7 +23,7 @@ Route::GET('/get-selected-suppliers', [BookmarkController::class, 'getSelectedSu
 Route::GET('/get-bookmark-ads', [BookmarkController::class, 'getBookmarkAds'])->name('bookmark.getBookmarkAds');
 Route::POST('/add-new-bookmark-folder', [BookmarkController::class, 'addNewBookmarkFolder'])->name('bookmark.addNewBookmarkFolder');
 Route::POST('/update-bookmark-folder', [BookmarkController::class, 'updateBookmarkFolder'])->name('bookmark.updateBookmarkFolder');
-Route::POST('/add-new-bookmark-folder', [BookmarkController::class, 'addNewBookmarkFolder'])->name('bookmark.addNewBookmarkFolder');
+// Route::POST('/add-new-bookmark-folder', [BookmarkController::class, 'addNewBookmarkFolder'])->name('bookmark.addNewBookmarkFolder');
 Route::POST('/delete-bookmark-folder', [BookmarkController::class, 'deleteBookmarkFolder'])->name('bookmark.deleteBookmarkFolder');
 Route::GET('/get-available-custom-bookmark-folder-apis', [BookmarkController::class, 'getAvailableCustomBookmarkApis'])->name('bookmark.getAvailableCustomBookmarkApis');
 Route::GET('/get-custom-bookmark-folder-details/{folderID}', [BookmarkController::class, 'getCustomBookmarkFolderDetails'])->name('bookmark.getCustomBookmarkFolderDetails');

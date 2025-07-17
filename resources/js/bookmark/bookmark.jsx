@@ -10,6 +10,7 @@ if (element) {
         getApprovedSuppliers: element.dataset.getApprovedSuppliers,
         getSelectedSuppliers: element.dataset.getSelectedSuppliers,
         getBookmarkAds: element.dataset.getBookmarkAds,
+        getAvailableCustomBookmarkApis: element.dataset.getCustomApis
     };
 
     const root = ReactDOM.createRoot(element);
