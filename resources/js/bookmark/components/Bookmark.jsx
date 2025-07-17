@@ -11,7 +11,7 @@ import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 
 
-const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis,addNewBookmarkFolder,deleteBookmarkFolder,updateBookmarkFolder }) => {
+const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis, addNewBookmarkFolder, deleteBookmarkFolder, updateBookmarkFolder }) => {
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
     const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
     const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
@@ -297,7 +297,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const onClickMove = (company, targetFolder) => {
         let moveUrl = '';
-        
+
         switch (targetFolder) {
             case 'BOOKMARKED':
                 moveUrl = company.moveToBookmarked;
@@ -319,12 +319,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 method: 'GET',
                 success: (response) => {
                     console.log(`Company moved to ${targetFolder} successfully:`, response);
-                    
+
                     // Refresh all sections after successful move
                     fetchBookmarkedCompanies(bookmarkedFilters);
                     fetchApprovedCompanies(approvedFilters);
                     fetchCustomFolders();
-                    
+
                     // Re-fetch selected companies
                     $.ajax({
                         url: getSelectedSuppliers,
@@ -344,7 +344,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const fetchCustomFolders = async () => {
         try {
-            const folderPromises = customFolder.map(url => 
+            const folderPromises = customFolder.map(url =>
                 new Promise((resolve, reject) => {
                     $.ajax({
                         url: url,
@@ -354,7 +354,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     });
                 })
             );
-            
+
             const folderPromisesWithReplacedUrls = customFolder.map(url => {
                 const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://127.0.0.1:8000');
                 console.log('Replaced URL:', replacedUrl);
@@ -383,7 +383,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const onCreateFolder = async (folderName) => {
         setIsCreatingFolder(true);
-        
+
         try {
             const response = await new Promise((resolve, reject) => {
                 $.ajax({
@@ -418,7 +418,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             });
 
             setIsCreateFolderModalOpen(false);
-            
+
         } catch (error) {
             console.error('Error creating folder:', error);
             alert('Failed to create folder. Please try again.');
@@ -429,9 +429,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const onUpdateFolder = async (folderName, folderData) => {
         const folderID = folderData.folderUrl.split('/').pop();
-        
+
         setIsUpdatingFolder(true);
-        
+
         try {
             const response = await new Promise((resolve, reject) => {
                 $.ajax({
@@ -469,7 +469,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             setIsCreateFolderModalOpen(false);
             setFolderToUpdate(null);
             setModalMode('create');
-            
+
         } catch (error) {
             console.error('Error updating folder:', error);
             alert('Failed to update folder. Please try again.');
@@ -489,9 +489,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const onDeleteFolder = async (folderUrl) => {
         // Extract folder ID from URL
         const folderID = folderUrl.split('/').pop();
-        
+
         setIsDeletingFolder(true);
-        
+
         try {
             const response = await new Promise((resolve, reject) => {
                 $.ajax({
@@ -527,7 +527,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
             // Close the confirmation modal
             setIsDeleteConfirmationModalOpen(false);
-            
+
         } catch (error) {
             console.error('Error deleting folder:', error);
             alert('Failed to delete folder. Please try again.');
@@ -835,12 +835,27 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     </div>
                 </div>
 
+                <div className='w-full flex justify-between items-center mt-5'>
+                    <h2 className='md:text-2xl text-xl font-bold'>Custom Groups</h2>
+                    <button
+                        className="bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer"
+                        onClick={() => {
+                            setModalMode('create');
+                            setFolderToUpdate(null);
+                            setIsCreateFolderModalOpen(true);
+                        }}
+                    >
+                        <LuPlus className="text-lg" />
+                        <p className="!mb-0 text-white">Create Folder</p>
+                    </button>
+                </div>
+
                 {/* Map the custom folders */}
                 {customFolderData.map((folder, folderIndex) => {
                     const folderSuppliers = folder.suppliers || [];
                     const folderSuppliersGrouped = chunkArray(folderSuppliers, 2);
                     const folderUrl = customFolder[folderIndex]; // Get the corresponding URL
-                    
+
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
                             <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
@@ -853,7 +868,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     </div>
                                 </div>
                                 <div className='group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 right-32 gap-2'>
-                                    <div 
+                                    <div
                                         className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
                                         onClick={() => {
                                             setFolderToDelete(folderUrl);
@@ -862,7 +877,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     >
                                         <AiOutlineDelete className='text-sm' />
                                     </div>
-                                    <div 
+                                    <div
                                         className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                         onClick={() => {
                                             setFolderToUpdate({
@@ -914,21 +929,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         </div>
                     );
                 })}
-
-
-                <div className='w-full mt-5 flex justify-center'>
-                    <button 
-                        className="mt-5 bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer" 
-                        onClick={() => {
-                            setModalMode('create');
-                            setFolderToUpdate(null);
-                            setIsCreateFolderModalOpen(true);
-                        }}
-                    >
-                        <LuPlus className="text-lg" />
-                        <p className="!mb-0 text-white">Create Folder</p>
-                    </button>
-                </div>
             </div>
             <CreateFolderModal
                 isOpen={isCreateFolderModalOpen}
@@ -945,7 +945,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
-                onClose={() => { 
+                onClose={() => {
                     setIsDeleteConfirmationModalOpen(false);
                     setFolderToDelete(null);
                 }}
