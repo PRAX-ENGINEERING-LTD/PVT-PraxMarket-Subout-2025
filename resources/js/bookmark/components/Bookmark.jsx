@@ -26,6 +26,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [onDeleteCompany, setOnDeleteCompany] = useState({});
     const [isDeleting, setIsDeleting] = useState(false);
     const [isCreatingFolder, setIsCreatingFolder] = useState(false);
+    const [isDeletingFolder, setIsDeletingFolder] = useState(false);
+    const [folderToDelete, setFolderToDelete] = useState(null);
     const [customFolder, setCustomFolder] = useState([]);
     const [customFolderData, setCustomFolderData] = useState([]);
 
@@ -418,6 +420,56 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
     };
 
+    const onDeleteFolder = async (folderUrl) => {
+        // Extract folder ID from URL
+        const folderID = folderUrl.split('/').pop();
+        
+        setIsDeletingFolder(true);
+        
+        try {
+            const response = await new Promise((resolve, reject) => {
+                $.ajax({
+                    url: deleteBookmarkFolder,
+                    method: 'POST',
+                    data: {
+                        folderID: folderID,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (response) => {
+                        console.log('Folder deleted successfully:', response);
+                        resolve(response);
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('Error deleting folder:', error);
+                        reject(error);
+                    }
+                });
+            });
+
+            // Refresh the custom folders list after deleting a folder
+            $.ajax({
+                url: getAvailableCustomBookmarkApis,
+                method: 'GET',
+                success: (response) => {
+                    console.log('Refreshed custom folders after delete:', response);
+                    setCustomFolder(response);
+                },
+                error: (xhr, status, error) => {
+                    console.error('Error refreshing custom folders:', error);
+                }
+            });
+
+            // Close the confirmation modal
+            setIsDeleteConfirmationModalOpen(false);
+            
+        } catch (error) {
+            console.error('Error deleting folder:', error);
+            alert('Failed to delete folder. Please try again.');
+        } finally {
+            setIsDeletingFolder(false);
+        }
+    };
+
 
     return (
         <>
@@ -721,6 +773,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 {customFolderData.map((folder, folderIndex) => {
                     const folderSuppliers = folder.suppliers || [];
                     const folderSuppliersGrouped = chunkArray(folderSuppliers, 2);
+                    const folderUrl = customFolder[folderIndex]; // Get the corresponding URL
                     
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
@@ -734,7 +787,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     </div>
                                 </div>
                                 <div className='group-hover/main:flex hidden absolute z-50 top-4 right-32 gap-2'>
-                                    <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-red-600 cursor-pointer hover:bg-gray-100 hover:scale-105'>
+                                    <div 
+                                        className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-red-600 cursor-pointer hover:bg-gray-100 hover:scale-105'
+                                        onClick={() => {
+                                            setFolderToDelete(folderUrl);
+                                            setIsDeleteConfirmationModalOpen(true);
+                                        }}
+                                    >
                                         <RiDeleteBin5Line className='text-sm' />
                                     </div>
                                     <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-blue-600 cursor-pointer hover:bg-gray-100 hover:scale-105'>
@@ -796,9 +855,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
-                onClose={() => { setIsDeleteConfirmationModalOpen(false) }}
-                onConfirm={() => { }}
+                onClose={() => { 
+                    setIsDeleteConfirmationModalOpen(false);
+                    setFolderToDelete(null);
+                }}
+                onConfirm={() => folderToDelete && onDeleteFolder(folderToDelete)}
                 subtitle="You're about to delete this folder. Are you sure you want to delete?"
+                isLoading={isDeletingFolder}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteCompanyConfirmationModalOpen}
