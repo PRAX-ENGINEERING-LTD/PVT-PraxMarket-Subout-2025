@@ -11,7 +11,7 @@ import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 
 
-const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis }) => {
+const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis,addNewBookmarkFolder,deleteBookmarkFolder }) => {
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
     const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
     const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
@@ -25,6 +25,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
     const [onDeleteCompany, setOnDeleteCompany] = useState({});
     const [isDeleting, setIsDeleting] = useState(false);
+    const [isCreatingFolder, setIsCreatingFolder] = useState(false);
     const [customFolder, setCustomFolder] = useState([]);
     const [customFolderData, setCustomFolderData] = useState([]);
 
@@ -370,6 +371,52 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             fetchCustomFolders();
         }
     }, [customFolder]);
+
+    const onCreateFolder = async (folderName) => {
+        setIsCreatingFolder(true);
+        
+        try {
+            const response = await new Promise((resolve, reject) => {
+                $.ajax({
+                    url: addNewBookmarkFolder,
+                    method: 'POST',
+                    data: {
+                        folderName: folderName,
+                        _token: $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: (response) => {
+                        console.log('Folder created successfully:', response);
+                        resolve(response);
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('Error creating folder:', error);
+                        reject(error);
+                    }
+                });
+            });
+
+            // Refresh the custom folders list after creating a new folder
+            $.ajax({
+                url: getAvailableCustomBookmarkApis,
+                method: 'GET',
+                success: (response) => {
+                    console.log('Refreshed custom folders:', response);
+                    setCustomFolder(response);
+                },
+                error: (xhr, status, error) => {
+                    console.error('Error refreshing custom folders:', error);
+                }
+            });
+
+            setIsCreateFolderModalOpen(false);
+            
+        } catch (error) {
+            console.error('Error creating folder:', error);
+            alert('Failed to create folder. Please try again.');
+        } finally {
+            setIsCreatingFolder(false);
+        }
+    };
 
 
     return (
@@ -744,6 +791,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <CreateFolderModal
                 isOpen={isCreateFolderModalOpen}
                 onClose={() => setIsCreateFolderModalOpen(false)}
+                onSubmit={onCreateFolder}
+                isLoading={isCreatingFolder}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
