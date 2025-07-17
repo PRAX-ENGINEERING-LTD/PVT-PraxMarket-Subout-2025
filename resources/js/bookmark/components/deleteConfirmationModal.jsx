@@ -1,7 +1,7 @@
 import React from "react";
 import { IoMdInformationCircleOutline } from "react-icons/io";
 
-const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, subtitle }) => {
+const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, subtitle, isLoading = false }) => {
   if (!isOpen) return null;
 
   return (
@@ -23,9 +23,15 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, subtitle }) => {
           </button>
           <button
             onClick={onConfirm}
-            className="px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer"
+            disabled={isLoading}
+            className={`px-4 py-2 bg-red-600 text-white rounded-lg hover:bg-red-700 cursor-pointer flex items-center gap-2 ${
+              isLoading ? 'opacity-50 cursor-not-allowed' : ''
+            }`}
           >
-            Confirm
+            {isLoading && (
+              <div className="animate-spin rounded-full h-4 w-4 border-2 border-white border-t-transparent"></div>
+            )}
+            {isLoading ? 'Deleting...' : 'Confirm'}
           </button>
         </div>
       </div>

@@ -24,6 +24,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isDeleteConfirmationModalOpen, setIsDeleteConfirmationModalOpen] = useState(false);
     const [isDeleteCompanyConfirmationModalOpen, setIsDeleteCompanyConfirmationModalOpen] = useState(false);
     const [onDeleteCompany, setOnDeleteCompany] = useState({});
+    const [isDeleting, setIsDeleting] = useState(false);
 
     // Filter states for bookmarked suppliers
     const [bookmarkedFilters, setBookmarkedFilters] = useState({
@@ -164,13 +165,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const onClickDeleteCompany = () => {
         if (onDeleteCompany && onDeleteCompany.deleteUrl) {
+            setIsDeleting(true);
             $.ajax({
                 url: onDeleteCompany.deleteUrl,
-                method: 'POST',
+                method: 'GET',
                 success: (response) => {
                     console.log('Company deleted successfully:', response);
                     setIsDeleteCompanyConfirmationModalOpen(false);
                     setOnDeleteCompany({});
+                    setIsDeleting(false);
 
                     // Refresh the data after successful deletion using filter-aware functions
                     fetchBookmarkedCompanies(bookmarkedFilters);
@@ -189,6 +192,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 error: (xhr, status, error) => {
                     console.error('Error deleting company:', error);
                     setIsDeleteCompanyConfirmationModalOpen(false);
+                    setIsDeleting(false);
                     // You might want to show an error message to the user here
                 },
             });
@@ -267,6 +271,52 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }));
     };
 
+    const onClickMove = (company, targetFolder) => {
+        let moveUrl = '';
+        
+        switch (targetFolder) {
+            case 'BOOKMARKED':
+                moveUrl = company.moveToBookmarked;
+                break;
+            case 'APPROVED':
+                moveUrl = company.moveToApproved;
+                break;
+            case 'SELECTED':
+                moveUrl = company.moveToSelected;
+                break;
+            default:
+                console.error('Invalid target folder:', targetFolder);
+                return;
+        }
+
+        if (moveUrl) {
+            $.ajax({
+                url: moveUrl,
+                method: 'GET',
+                success: (response) => {
+                    console.log(`Company moved to ${targetFolder} successfully:`, response);
+                    
+                    // Refresh all sections after successful move
+                    fetchBookmarkedCompanies(bookmarkedFilters);
+                    fetchApprovedCompanies(approvedFilters);
+                    
+                    // Re-fetch selected companies
+                    $.ajax({
+                        url: getSelectedSuppliers,
+                        method: 'GET',
+                        success: (response) => {
+                            setSelectedSuppliers(response.selectedCompanies);
+                            setSelectedSuppliersCount(response.selectedCompaniesCount);
+                        }
+                    });
+                },
+                error: (xhr, status, error) => {
+                    console.error(`Error moving company to ${targetFolder}:`, error);
+                },
+            });
+        }
+    };
+
 
 
     return (
@@ -300,6 +350,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         key={supplier.id}
                                         {...supplier}
                                         recommended
+                                        moveToBookmarked={supplier.moveToBookmarked}
+                                        moveToApproved={supplier.moveToApproved}
+                                        moveToSelected={supplier.moveToSelected}
+                                        onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
                                     />
                                 ))}
                             </Carousel>
@@ -410,6 +464,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 <CompanyCard
                                                     key={bookmark.id}
                                                     {...bookmark}
+                                                    moveToApproved={bookmark.moveToApproved}
+                                                    moveToSelected={bookmark.moveToSelected}
+                                                    onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
                                                     onDelete={() => {
                                                         setOnDeleteCompany(bookmark);
                                                         setIsDeleteCompanyConfirmationModalOpen(true)
@@ -497,6 +554,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 <CompanyCard
                                                     key={bookmark.id}
                                                     {...bookmark}
+                                                    moveToBookmarked={bookmark.moveToBookmarked}
+                                                    moveToSelected={bookmark.moveToSelected}
+                                                    onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
                                                     onDelete={() => {
                                                         setOnDeleteCompany(bookmark);
                                                         setIsDeleteCompanyConfirmationModalOpen(true)
@@ -550,6 +610,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         <CompanyCard
                                             key={bookmark.id}
                                             {...bookmark}
+                                            moveToBookmarked={bookmark.moveToBookmarked}
+                                            moveToApproved={bookmark.moveToApproved}
+                                            onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
                                             onDelete={() => {
                                                 setOnDeleteCompany(bookmark);
                                                 setIsDeleteCompanyConfirmationModalOpen(true)
@@ -583,6 +646,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 onClose={() => { setIsDeleteCompanyConfirmationModalOpen(false) }}
                 onConfirm={onClickDeleteCompany}
                 subtitle="This company will also be removed from all customised group."
+                isLoading={isDeleting}
             />
         </>
     );
