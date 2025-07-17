@@ -170,6 +170,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         return chunked;
     };
 
+    const formatCountWithLeadingZero = (count) => {
+        return count < 10 ? `0${count}` : count.toString();
+    };
+
 
     const bookmarkgrouped = chunkArray(bookmarkSuppliers, 2);
     const approvedgrouped = chunkArray(approvedSuppliers, 2);
@@ -652,7 +656,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
                                 </span>
-                                <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{bookmarkSuppliersCount}</div>
+                                <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount)}</div>
                             </div>
                             {bookmarkgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
@@ -742,7 +746,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
                                 </span>
-                                <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{approvedSuppliersCount}</div>
+                                <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount)}</div>
                             </div>
                             {approvedgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
@@ -791,7 +795,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
                             </span>
-                            <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{selectedSuppliersCount}</div>
+                            <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount)}</div>
                         </div>
                         {selectedSuppliers.length === 0 ? (
                             <EmptyItemsMessage />
@@ -844,8 +848,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <span className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         {folder.folderName}
                                     </span>
-                                    <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
-                                        {folder.totalSupplierCount}
+                                    <div className='bg-[#f7efff] px-3 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
+                                        {formatCountWithLeadingZero(folder.totalSupplierCount)}
                                     </div>
                                 </div>
                                 <div className='group-hover/main:flex hidden absolute z-50 top-4 right-32 gap-2'>
