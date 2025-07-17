@@ -12,7 +12,6 @@ import DeleteConfirmationModal from './deleteConfirmationModal';
 
 
 const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis }) => {
-    console.log(getAvailableCustomBookmarkApis,"getAvailableCustomBookmarkApis")
     const [recommendedSuppliers, setRecommendedSuppliers] = useState([]);
     const [bookmarkSuppliers, setBookmarkSuppliers] = useState([]);
     const [bookmarkSuppliersCount, setBookmarkSuppliersCount] = useState(0);
@@ -27,6 +26,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [onDeleteCompany, setOnDeleteCompany] = useState({});
     const [isDeleting, setIsDeleting] = useState(false);
     const [customFolder, setCustomFolder] = useState([]);
+    const [customFolderData, setCustomFolderData] = useState([]);
 
     // Filter states for bookmarked suppliers
     const [bookmarkedFilters, setBookmarkedFilters] = useState({
@@ -191,6 +191,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     // Refresh the data after successful deletion using filter-aware functions
                     fetchBookmarkedCompanies(bookmarkedFilters);
                     fetchApprovedCompanies(approvedFilters);
+                    fetchCustomFolders();
 
                     // Re-fetch selected companies
                     $.ajax({
@@ -286,7 +287,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const onClickMove = (company, targetFolder) => {
         let moveUrl = '';
-
+        
         switch (targetFolder) {
             case 'BOOKMARKED':
                 moveUrl = company.moveToBookmarked;
@@ -308,11 +309,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 method: 'GET',
                 success: (response) => {
                     console.log(`Company moved to ${targetFolder} successfully:`, response);
-
+                    
                     // Refresh all sections after successful move
                     fetchBookmarkedCompanies(bookmarkedFilters);
                     fetchApprovedCompanies(approvedFilters);
-
+                    fetchCustomFolders();
+                    
                     // Re-fetch selected companies
                     $.ajax({
                         url: getSelectedSuppliers,
@@ -330,9 +332,44 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
     };
 
+    const fetchCustomFolders = async () => {
+        try {
+            const folderPromises = customFolder.map(url => 
+                new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: url,
+                        method: 'GET',
+                        success: (response) => resolve(response),
+                        error: (xhr, status, error) => reject(error)
+                    });
+                })
+            );
+            
+            const folderPromisesWithReplacedUrls = customFolder.map(url => {
+                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://127.0.0.1:8000');
+                console.log('Replaced URL:', replacedUrl);
+                return new Promise((resolve, reject) => {
+                    $.ajax({
+                        url: replacedUrl,
+                        method: 'GET',
+                        success: (response) => resolve(response),
+                        error: (xhr, status, error) => reject(error)
+                    });
+                });
+            });
+            const folderData = await Promise.all(folderPromisesWithReplacedUrls);
+            setCustomFolderData(folderData);
+        } catch (error) {
+            console.error('Error fetching custom folders:', error);
+        }
+    };
 
-
-    console.log('customFolder:', customFolder);
+    // Effect to fetch custom folder data when customFolder URLs change
+    useEffect(() => {
+        if (customFolder.length > 0) {
+            fetchCustomFolders();
+        }
+    }, [customFolder]);
 
 
     return (
@@ -595,14 +632,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             </span>
                             <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{selectedSuppliersCount}</div>
                         </div>
-                        <div className='group-hover/main:flex hidden absolute z-50 top-4 right-32 gap-2'>
-                            <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-red-600 cursor-pointer hover:bg-gray-100 hover:scale-105' onClick={() => setIsDeleteConfirmationModalOpen(true)}>
-                                <RiDeleteBin5Line className='text-sm' />
-                            </div>
-                            <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-blue-600 cursor-pointer hover:bg-gray-100 hover:scale-105'>
-                                <MdOutlineDriveFileRenameOutline className='text-sm' />
-                            </div>
-                        </div>
                         {selectedSuppliers.length === 0 ? (
                             <EmptyItemsMessage />
                         ) : (
@@ -640,6 +669,71 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         )}
                     </div>
                 </div>
+
+                {/* Map the custom folders */}
+                {customFolderData.map((folder, folderIndex) => {
+                    const folderSuppliers = folder.suppliers || [];
+                    const folderSuppliersGrouped = chunkArray(folderSuppliers, 2);
+                    
+                    return (
+                        <div key={folderIndex} className='w-full mt-5'>
+                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                                <div className="flex gap-5">
+                                    <span className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                        {folder.folderName}
+                                    </span>
+                                    <div className='bg-white px-3 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
+                                        {folder.totalSupplierCount}
+                                    </div>
+                                </div>
+                                <div className='group-hover/main:flex hidden absolute z-50 top-4 right-32 gap-2'>
+                                    <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-red-600 cursor-pointer hover:bg-gray-100 hover:scale-105'>
+                                        <RiDeleteBin5Line className='text-sm' />
+                                    </div>
+                                    <div className='border border-gray-300 bg-white rounded-xl px-2 py-2 text-gray-500 hover:text-blue-600 cursor-pointer hover:bg-gray-100 hover:scale-105'>
+                                        <MdOutlineDriveFileRenameOutline className='text-sm' />
+                                    </div>
+                                </div>
+                                {folderSuppliersGrouped.length === 0 ? (
+                                    <EmptyItemsMessage />
+                                ) : (
+                                    <Carousel
+                                        responsive={responsive2}
+                                        arrows={false}
+                                        customButtonGroup={<CustomButtonGroupAsArrows />}
+                                        infinite={folderSuppliersGrouped.length > 1}
+                                        autoPlaySpeed={3000}
+                                        keyBoardControl
+                                        customTransition="transform 700ms ease-in-out"
+                                        transitionDuration={500}
+                                        containerClass="relative pt-10 -mt-4"
+                                        removeArrowOnDeviceType={[]}
+                                        showDots={false}
+                                        itemClass="px-2"
+                                        swipeable
+                                    >
+                                        {folderSuppliersGrouped.map((pair, index) => (
+                                            <div key={index} className="flex flex-col gap-4">
+                                                {pair.map((supplier) => (
+                                                    <CompanyCard
+                                                        key={supplier.id}
+                                                        {...supplier}
+                                                        onDelete={() => {
+                                                            setOnDeleteCompany(supplier);
+                                                            setIsDeleteCompanyConfirmationModalOpen(true)
+                                                        }}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </Carousel>
+                                )}
+                            </div>
+                        </div>
+                    );
+                })}
+
+
                 <div className='w-full mt-5 flex justify-center'>
                     <button className="mt-5 bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer" onClick={() => setIsCreateFolderModalOpen(true)}>
                         <LuPlus className="text-lg" />

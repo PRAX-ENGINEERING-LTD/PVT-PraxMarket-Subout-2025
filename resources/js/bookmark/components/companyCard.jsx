@@ -3,7 +3,7 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuArrowLeftRight } from "react-icons/lu";
 
 
-const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked,moveToApproved,moveToSelected,onClickMove }) => {
+const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked, moveToApproved, moveToSelected, onClickMove }) => {
     return (
         <div
             className="group border border-gray-200 rounded-xl shadow-sm bg-white transform transition duration-300 hover:-translate-y-1 cursor-pointer"
@@ -25,16 +25,18 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                     ) : (
                         <div></div>
                     )}
-                    <div className='relative group/sub flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center cursor-pointer'>
-                        <LuArrowLeftRight className='text-base' />
+                    {onClickMove && (
+                        <div className='relative group/sub flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center cursor-pointer'>
+                            <LuArrowLeftRight className='text-base' />
 
-                        {/* Dropdown text, initially hidden */}
-                        <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-9999'>
-                            {moveToBookmarked && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('BOOKMARKED')}>Move To Bookmarked</span>)}
-                            {moveToApproved && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('APPROVED')}>Move To Approved</span>)}
-                            {moveToSelected && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('SELECTED')}>Move To Selected</span>)}
+                            {/* Dropdown text, initially hidden */}
+                            <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-9999'>
+                                {moveToBookmarked && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('BOOKMARKED')}>Move To Bookmarked</span>)}
+                                {moveToApproved && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('APPROVED')}>Move To Approved</span>)}
+                                {moveToSelected && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('SELECTED')}>Move To Selected</span>)}
+                            </div>
                         </div>
-                    </div>
+                    )}
 
                 </div>
             </div>
