@@ -59,6 +59,10 @@
   -ms-overflow-style: none;
   scrollbar-width: none;
 }
+
+.gradient-bg {
+  background-image: linear-gradient(to bottom right, #f5f3ff, #7c3aed);
+}
  
   
   
