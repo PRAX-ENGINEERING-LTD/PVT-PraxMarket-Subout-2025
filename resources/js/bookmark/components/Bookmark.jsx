@@ -36,6 +36,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [customFolderData, setCustomFolderData] = useState([]);
     const [isMoveGroupModalOpen, setIsMoveGroupModalOpen] = useState(false);
     const [groupTransferDetails, setGroupTransferDetails] = useState([]);
+    const [isMoveTransferLoading, setIsMoveTransferLoading] = useState(false);
 
 
     // Filter states for bookmarked suppliers
@@ -388,6 +389,45 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     console.error(`Error moving company to ${targetFolder}:`, error);
                 },
             });
+        }
+    };
+
+    const onMoveToCustomFolder = (selectedFolderIndex) => {
+        if (groupTransferDetails && groupTransferDetails[selectedFolderIndex]) {
+            const selectedFolder = groupTransferDetails[selectedFolderIndex];
+            const moveUrl = selectedFolder.moveUrl;
+
+            if (moveUrl) {
+                $.ajax({
+                    url: moveUrl,
+                    method: 'GET',
+                    success: (response) => {
+                        console.log('Company moved to custom folder successfully:', response);
+
+                        // Close the modal
+                        setIsMoveGroupModalOpen(false);
+
+                        // Refresh all sections after successful move
+                        fetchBookmarkedCompanies(bookmarkedFilters);
+                        fetchApprovedCompanies(approvedFilters);
+                        fetchCustomFolders();
+
+                        // Re-fetch selected companies
+                        $.ajax({
+                            url: getSelectedSuppliers,
+                            method: 'GET',
+                            success: (response) => {
+                                setSelectedSuppliers(response.selectedCompanies);
+                                setSelectedSuppliersCount(response.selectedCompaniesCount);
+                            }
+                        });
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('Error moving company to custom folder:', error);
+                        // You might want to show an error message to the user here
+                    },
+                });
+            }
         }
     };
 
@@ -1002,6 +1042,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 isOpen={isMoveGroupModalOpen}
                 groupTransferDetails={groupTransferDetails}
                 onClose={() => setIsMoveGroupModalOpen(false)}
+                onSubmit={onMoveToCustomFolder}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
