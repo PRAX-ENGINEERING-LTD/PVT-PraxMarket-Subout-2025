@@ -960,7 +960,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
-                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
+                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
                                         {folder?.folderName || 'Unnamed Folder'}
