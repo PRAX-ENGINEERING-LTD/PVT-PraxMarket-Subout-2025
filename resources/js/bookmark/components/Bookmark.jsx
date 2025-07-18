@@ -646,7 +646,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     Recommended Suppliers
                                 </span>
                             </div>
-                            {recommendedSuppliers.length !== 0 ? (
+                            {recommendedSuppliers.length === 0 ? (
                                 <EmptyItemsMessage />
                             ) : (
                                 <Carousel

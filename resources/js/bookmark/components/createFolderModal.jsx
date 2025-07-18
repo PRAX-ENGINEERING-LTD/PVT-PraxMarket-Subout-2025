@@ -91,7 +91,7 @@ const CreateFolderModal = ({
               type="button"
               onClick={handleClose}
               disabled={isLoading}
-              className={`px-4 py-2 border border-purple-500 text-purple-500 rounded-lg hover:bg-purple-50 cursor-pointer ${
+              className={`px-4 py-2 border-2 border-purple-500 hover:bg-[#f7efff] text-purple-500 rounded-lg cursor-pointer ${
                 isLoading ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >

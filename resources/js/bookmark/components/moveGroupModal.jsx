@@ -96,7 +96,7 @@ const MoveGroupModal = ({
           <button
             type="button"
             onClick={onClose}
-            className="px-4 py-2 border border-purple-500 text-purple-500 rounded-md hover:bg-purple-50 transition-colors"
+            className="px-4 py-2 border-2 border-purple-500 hover:bg-[#f7efff] text-purple-500 rounded-md transition-colors"
           >
             Cancel
           </button>
