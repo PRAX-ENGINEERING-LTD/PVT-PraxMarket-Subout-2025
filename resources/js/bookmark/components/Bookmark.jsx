@@ -9,6 +9,7 @@ import { FiEdit } from "react-icons/fi";
 import { LuPlus } from "react-icons/lu";
 import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
+import MoveGroupModal from './moveGroupModal';
 
 
 const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis, addNewBookmarkFolder, deleteBookmarkFolder, updateBookmarkFolder }) => {
@@ -33,6 +34,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [modalMode, setModalMode] = useState('create'); // 'create' or 'update'
     const [customFolder, setCustomFolder] = useState([]);
     const [customFolderData, setCustomFolderData] = useState([]);
+    const [isMoveGroupModalOpen, setIsMoveGroupModalOpen] = useState(false);
+    const [groupTransferDetails, setGroupTransferDetails] = useState([]);
+
 
     // Filter states for bookmarked suppliers
     const [bookmarkedFilters, setBookmarkedFilters] = useState({
@@ -245,6 +249,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 console.log('BookmarkSuppliers:', response);
                 setBookmarkSuppliers(response.bookmarkedCompanies);
                 setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
+                setGroupTransferDetails(response.groupTransferDetails);
             },
             error: (xhr, status, error) => {
                 console.error('Error loading BookmarkSuppliers:', error);
@@ -308,6 +313,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             case 'SELECTED':
                 moveUrl = company.moveToSelected;
                 break;
+            case 'GROUP':
+                setGroupTransferDetails(company.groupTransferDetails || []);
+                setIsMoveGroupModalOpen(true);
+                return;
             default:
                 console.error('Invalid target folder:', targetFolder);
                 return;
@@ -942,6 +951,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 mode={modalMode}
                 initialFolderName={folderToUpdate?.folderName || ''}
                 folderData={folderToUpdate}
+            />
+            <MoveGroupModal
+                isOpen={isMoveGroupModalOpen}
+                groupTransferDetails={groupTransferDetails}
+                onClose={() => setIsMoveGroupModalOpen(false)}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
