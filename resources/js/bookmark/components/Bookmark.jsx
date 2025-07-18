@@ -895,7 +895,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
-                                        responsive={responsive2}
+                                        responsive={responsive}
                                         arrows={false}
                                         customButtonGroup={<CustomButtonGroupAsArrows />}
                                         infinite={folderSuppliersGrouped.length > 1}
