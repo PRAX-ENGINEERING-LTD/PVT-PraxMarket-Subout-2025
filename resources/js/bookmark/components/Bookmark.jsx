@@ -209,7 +209,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
 
     const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers);
-    const approvedgrouped = chunkArray(approvedSuppliers, 2);
+    const approvedgrouped = groupArrayInTwoRows(approvedSuppliers);
 
     const EmptyItemsMessage = () => (
         <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 py-10 h-[400px]">
@@ -793,7 +793,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     responsive={responsive2}
                                     arrows={false}
                                     customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    infinite
+                                    // infinite
                                     autoPlaySpeed={3000}
                                     keyBoardControl
                                     customTransition="transform 700ms ease-in-out"
