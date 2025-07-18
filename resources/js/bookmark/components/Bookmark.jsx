@@ -172,7 +172,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         if (!array || !Array.isArray(array)) {
             return [];
         }
-        
+
         const chunked = [];
         for (let i = 0; i < array.length; i += size) {
             chunked.push(array.slice(i, i + size));
@@ -186,31 +186,31 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         if (!array || !Array.isArray(array)) {
             return [];
         }
-        
+
         const grouped = [];
         const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
-        
+
         for (let i = 0; i < array.length; i += itemsPerColumn) {
             const columnItems = array.slice(i, i + itemsPerColumn);
-            
+
             // Split into top row (first 3) and bottom row (next 3)
             const topRow = columnItems.slice(0, 3);
             const bottomRow = columnItems.slice(3, 6);
-            
+
             // Create pairs for each row position
             const pairs = [];
             const maxLength = Math.max(topRow.length, bottomRow.length);
-            
+
             for (let j = 0; j < maxLength; j++) {
                 const pair = [];
                 if (topRow[j]) pair.push(topRow[j]);
                 if (bottomRow[j]) pair.push(bottomRow[j]);
                 if (pair.length > 0) pairs.push(pair);
             }
-            
+
             grouped.push(...pairs);
         }
-        
+
         return grouped;
     };
 
@@ -225,7 +225,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
     const EmptyItemsMessage = () => (
-        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 py-10 h-[400px]">
+        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-full">
             <FaRegHandshake className='text-black text-2xl' />
             <h3 className='text-black text-lg font-bold'>No Suppliers Added Yet</h3>
             <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
@@ -441,7 +441,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setCustomFolderData([]);
                 return;
             }
-            
+
             const folderPromises = customFolder.map(url =>
                 new Promise((resolve, reject) => {
                     $.ajax({
@@ -640,39 +640,43 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="md:px-5 px-2 py-5 w-full">
                 <div className="grid grid-cols-12 gap-4">
                     <div className="md:col-span-9 col-span-12">
-                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4">
+                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 h-[250px]">
                             <div className="flex sm:mb-0 mb-6">
                                 <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Recommended Suppliers
                                 </span>
                             </div>
-                            <Carousel
-                                responsive={responsive}
-                                arrows={false}
-                                customButtonGroup={<CustomButtonGroupAsArrows />}
-                                infinite
-                                autoPlaySpeed={3000}
-                                keyBoardControl
-                                customTransition="transform 700ms ease-in-out"
-                                transitionDuration={500}
-                                containerClass="relative pt-10 -mt-4"
-                                removeArrowOnDeviceType={[]}
-                                showDots={false}
-                                itemClass="px-2"
-                                swipeable
-                            >
-                                {(recommendedSuppliers || []).map((supplier) => (
-                                    <CompanyCard
-                                        key={supplier.id}
-                                        {...supplier}
-                                        recommended
-                                        moveToBookmarked={supplier.moveToBookmarked}
-                                        moveToApproved={supplier.moveToApproved}
-                                        moveToSelected={supplier.moveToSelected}
-                                        onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
-                                    />
-                                ))}
-                            </Carousel>
+                            {recommendedSuppliers.length !== 0 ? (
+                                <EmptyItemsMessage />
+                            ) : (
+                                <Carousel
+                                    responsive={responsive}
+                                    arrows={false}
+                                    customButtonGroup={<CustomButtonGroupAsArrows />}
+                                    infinite
+                                    autoPlaySpeed={3000}
+                                    keyBoardControl
+                                    customTransition="transform 700ms ease-in-out"
+                                    transitionDuration={500}
+                                    containerClass="relative pt-10 -mt-4"
+                                    removeArrowOnDeviceType={[]}
+                                    showDots={false}
+                                    itemClass="px-2"
+                                    swipeable
+                                >
+                                    {(recommendedSuppliers || []).map((supplier) => (
+                                        <CompanyCard
+                                            key={supplier.id}
+                                            {...supplier}
+                                            recommended
+                                            moveToBookmarked={supplier.moveToBookmarked}
+                                            moveToApproved={supplier.moveToApproved}
+                                            moveToSelected={supplier.moveToSelected}
+                                            onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
+                                        />
+                                    ))}
+                                </Carousel>
+                            )}
                         </div>
                     </div>
 
@@ -749,7 +753,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg">
+                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg h-[458px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
@@ -839,7 +843,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                        <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 h-[458px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
@@ -888,7 +892,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </div>
 
                 <div className='w-full mt-5'>
-                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 h-[271px]">
                         <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
@@ -956,7 +960,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
-                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 h-[271px]">
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         {folder?.folderName || 'Unnamed Folder'}
