@@ -10,6 +10,7 @@ const CreateFolderModal = ({
   folderData = null // Contains folder info for update mode
 }) => {
   const [folderName, setFolderName] = useState("");
+  const MAX_CHARACTERS = 50;
 
   useEffect(() => {
     if (isOpen) {
@@ -23,9 +24,20 @@ const CreateFolderModal = ({
 
   if (!isOpen) return null;
 
+  const handleInputChange = (e) => {
+    const value = e.target.value;
+    // Only allow input if it's within the character limit
+    if (value.length <= MAX_CHARACTERS) {
+      setFolderName(value);
+    }
+  };
+
+  const isOverLimit = folderName.length > MAX_CHARACTERS;
+  const remainingChars = MAX_CHARACTERS - folderName.length;
+
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (folderName.trim()) {
+    if (folderName.trim() && !isOverLimit) {
       onSubmit(folderName.trim(), folderData);
     }
   };
@@ -80,10 +92,36 @@ const CreateFolderModal = ({
             type="text"
             placeholder="3D Printing"
             value={folderName}
-            onChange={(e) => setFolderName(e.target.value)}
+            onChange={handleInputChange}
             disabled={isLoading}
-            className="w-full px-3 py-2 border border-gray-300 rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:ring-purple-500 focus:border-transparent"
+            maxLength={MAX_CHARACTERS}
+            className={`w-full px-3 py-2 border rounded-lg bg-white text-gray-900 focus:outline-none focus:ring-2 focus:border-transparent ${
+              isOverLimit 
+                ? 'border-red-500 focus:ring-red-500' 
+                : 'border-gray-300 focus:ring-purple-500'
+            }`}
           />
+
+          {/* Character count and error message */}
+          <div className="mt-2 flex justify-between items-center">
+            <div className="text-xs">
+              {isOverLimit ? (
+                <span className="text-red-500 font-medium">
+                  Character limit exceeded! Maximum {MAX_CHARACTERS} characters allowed.
+                </span>
+              ) : (
+                <span className={remainingChars <= 10 ? 'text-orange-500' : 'text-gray-500'}>
+                  {remainingChars} characters remaining
+                </span>
+              )}
+            </div>
+            <span className={`text-xs font-medium ${
+              isOverLimit ? 'text-red-500' : 
+              remainingChars <= 10 ? 'text-orange-500' : 'text-gray-500'
+            }`}>
+              {folderName.length}/{MAX_CHARACTERS}
+            </span>
+          </div>
 
           {/* Buttons */}
           <div className="mt-6 flex justify-start space-x-4">
@@ -99,9 +137,9 @@ const CreateFolderModal = ({
             </button>
             <button 
               type="submit"
-              disabled={isLoading || !folderName.trim()}
+              disabled={isLoading || !folderName.trim() || isOverLimit}
               className={`px-4 py-2 bg-[#5B21B6] text-white rounded-lg hover:bg-[#5a21b6da] cursor-pointer flex items-center gap-2 ${
-                isLoading || !folderName.trim() ? 'opacity-50 cursor-not-allowed' : ''
+                isLoading || !folderName.trim() || isOverLimit ? 'opacity-50 cursor-not-allowed' : ''
               }`}
             >
               {isLoading && (
