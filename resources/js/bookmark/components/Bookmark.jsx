@@ -174,12 +174,41 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         return chunked;
     };
 
+    // New function for 2-row grouping pattern: 1,2,3 / 4,5,6 | 7,8,9 / 10,11,12 | etc.
+    const groupArrayInTwoRows = (array) => {
+        const grouped = [];
+        const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
+        
+        for (let i = 0; i < array.length; i += itemsPerColumn) {
+            const columnItems = array.slice(i, i + itemsPerColumn);
+            
+            // Split into top row (first 3) and bottom row (next 3)
+            const topRow = columnItems.slice(0, 3);
+            const bottomRow = columnItems.slice(3, 6);
+            
+            // Create pairs for each row position
+            const pairs = [];
+            const maxLength = Math.max(topRow.length, bottomRow.length);
+            
+            for (let j = 0; j < maxLength; j++) {
+                const pair = [];
+                if (topRow[j]) pair.push(topRow[j]);
+                if (bottomRow[j]) pair.push(bottomRow[j]);
+                if (pair.length > 0) pairs.push(pair);
+            }
+            
+            grouped.push(...pairs);
+        }
+        
+        return grouped;
+    };
+
     const formatCountWithLeadingZero = (count) => {
         return count < 10 ? `0${count}` : count.toString();
     };
 
 
-    const bookmarkgrouped = chunkArray(bookmarkSuppliers, 2);
+    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers);
     const approvedgrouped = chunkArray(approvedSuppliers, 2);
 
     const EmptyItemsMessage = () => (
@@ -674,7 +703,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     responsive={responsive2}
                                     arrows={false}
                                     customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    infinite
+                                    // infinite
                                     autoPlaySpeed={3000}
                                     keyBoardControl
                                     customTransition="transform 700ms ease-in-out"
