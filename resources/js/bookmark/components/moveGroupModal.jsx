@@ -80,7 +80,7 @@ const MoveGroupModal = ({
                 >
                   <div className="flex items-center gap-2">
                     <FaRegFolder className="text-gray-600 text-base" />
-                    <span className="text-sm font-medium text-gray-800">{group?.folderName || 'Unnamed Folder'}</span>
+                    <span className="text-sm font-medium text-gray-800 max-w-[200px] truncate">{group?.folderName || 'Unnamed Folder'}</span>
                   </div>
                   {isSelected && (
                     <FaRegCircleCheck className="text-green-500 text-lg" />
