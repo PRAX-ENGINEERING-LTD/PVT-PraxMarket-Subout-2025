@@ -167,19 +167,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         );
     };
 
-    const chunkArray = (array, size) => {
-        // Add null check to prevent undefined errors
-        if (!array || !Array.isArray(array)) {
-            return [];
-        }
-
-        const chunked = [];
-        for (let i = 0; i < array.length; i += size) {
-            chunked.push(array.slice(i, i + size));
-        }
-        return chunked;
-    };
-
     // New function for 2-row grouping pattern: 1,2,3 / 4,5,6 | 7,8,9 / 10,11,12 | etc.
     const groupArrayInTwoRows = (array) => {
         // Add null check to prevent undefined errors
@@ -955,7 +942,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 {/* Map the custom folders */}
                 {(customFolderData || []).map((folder, folderIndex) => {
                     const folderSuppliers = folder?.suppliers || [];
-                    const folderSuppliersGrouped = chunkArray(folderSuppliers, 2);
                     const folderUrl = (customFolder && customFolder[folderIndex]) || ''; // Get the corresponding URL with safety check
 
                     return (
@@ -969,7 +955,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
                                     </div>
                                 </div>
-                                <div className='group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 right-32 gap-2'>
+                                <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
                                     <div
                                         className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                         onClick={() => {
@@ -993,14 +979,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         <AiOutlineDelete className='text-sm' />
                                     </div>
                                 </div>
-                                {folderSuppliersGrouped.length === 0 ? (
+                                {folderSuppliers.length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
                                         responsive={responsive}
                                         arrows={false}
                                         customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        infinite={folderSuppliersGrouped.length > 1}
+                                        infinite
                                         autoPlaySpeed={3000}
                                         keyBoardControl
                                         customTransition="transform 700ms ease-in-out"
@@ -1011,18 +997,17 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         itemClass="px-2"
                                         swipeable
                                     >
-                                        {folderSuppliersGrouped.map((pair, index) => (
+                                        {(folderSuppliers || []).map((supplier, index) => (
                                             <div key={index} className="flex flex-col gap-4">
-                                                {pair.map((supplier) => (
-                                                    <CompanyCard
-                                                        key={supplier.id}
-                                                        {...supplier}
-                                                        onDelete={() => {
-                                                            setOnDeleteCompany(supplier);
-                                                            setIsDeleteCompanyConfirmationModalOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
+
+                                                <CompanyCard
+                                                    key={supplier.id}
+                                                    {...supplier}
+                                                    onDelete={() => {
+                                                        setOnDeleteCompany(supplier);
+                                                        setIsDeleteCompanyConfirmationModalOpen(true)
+                                                    }}
+                                                />
                                             </div>
                                         ))}
                                     </Carousel>
