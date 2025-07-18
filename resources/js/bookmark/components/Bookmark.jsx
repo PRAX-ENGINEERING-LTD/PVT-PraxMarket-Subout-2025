@@ -225,7 +225,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
     const EmptyItemsMessage = () => (
-        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-full">
+        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
             <FaRegHandshake className='text-black text-2xl' />
             <h3 className='text-black text-lg font-bold'>No Suppliers Added Yet</h3>
             <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
@@ -1005,7 +1005,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         keyBoardControl
                                         customTransition="transform 700ms ease-in-out"
                                         transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-4"
+                                        containerClass="relative pt-10 -mt-8"
                                         removeArrowOnDeviceType={[]}
                                         showDots={false}
                                         itemClass="px-2"
