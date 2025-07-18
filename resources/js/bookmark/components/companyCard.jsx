@@ -3,7 +3,7 @@ import { RiDeleteBin5Line } from "react-icons/ri";
 import { LuArrowLeftRight } from "react-icons/lu";
 
 
-const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked, moveToApproved, moveToSelected, onClickMove, groupTransferDetails = [] }) => {
+const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked, moveToApproved, moveToSelected, onClickMove, customBookMarkFolder = [] }) => {
     return (
         <div
             className="group border border-gray-200 rounded-xl shadow-sm bg-white transform transition duration-300 hover:-translate-y-1 cursor-pointer"
@@ -34,7 +34,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                                 {moveToBookmarked && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('BOOKMARKED')}>Move To Bookmarked</span>)}
                                 {moveToApproved && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('APPROVED')}>Move To Approved</span>)}
                                 {moveToSelected && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('SELECTED')}>Move To Selected</span>)}
-                                {(Array.isArray(groupTransferDetails) && groupTransferDetails.length > 0) && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('GROUP')}>Move To Group</span>)}
+                                {(Array.isArray(customBookMarkFolder) && customBookMarkFolder.length > 0) && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('GROUP')}>Move To Group</span>)}
                             </div>
                         </div>
                     )}

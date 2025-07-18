@@ -290,7 +290,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 console.log('BookmarkSuppliers:', response);
                 setBookmarkSuppliers(response.bookmarkedCompanies);
                 setBookmarkSuppliersCount(response.bookmarkedCompaniesCount);
-                setGroupTransferDetails(response.groupTransferDetails);
             },
             error: (xhr, status, error) => {
                 console.error('Error loading BookmarkSuppliers:', error);
@@ -355,7 +354,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 moveUrl = company.moveToSelected;
                 break;
             case 'GROUP':
-                setGroupTransferDetails(company.groupTransferDetails || []);
+                setGroupTransferDetails(company.customBookMarkFolder || []);
                 setIsMoveGroupModalOpen(true);
                 return;
             default:

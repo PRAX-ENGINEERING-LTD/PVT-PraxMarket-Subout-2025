@@ -1,4 +1,6 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
+import { FaRegFolder } from "react-icons/fa";
+import { FaRegCircleCheck } from "react-icons/fa6";
 
 const MoveGroupModal = ({
   isOpen,
@@ -7,32 +9,29 @@ const MoveGroupModal = ({
   onSubmit,
   isLoading = false,
 }) => {
-
+  const [selectedFolder, setSelectedFolder] = useState(null);
 
   if (!isOpen) return null;
 
   const handleSubmit = (e) => {
-
+    e.preventDefault();
+    if (onSubmit && selectedFolder !== null) {
+      onSubmit(selectedFolder); // Pass the selected folder
+    }
   };
-
-  const handleClose = () => {
-
-    onClose();
-  };
-
 
   return (
-    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70 bg-opacity-50">
-      <div className="bg-white rounded-2xl shadow-lg w-96 p-6 relative">
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/70">
+      <div className="bg-white rounded-2xl shadow-lg w-96 max-h-[80vh] p-6 relative">
         {/* Close Button */}
         <button
-          onClick={handleClose}
+          onClick={onClose}
           disabled={isLoading}
-          className="absolute top-4 right-4 text-gray-500 hover:text-black"
+          className="absolute top-5 right-5 text-black bg-gray-200 rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-5 w-5"
+            className="h-4 w-4"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"
@@ -47,15 +46,54 @@ const MoveGroupModal = ({
         </button>
 
         {/* Header */}
-        <h2 className="text-xl font-semibold text-gray-800 mb-4"></h2>
+        <h2 className="text-lg font-semibold text-gray-800 mb-4">Select Folder</h2>
         <hr className="mb-4" />
 
-        {groupTransferDetails.map((group, index) => (
-          <div key={index} className="mb-4">
-            <h3 className="text-lg font-semibold text-gray-800 mb-2">{group.name}</h3>
-          </div>
-        ))}
+        {/* Folder List */}
+        <h2 className="text-sm font-medium text-gray-800 mb-1">Folders</h2>
+        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+          {groupTransferDetails.map((group, index) => {
+            const isSelected = selectedFolder === index;
+            return (
+              <div
+                key={index}
+                onClick={() => setSelectedFolder(index)}
+                className={`flex items-center justify-between gap-2 cursor-pointer py-2 px-3 rounded-md transition-all
+                  ${isSelected
+                    ? "bg-[#f7efff] border-2 border-[#7366FF]"
+                    : "bg-gray-200 hover:bg-[#f7efff] hover:border hover:border-[#7366FF]"
+                  }`}
+              >
+                <div className="flex items-center gap-2">
+                  <FaRegFolder className="text-gray-600 text-base" />
+                  <span className="text-sm font-medium text-gray-800">{group.folderName}</span>
+                </div>
+                {isSelected && (
+                  <FaRegCircleCheck className="text-green-500 text-lg" />
+                )}
+              </div>
+            );
+          })}
+        </div>
 
+        {/* Action Buttons */}
+        <div className="mt-6 flex justify-end gap-3">
+          <button
+            type="button"
+            onClick={onClose}
+            className="px-4 py-2 border border-purple-500 text-purple-500 rounded-md hover:bg-purple-50 transition-colors"
+          >
+            Cancel
+          </button>
+          <button
+            type="submit"
+            onClick={handleSubmit}
+            disabled={isLoading || selectedFolder === null}
+            className="px-4 py-2 bg-purple-600 text-white rounded-md hover:bg-purple-700 transition-colors disabled:opacity-50"
+          >
+            Submit
+          </button>
+        </div>
       </div>
     </div>
   );
