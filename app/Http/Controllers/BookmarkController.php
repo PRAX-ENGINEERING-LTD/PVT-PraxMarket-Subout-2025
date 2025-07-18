@@ -525,7 +525,8 @@ class BookmarkController extends Controller
         $fromFolder = $request->route('fromFolder');
         $toFolder = $request->route('toFolder');
 
-        $endpoint = Config::get("app.apiUrl") . "v1/move-folder/686ba4de940660836707450d/" . $fromFolder . "/" . $toFolder . "/" . $companyID . "/" . $authID;
+
+        $endpoint = Config::get("app.apiUrl") . "v1/move-folder/686ba4de940660836707450d/" . $fromFolder . "/" . $toFolder . "/" . $companyID;
 
         $headers = $this->webServiceHelper->httpGetHeaders;
         $method = $this->webServiceHelper->httpGetMethod;

@@ -356,7 +356,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             );
 
             const folderPromisesWithReplacedUrls = customFolder.map(url => {
-                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://127.0.0.1:8000');
+                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://localhost/PVT-PraxMarket-Subout-2025');
                 console.log('Replaced URL:', replacedUrl);
                 return new Promise((resolve, reject) => {
                     $.ajax({

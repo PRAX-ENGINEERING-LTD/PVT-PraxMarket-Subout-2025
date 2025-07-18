@@ -28,7 +28,7 @@ Route::POST('/delete-bookmark-folder', [BookmarkController::class, 'deleteBookma
 Route::GET('/get-available-custom-bookmark-folder-apis', [BookmarkController::class, 'getAvailableCustomBookmarkApis'])->name('bookmark.getAvailableCustomBookmarkApis');
 Route::GET('/get-custom-bookmark-folder-details/{folderID}', [BookmarkController::class, 'getCustomBookmarkFolderDetails'])->name('bookmark.getCustomBookmarkFolderDetails');
 Route::GET('/remove-from-folder/{fromFolder}/{companyID}', [BookmarkController::class, 'removeFromFolder'])->name('bookmark.removeFromFolder');
-Route::GET('/move-from-folder/{toFolder}/{fromFolder}/{companyID}', [BookmarkController::class, 'moveFolder'])->name('bookmark.moveFolder');
+Route::GET('/move-to-folder/{toFolder}/{fromFolder}/{companyID}', [BookmarkController::class, 'moveFolder'])->name('bookmark.moveFolder');
 
 
 
