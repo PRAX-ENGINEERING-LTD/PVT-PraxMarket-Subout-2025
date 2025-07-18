@@ -51,7 +51,7 @@ const MoveGroupModal = ({
 
         {/* Folder List */}
         <h2 className="text-sm font-medium text-gray-800 mb-1">Folders</h2>
-        <div className="space-y-3 max-h-[300px] overflow-y-auto pr-2">
+        <div className="space-y-3 max-h-[240px] overflow-y-auto pr-2">
           {groupTransferDetails.map((group, index) => {
             const isSelected = selectedFolder === index;
             return (
@@ -77,7 +77,7 @@ const MoveGroupModal = ({
         </div>
 
         {/* Action Buttons */}
-        <div className="mt-6 flex justify-end gap-3">
+        <div className="mt-6 flex justify-start gap-3">
           <button
             type="button"
             onClick={onClose}
