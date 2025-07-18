@@ -9,6 +9,7 @@ import { FiEdit } from "react-icons/fi";
 import { LuPlus } from "react-icons/lu";
 import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
+import MoveGroupModal from './moveGroupModal';
 
 
 const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis, addNewBookmarkFolder, deleteBookmarkFolder, updateBookmarkFolder }) => {
@@ -33,6 +34,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [modalMode, setModalMode] = useState('create'); // 'create' or 'update'
     const [customFolder, setCustomFolder] = useState([]);
     const [customFolderData, setCustomFolderData] = useState([]);
+    const [isMoveGroupModalOpen, setIsMoveGroupModalOpen] = useState(false);
+    const [groupTransferDetails, setGroupTransferDetails] = useState([]);
+    const [isMoveTransferLoading, setIsMoveTransferLoading] = useState(false);
+
 
     // Filter states for bookmarked suppliers
     const [bookmarkedFilters, setBookmarkedFilters] = useState({
@@ -162,24 +167,55 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         );
     };
 
-    const chunkArray = (array, size) => {
-        const chunked = [];
-        for (let i = 0; i < array.length; i += size) {
-            chunked.push(array.slice(i, i + size));
+    // New function for 2-row grouping pattern: 1,2,3 / 4,5,6 | 7,8,9 / 10,11,12 | etc.
+    const groupArrayInTwoRows = (array) => {
+        // Add null check to prevent undefined errors
+        if (!array || !Array.isArray(array)) {
+            return [];
         }
-        return chunked;
+
+        const grouped = [];
+        const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
+
+        for (let i = 0; i < array.length; i += itemsPerColumn) {
+            const columnItems = array.slice(i, i + itemsPerColumn);
+
+            // Split into top row (first 3) and bottom row (next 3)
+            const topRow = columnItems.slice(0, 3);
+            const bottomRow = columnItems.slice(3, 6);
+
+            // Create pairs for each row position
+            const pairs = [];
+            const maxLength = Math.max(topRow.length, bottomRow.length);
+
+            for (let j = 0; j < maxLength; j++) {
+                const pair = [];
+                if (topRow[j]) pair.push(topRow[j]);
+                if (bottomRow[j]) pair.push(bottomRow[j]);
+                if (pair.length > 0) pairs.push(pair);
+            }
+
+            grouped.push(...pairs);
+        }
+
+        return grouped;
     };
 
     const formatCountWithLeadingZero = (count) => {
-        return count < 10 ? `0${count}` : count.toString();
+        // Handle undefined, null, or non-numeric values
+        const numericCount = count || 0;
+        return numericCount < 10 ? `0${numericCount}` : numericCount.toString();
     };
 
 
-    const bookmarkgrouped = chunkArray(bookmarkSuppliers, 2);
-    const approvedgrouped = chunkArray(approvedSuppliers, 2);
+    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
+    const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
+
+
+    const customheight = (bookmarkgrouped.length < 4 ) && (approvedgrouped.length < 4);
 
     const EmptyItemsMessage = () => (
-        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 py-10 h-[400px]">
+        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
             <FaRegHandshake className='text-black text-2xl' />
             <h3 className='text-black text-lg font-bold'>No Suppliers Added Yet</h3>
             <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
@@ -308,6 +344,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             case 'SELECTED':
                 moveUrl = company.moveToSelected;
                 break;
+            case 'GROUP':
+                setGroupTransferDetails(company.customBookMarkFolder || []);
+                setIsMoveGroupModalOpen(true);
+                return;
             default:
                 console.error('Invalid target folder:', targetFolder);
                 return;
@@ -342,8 +382,56 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
     };
 
+    const onMoveToCustomFolder = (selectedFolderIndex) => {
+        if (groupTransferDetails && groupTransferDetails[selectedFolderIndex]) {
+            const selectedFolder = groupTransferDetails[selectedFolderIndex];
+            const moveUrl = selectedFolder.moveUrl;
+
+            if (moveUrl) {
+                setIsMoveTransferLoading(true);
+                $.ajax({
+                    url: moveUrl,
+                    method: 'GET',
+                    success: (response) => {
+                        console.log('Company moved to custom folder successfully:', response);
+
+                        // Close the modal
+                        setIsMoveGroupModalOpen(false);
+                        setIsMoveTransferLoading(false);
+
+                        // Refresh all sections after successful move
+                        fetchBookmarkedCompanies(bookmarkedFilters);
+                        fetchApprovedCompanies(approvedFilters);
+                        fetchCustomFolders();
+
+                        // Re-fetch selected companies
+                        $.ajax({
+                            url: getSelectedSuppliers,
+                            method: 'GET',
+                            success: (response) => {
+                                setSelectedSuppliers(response.selectedCompanies);
+                                setSelectedSuppliersCount(response.selectedCompaniesCount);
+                            }
+                        });
+                    },
+                    error: (xhr, status, error) => {
+                        console.error('Error moving company to custom folder:', error);
+                        setIsMoveTransferLoading(false);
+                        // You might want to show an error message to the user here
+                    },
+                });
+            }
+        }
+    };
+
     const fetchCustomFolders = async () => {
         try {
+            // Add null check for customFolder
+            if (!customFolder || !Array.isArray(customFolder) || customFolder.length === 0) {
+                setCustomFolderData([]);
+                return;
+            }
+
             const folderPromises = customFolder.map(url =>
                 new Promise((resolve, reject) => {
                     $.ajax({
@@ -376,7 +464,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Effect to fetch custom folder data when customFolder URLs change
     useEffect(() => {
-        if (customFolder.length > 0) {
+        if (customFolder && customFolder.length > 0) {
             fetchCustomFolders();
         }
     }, [customFolder]);
@@ -542,39 +630,43 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="md:px-5 px-2 py-5 w-full">
                 <div className="grid grid-cols-12 gap-4">
                     <div className="md:col-span-9 col-span-12">
-                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4">
+                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
                             <div className="flex sm:mb-0 mb-6">
                                 <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Recommended Suppliers
                                 </span>
                             </div>
-                            <Carousel
-                                responsive={responsive}
-                                arrows={false}
-                                customButtonGroup={<CustomButtonGroupAsArrows />}
-                                infinite
-                                autoPlaySpeed={3000}
-                                keyBoardControl
-                                customTransition="transform 700ms ease-in-out"
-                                transitionDuration={500}
-                                containerClass="relative pt-10 -mt-4"
-                                removeArrowOnDeviceType={[]}
-                                showDots={false}
-                                itemClass="px-2"
-                                swipeable
-                            >
-                                {recommendedSuppliers.map((supplier) => (
-                                    <CompanyCard
-                                        key={supplier.id}
-                                        {...supplier}
-                                        recommended
-                                        moveToBookmarked={supplier.moveToBookmarked}
-                                        moveToApproved={supplier.moveToApproved}
-                                        moveToSelected={supplier.moveToSelected}
-                                        onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
-                                    />
-                                ))}
-                            </Carousel>
+                            {recommendedSuppliers.length === 0 ? (
+                                <EmptyItemsMessage />
+                            ) : (
+                                <Carousel
+                                    responsive={responsive}
+                                    arrows={false}
+                                    customButtonGroup={<CustomButtonGroupAsArrows />}
+                                    infinite
+                                    autoPlaySpeed={3000}
+                                    keyBoardControl
+                                    customTransition="transform 700ms ease-in-out"
+                                    transitionDuration={500}
+                                    containerClass="relative pt-10 -mt-4"
+                                    removeArrowOnDeviceType={[]}
+                                    showDots={false}
+                                    itemClass="px-2"
+                                    swipeable
+                                >
+                                    {(recommendedSuppliers || []).map((supplier) => (
+                                        <CompanyCard
+                                            key={supplier.id}
+                                            {...supplier}
+                                            recommended
+                                            moveToBookmarked={supplier.moveToBookmarked}
+                                            moveToApproved={supplier.moveToApproved}
+                                            moveToSelected={supplier.moveToSelected}
+                                            onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
+                                        />
+                                    ))}
+                                </Carousel>
+                            )}
                         </div>
                     </div>
 
@@ -651,12 +743,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg">
+                        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
                                 </span>
-                                <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount)}</div>
+                                <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                             </div>
                             {bookmarkgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
@@ -665,7 +757,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     responsive={responsive2}
                                     arrows={false}
                                     customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    infinite
+                                    // infinite
                                     autoPlaySpeed={3000}
                                     keyBoardControl
                                     customTransition="transform 700ms ease-in-out"
@@ -741,12 +833,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
                                 </span>
-                                <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount)}</div>
+                                <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                             </div>
                             {approvedgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
@@ -755,7 +847,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     responsive={responsive2}
                                     arrows={false}
                                     customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    infinite
+                                    // infinite
                                     autoPlaySpeed={3000}
                                     keyBoardControl
                                     customTransition="transform 700ms ease-in-out"
@@ -790,14 +882,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </div>
 
                 <div className='w-full mt-5'>
-                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
                         <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
                             </span>
-                            <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount)}</div>
+                            <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
                         </div>
-                        {selectedSuppliers.length === 0 ? (
+                        {(selectedSuppliers || []).length === 0 ? (
                             <EmptyItemsMessage />
                         ) : (
                             <Carousel
@@ -815,7 +907,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 itemClass="px-2"
                                 swipeable
                             >
-                                {selectedSuppliers.map((bookmark, index) => (
+                                {(selectedSuppliers || []).map((bookmark, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         <CompanyCard
                                             key={bookmark.id}
@@ -851,29 +943,28 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </div>
 
                 {/* Map the custom folders */}
-                {customFolderData.map((folder, folderIndex) => {
-                    const folderSuppliers = folder.suppliers || [];
-                    const folderSuppliersGrouped = chunkArray(folderSuppliers, 2);
-                    const folderUrl = customFolder[folderIndex]; // Get the corresponding URL
+                {(customFolderData || []).map((folder, folderIndex) => {
+                    const folderSuppliers = folder?.suppliers || [];
+                    const folderUrl = (customFolder && customFolder[folderIndex]) || ''; // Get the corresponding URL with safety check
 
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
-                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
+                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                    <span className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
-                                        {folder.folderName}
-                                    </span>
-                                    <div className='bg-[#f7efff] px-3 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
-                                        {formatCountWithLeadingZero(folder.totalSupplierCount)}
+                                    <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
+                                        {folder?.folderName || 'Unnamed Folder'}
+                                    </p>
+                                    <div className='bg-[#f7efff] px-3 h-8 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
+                                        {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
                                     </div>
                                 </div>
-                                <div className='group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 right-32 gap-2'>
+                                <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
                                     <div
                                         className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                         onClick={() => {
                                             setFolderToUpdate({
                                                 folderUrl: folderUrl,
-                                                folderName: folder.folderName
+                                                folderName: folder?.folderName || ''
                                             });
                                             setModalMode('update');
                                             setIsCreateFolderModalOpen(true);
@@ -891,36 +982,35 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         <AiOutlineDelete className='text-sm' />
                                     </div>
                                 </div>
-                                {folderSuppliersGrouped.length === 0 ? (
+                                {folderSuppliers.length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
                                         responsive={responsive}
                                         arrows={false}
                                         customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        infinite={folderSuppliersGrouped.length > 1}
+                                        infinite
                                         autoPlaySpeed={3000}
                                         keyBoardControl
                                         customTransition="transform 700ms ease-in-out"
                                         transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-4"
+                                        containerClass="relative pt-10 -mt-8"
                                         removeArrowOnDeviceType={[]}
                                         showDots={false}
                                         itemClass="px-2"
                                         swipeable
                                     >
-                                        {folderSuppliersGrouped.map((pair, index) => (
+                                        {(folderSuppliers || []).map((supplier, index) => (
                                             <div key={index} className="flex flex-col gap-4">
-                                                {pair.map((supplier) => (
-                                                    <CompanyCard
-                                                        key={supplier.id}
-                                                        {...supplier}
-                                                        onDelete={() => {
-                                                            setOnDeleteCompany(supplier);
-                                                            setIsDeleteCompanyConfirmationModalOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
+
+                                                <CompanyCard
+                                                    key={supplier.id}
+                                                    {...supplier}
+                                                    onDelete={() => {
+                                                        setOnDeleteCompany(supplier);
+                                                        setIsDeleteCompanyConfirmationModalOpen(true)
+                                                    }}
+                                                />
                                             </div>
                                         ))}
                                     </Carousel>
@@ -942,6 +1032,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 mode={modalMode}
                 initialFolderName={folderToUpdate?.folderName || ''}
                 folderData={folderToUpdate}
+            />
+            <MoveGroupModal
+                isOpen={isMoveGroupModalOpen}
+                groupTransferDetails={groupTransferDetails}
+                onClose={() => setIsMoveGroupModalOpen(false)}
+                onSubmit={onMoveToCustomFolder}
+                isLoading={isMoveTransferLoading}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
