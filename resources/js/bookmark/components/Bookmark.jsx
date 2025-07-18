@@ -584,7 +584,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
                                 alt="Pine Forest"
                                 className="object-cover w-full h-full rounded-2xl cursor-pointer"
-                                style={{ maxHeight: '239px' }}
+                                style={{ maxHeight: '250px' }}
                                 onClick={() => {
                                     const url = bookmarkAds?.adPointingUrl?.startsWith('http')
                                         ? bookmarkAds.adPointingUrl
@@ -651,7 +651,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 bg-gradient-to-br from-violet-100 to-violet-600">
+                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
@@ -869,15 +869,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </div>
                                 <div className='group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 right-32 gap-2'>
                                     <div
-                                        className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
-                                        onClick={() => {
-                                            setFolderToDelete(folderUrl);
-                                            setIsDeleteConfirmationModalOpen(true);
-                                        }}
-                                    >
-                                        <AiOutlineDelete className='text-sm' />
-                                    </div>
-                                    <div
                                         className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                         onClick={() => {
                                             setFolderToUpdate({
@@ -890,12 +881,21 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     >
                                         <FiEdit className='text-sm' />
                                     </div>
+                                    <div
+                                        className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
+                                        onClick={() => {
+                                            setFolderToDelete(folderUrl);
+                                            setIsDeleteConfirmationModalOpen(true);
+                                        }}
+                                    >
+                                        <AiOutlineDelete className='text-sm' />
+                                    </div>
                                 </div>
                                 {folderSuppliersGrouped.length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
-                                        responsive={responsive2}
+                                        responsive={responsive}
                                         arrows={false}
                                         customButtonGroup={<CustomButtonGroupAsArrows />}
                                         infinite={folderSuppliersGrouped.length > 1}
