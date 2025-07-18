@@ -640,7 +640,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="md:px-5 px-2 py-5 w-full">
                 <div className="grid grid-cols-12 gap-4">
                     <div className="md:col-span-9 col-span-12">
-                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 h-[250px]">
+                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
                             <div className="flex sm:mb-0 mb-6">
                                 <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Recommended Suppliers
@@ -753,7 +753,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg h-[458px]">
+                        <div className="relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[458px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
@@ -843,7 +843,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </select>
                             </div>
                         </div>
-                        <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 h-[458px]">
+                        <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[458px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
@@ -892,7 +892,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </div>
 
                 <div className='w-full mt-5'>
-                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 h-[271px]">
+                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
                         <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
@@ -960,7 +960,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
-                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 h-[271px]">
+                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
                                         {folder?.folderName || 'Unnamed Folder'}
