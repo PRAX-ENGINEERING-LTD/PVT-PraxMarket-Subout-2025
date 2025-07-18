@@ -35,11 +35,11 @@ const MoveGroupModal = ({
         <button
           onClick={onClose}
           disabled={isLoading}
-          className="absolute top-5 right-5 text-black bg-gray-200 rounded-full p-1 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+          className="absolute top-5 right-5 text-black bg-gray-200 rounded-full p-2 transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
         >
           <svg
             xmlns="http://www.w3.org/2000/svg"
-            className="h-4 w-4"
+            className="h-5 w-5"
             fill="none"
             viewBox="0 0 24 24"
             stroke="currentColor"

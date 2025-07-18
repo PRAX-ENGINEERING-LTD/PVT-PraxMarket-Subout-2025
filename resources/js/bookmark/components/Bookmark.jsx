@@ -398,6 +398,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             const moveUrl = selectedFolder.moveUrl;
 
             if (moveUrl) {
+                setIsMoveTransferLoading(true);
                 $.ajax({
                     url: moveUrl,
                     method: 'GET',
@@ -406,6 +407,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                         // Close the modal
                         setIsMoveGroupModalOpen(false);
+                        setIsMoveTransferLoading(false);
 
                         // Refresh all sections after successful move
                         fetchBookmarkedCompanies(bookmarkedFilters);
@@ -424,6 +426,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     },
                     error: (xhr, status, error) => {
                         console.error('Error moving company to custom folder:', error);
+                        setIsMoveTransferLoading(false);
                         // You might want to show an error message to the user here
                     },
                 });
@@ -1043,6 +1046,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 groupTransferDetails={groupTransferDetails}
                 onClose={() => setIsMoveGroupModalOpen(false)}
                 onSubmit={onMoveToCustomFolder}
+                isLoading={isMoveTransferLoading}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteConfirmationModalOpen}
