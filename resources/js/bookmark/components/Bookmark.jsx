@@ -167,6 +167,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
     const chunkArray = (array, size) => {
+        // Add null check to prevent undefined errors
+        if (!array || !Array.isArray(array)) {
+            return [];
+        }
+        
         const chunked = [];
         for (let i = 0; i < array.length; i += size) {
             chunked.push(array.slice(i, i + size));
@@ -176,6 +181,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // New function for 2-row grouping pattern: 1,2,3 / 4,5,6 | 7,8,9 / 10,11,12 | etc.
     const groupArrayInTwoRows = (array) => {
+        // Add null check to prevent undefined errors
+        if (!array || !Array.isArray(array)) {
+            return [];
+        }
+        
         const grouped = [];
         const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
         
@@ -204,12 +214,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
     const formatCountWithLeadingZero = (count) => {
-        return count < 10 ? `0${count}` : count.toString();
+        // Handle undefined, null, or non-numeric values
+        const numericCount = count || 0;
+        return numericCount < 10 ? `0${numericCount}` : numericCount.toString();
     };
 
 
-    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers);
-    const approvedgrouped = groupArrayInTwoRows(approvedSuppliers);
+    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
+    const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
     const EmptyItemsMessage = () => (
         <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 py-10 h-[400px]">
@@ -382,6 +394,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const fetchCustomFolders = async () => {
         try {
+            // Add null check for customFolder
+            if (!customFolder || !Array.isArray(customFolder) || customFolder.length === 0) {
+                setCustomFolderData([]);
+                return;
+            }
+            
             const folderPromises = customFolder.map(url =>
                 new Promise((resolve, reject) => {
                     $.ajax({
@@ -414,7 +432,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Effect to fetch custom folder data when customFolder URLs change
     useEffect(() => {
-        if (customFolder.length > 0) {
+        if (customFolder && customFolder.length > 0) {
             fetchCustomFolders();
         }
     }, [customFolder]);
@@ -601,7 +619,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 itemClass="px-2"
                                 swipeable
                             >
-                                {recommendedSuppliers.map((supplier) => (
+                                {(recommendedSuppliers || []).map((supplier) => (
                                     <CompanyCard
                                         key={supplier.id}
                                         {...supplier}
@@ -694,7 +712,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Bookmarked Suppliers
                                 </span>
-                                <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount)}</div>
+                                <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                             </div>
                             {bookmarkgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
@@ -784,7 +802,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                     Approved Suppliers
                                 </span>
-                                <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount)}</div>
+                                <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                             </div>
                             {approvedgrouped.length === 0 ? (
                                 <EmptyItemsMessage />
@@ -833,9 +851,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                 Selected Suppliers
                             </span>
-                            <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount)}</div>
+                            <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
                         </div>
-                        {selectedSuppliers.length === 0 ? (
+                        {(selectedSuppliers || []).length === 0 ? (
                             <EmptyItemsMessage />
                         ) : (
                             <Carousel
@@ -853,7 +871,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 itemClass="px-2"
                                 swipeable
                             >
-                                {selectedSuppliers.map((bookmark, index) => (
+                                {(selectedSuppliers || []).map((bookmark, index) => (
                                     <div key={index} className="flex flex-col gap-4">
                                         <CompanyCard
                                             key={bookmark.id}
@@ -889,20 +907,20 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </div>
 
                 {/* Map the custom folders */}
-                {customFolderData.map((folder, folderIndex) => {
-                    const folderSuppliers = folder.suppliers || [];
+                {(customFolderData || []).map((folder, folderIndex) => {
+                    const folderSuppliers = folder?.suppliers || [];
                     const folderSuppliersGrouped = chunkArray(folderSuppliers, 2);
-                    const folderUrl = customFolder[folderIndex]; // Get the corresponding URL
+                    const folderUrl = (customFolder && customFolder[folderIndex]) || ''; // Get the corresponding URL with safety check
 
                     return (
                         <div key={folderIndex} className='w-full mt-5'>
                             <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4">
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
-                                        {folder.folderName}
+                                        {folder?.folderName || 'Unnamed Folder'}
                                     </span>
                                     <div className='bg-[#f7efff] px-3 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
-                                        {formatCountWithLeadingZero(folder.totalSupplierCount)}
+                                        {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
                                     </div>
                                 </div>
                                 <div className='group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 right-32 gap-2'>
@@ -911,7 +929,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         onClick={() => {
                                             setFolderToUpdate({
                                                 folderUrl: folderUrl,
-                                                folderName: folder.folderName
+                                                folderName: folder?.folderName || ''
                                             });
                                             setModalMode('update');
                                             setIsCreateFolderModalOpen(true);
