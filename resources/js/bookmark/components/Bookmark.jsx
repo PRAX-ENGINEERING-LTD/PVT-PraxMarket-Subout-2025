@@ -10,6 +10,10 @@ import { LuPlus } from "react-icons/lu";
 import CreateFolderModal from './createFolderModal';
 import DeleteConfirmationModal from './deleteConfirmationModal';
 import MoveGroupModal from './moveGroupModal';
+import { TbTriangleSquareCircle } from "react-icons/tb";
+import { HiOutlineLocationMarker } from "react-icons/hi";
+import { FaRegCalendarCheck } from "react-icons/fa";
+
 
 
 const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds, getAvailableCustomBookmarkApis, addNewBookmarkFolder, deleteBookmarkFolder, updateBookmarkFolder }) => {
@@ -703,8 +707,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         <div className="flex flex-wrap gap-4 items-center justify-start mb-4">
                             {/* Category Filter */}
                             <div className="relative">
+                                <TbTriangleSquareCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
                                     value={bookmarkedFilters.catagoryID}
                                     onChange={(e) => handleBookmarkedFilterChange('catagoryID', e.target.value)}
                                 >
@@ -713,12 +718,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <option value="67c86253179ba1a66e0a5192">sddsds</option>
                                     <option value="67e3bc5c0e460de8090dcbe2">Sample</option>
                                 </select>
+                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 8L2 4h8L6 8z"/>
+                                </svg>
                             </div>
 
                             {/* Distance Filter */}
                             <div className="relative">
+                                <HiOutlineLocationMarker className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"
+                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
                                     value={bookmarkedFilters.distance}
                                     onChange={(e) => handleBookmarkedFilterChange('distance', e.target.value)}
                                 >
@@ -727,12 +736,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <option value="5">Within 5 km</option>
                                     <option value="10">Within 10 km</option>
                                 </select>
+                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 8L2 4h8L6 8z"/>
+                                </svg>
                             </div>
 
                             {/* Availability Filter */}
                             <div className="relative">
+                                <FaRegCalendarCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
                                     value={bookmarkedFilters.availablityStatus}
                                     onChange={(e) => handleBookmarkedFilterChange('availablityStatus', e.target.value)}
                                 >
@@ -741,6 +754,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <option value="4-6 weeks">4-6 weeks</option>
                                     <option value="2-3 months">2-3 months</option>
                                 </select>
+                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 8L2 4h8L6 8z"/>
+                                </svg>
                             </div>
                         </div>
                         <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
@@ -793,8 +809,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         <div className="flex flex-wrap gap-4 items-center justify-end mb-4">
                             {/* Category Filter */}
                             <div className="relative">
+                                <TbTriangleSquareCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
                                     value={approvedFilters.catagoryID}
                                     onChange={(e) => handleApprovedFilterChange('catagoryID', e.target.value)}
                                 >
@@ -803,12 +820,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <option value="67c86253179ba1a66e0a5192">sddsds</option>
                                     <option value="67e3bc5c0e460de8090dcbe2">Sample</option>
                                 </select>
+                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 8L2 4h8L6 8z"/>
+                                </svg>
                             </div>
 
                             {/* Distance Filter */}
                             <div className="relative">
+                                <HiOutlineLocationMarker className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-2 pr-8 bg-white text-sm shadow-sm"
+                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
                                     value={approvedFilters.distance}
                                     onChange={(e) => handleApprovedFilterChange('distance', e.target.value)}
                                 >
@@ -817,12 +838,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <option value="5">Within 5 km</option>
                                     <option value="10">Within 10 km</option>
                                 </select>
+                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 8L2 4h8L6 8z"/>
+                                </svg>
                             </div>
 
                             {/* Availability Filter */}
                             <div className="relative">
+                                <FaRegCalendarCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
                                 <select
-                                    className="border border-gray-300 rounded-md py-2 px-4 pr-8 bg-white text-sm shadow-sm"
+                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
                                     value={approvedFilters.availablityStatus}
                                     onChange={(e) => handleApprovedFilterChange('availablityStatus', e.target.value)}
                                 >
@@ -831,6 +856,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <option value="4-6 weeks">4-6 weeks</option>
                                     <option value="2-3 months">2-3 months</option>
                                 </select>
+                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
+                                    <path d="M6 8L2 4h8L6 8z"/>
+                                </svg>
                             </div>
                         </div>
                         <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
