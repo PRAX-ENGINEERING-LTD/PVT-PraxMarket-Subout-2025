@@ -48,6 +48,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isBookmarkedLoading, setIsBookmarkedLoading] = useState(false);
     const [isApprovedLoading, setIsApprovedLoading] = useState(false);
     const [isSelectedLoading, setIsSelectedLoading] = useState(false);
+    const [isAdsLoading, setIsAdsLoading] = useState(false);
 
 
     // Filter states for bookmarked suppliers
@@ -234,6 +235,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setIsSelectedLoading(false);
             }
         });
+        setIsAdsLoading(true);
         $.ajax({
             url: getBookmarkAds,
             method: 'GET',
@@ -244,6 +246,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             error: (xhr, status, error) => {
                 console.error('Error loading BookmarkADD:', error);
             },
+            complete: () => {
+                setIsAdsLoading(false);
+            }
         });
     }, [getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds]);
 
@@ -1021,6 +1026,18 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         </div>
     );
 
+    // Skeleton component for bookmark ads
+    const AdsSkeleton = () => (
+        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+            <div 
+                className="bg-gray-200 animate-pulse rounded-2xl w-full h-full object-cover" 
+                style={{ maxHeight: '250px', minHeight: '200px' }}
+            />
+            {/* Optional shimmer effect overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse rounded-2xl"></div>
+        </div>
+    );
+
 
     return (
         <>
@@ -1072,20 +1089,24 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     </div>
 
                     <div className="md:col-span-3 col-span-12">
-                        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
-                            <img
-                                src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
-                                alt="Pine Forest"
-                                className="object-cover w-full h-full rounded-2xl cursor-pointer"
-                                style={{ maxHeight: '250px' }}
-                                onClick={() => {
-                                    const url = bookmarkAds?.adPointingUrl?.startsWith('http')
-                                        ? bookmarkAds.adPointingUrl
-                                        : `https://${bookmarkAds.adPointingUrl}`;
-                                    window.open(url, '_blank');
-                                }}
-                            />
-                        </div>
+                        {isAdsLoading ? (
+                            <AdsSkeleton />
+                        ) : (
+                            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+                                <img
+                                    src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
+                                    alt="Pine Forest"
+                                    className="object-cover w-full h-full rounded-2xl cursor-pointer"
+                                    style={{ maxHeight: '250px' }}
+                                    onClick={() => {
+                                        const url = bookmarkAds?.adPointingUrl?.startsWith('http')
+                                            ? bookmarkAds.adPointingUrl
+                                            : `https://${bookmarkAds.adPointingUrl}`;
+                                        window.open(url, '_blank');
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="mt-8 text-center">
