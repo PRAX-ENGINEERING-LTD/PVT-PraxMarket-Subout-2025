@@ -13,6 +13,7 @@ import MoveGroupModal from './moveGroupModal';
 import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FaRegCalendarCheck } from "react-icons/fa";
+import { ToastContainer,toast } from 'react-toastify';
 
 
 
@@ -247,6 +248,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 method: 'GET',
                 success: (response) => {
                     console.log('Company deleted successfully:', response);
+                    toast.success('Company deleted successfully!', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                     setIsDeleteCompanyConfirmationModalOpen(false);
                     setOnDeleteCompany({});
                     setIsDeleting(false);
@@ -268,9 +277,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 },
                 error: (xhr, status, error) => {
                     console.error('Error deleting company:', error);
+                    toast.error('Failed to delete company. Please try again.', {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                     setIsDeleteCompanyConfirmationModalOpen(false);
                     setIsDeleting(false);
-                    // You might want to show an error message to the user here
                 },
             });
         }
@@ -374,7 +390,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setIsMoveGroupModalOpen(true);
                 return;
             default:
-                console.error('Invalid target folder:', targetFolder);
+                console.error('Invalid target Group:', targetFolder);
                 return;
         }
 
@@ -384,6 +400,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 method: 'GET',
                 success: (response) => {
                     console.log(`Company moved to ${targetFolder} successfully:`, response);
+                    toast.success(`Company moved to ${targetFolder.toLowerCase()} successfully!`, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
 
                     // Refresh all sections after successful move
                     fetchBookmarkedCompanies(bookmarkedFilters);
@@ -402,6 +426,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 },
                 error: (xhr, status, error) => {
                     console.error(`Error moving company to ${targetFolder}:`, error);
+                    toast.error(`Failed to move company to ${targetFolder.toLowerCase()}. Please try again.`, {
+                        position: "top-right",
+                        autoClose: 3000,
+                        hideProgressBar: false,
+                        closeOnClick: true,
+                        pauseOnHover: true,
+                        draggable: true,
+                    });
                 },
             });
         }
@@ -418,7 +450,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     url: moveUrl,
                     method: 'GET',
                     success: (response) => {
-                        console.log('Company moved to custom folder successfully:', response);
+                        console.log('Company moved to custom Group successfully:', response);
+                        toast.success(`Company moved to custom Group successfully!`, {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                        });
 
                         // Close the modal
                         setIsMoveGroupModalOpen(false);
@@ -440,9 +480,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         });
                     },
                     error: (xhr, status, error) => {
-                        console.error('Error moving company to custom folder:', error);
+                        console.error('Error moving company to custom Group:', error);
+                        toast.error('Failed to move company to custom Group. Please try again.', {
+                            position: "top-right",
+                            autoClose: 3000,
+                            hideProgressBar: false,
+                            closeOnClick: true,
+                            pauseOnHover: true,
+                            draggable: true,
+                        });
                         setIsMoveTransferLoading(false);
-                        // You might want to show an error message to the user here
                     },
                 });
             }
@@ -513,14 +560,23 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: (response) => {
-                        console.log('Folder created successfully:', response);
+                        console.log('Group created successfully:', response);
                         resolve(response);
                     },
                     error: (xhr, status, error) => {
-                        console.error('Error creating folder:', error);
+                        console.error('Error creating Group:', error);
                         reject(error);
                     }
                 });
+            });
+
+            toast.success('Group created successfully!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
             });
 
             // Refresh the custom folders list after creating a new folder
@@ -539,8 +595,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             setIsCreateFolderModalOpen(false);
 
         } catch (error) {
-            console.error('Error creating folder:', error);
-            alert('Failed to create folder. Please try again.');
+            console.error('Error creating Group:', error);
+            toast.error('Failed to create Group. Please try again.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setIsCreatingFolder(false);
         }
@@ -562,14 +625,23 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: (response) => {
-                        console.log('Folder updated successfully:', response);
+                        console.log('Group updated successfully:', response);
                         resolve(response);
                     },
                     error: (xhr, status, error) => {
-                        console.error('Error updating folder:', error);
+                        console.error('Error updating Group:', error);
                         reject(error);
                     }
                 });
+            });
+
+            toast.success('Group updated successfully!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
             });
 
             // Refresh the custom folders list after updating a folder
@@ -590,8 +662,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             setModalMode('create');
 
         } catch (error) {
-            console.error('Error updating folder:', error);
-            alert('Failed to update folder. Please try again.');
+            console.error('Error updating Group:', error);
+            toast.error('Failed to update Group. Please try again.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setIsUpdatingFolder(false);
         }
@@ -621,14 +700,23 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         _token: $('meta[name="csrf-token"]').attr('content')
                     },
                     success: (response) => {
-                        console.log('Folder deleted successfully:', response);
+                        console.log('Group deleted successfully:', response);
                         resolve(response);
                     },
                     error: (xhr, status, error) => {
-                        console.error('Error deleting folder:', error);
+                        console.error('Error deleting Group:', error);
                         reject(error);
                     }
                 });
+            });
+
+            toast.success('Group deleted successfully!', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
             });
 
             // Refresh the custom folders list after deleting a folder
@@ -636,11 +724,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 url: getAvailableCustomBookmarkApis,
                 method: 'GET',
                 success: (response) => {
-                    console.log('Refreshed custom folders after delete:', response);
+                    console.log('Refreshed custom Group after delete:', response);
                     setCustomFolder(response);
                 },
                 error: (xhr, status, error) => {
-                    console.error('Error refreshing custom folders:', error);
+                    console.error('Error refreshing Group folders:', error);
                 }
             });
 
@@ -648,8 +736,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             setIsDeleteConfirmationModalOpen(false);
 
         } catch (error) {
-            console.error('Error deleting folder:', error);
-            alert('Failed to delete folder. Please try again.');
+            console.error('Error deleting Group:', error);
+            toast.error('Failed to delete Group. Please try again.', {
+                position: "top-right",
+                autoClose: 3000,
+                hideProgressBar: false,
+                closeOnClick: true,
+                pauseOnHover: true,
+                draggable: true,
+            });
         } finally {
             setIsDeletingFolder(false);
         }
@@ -1272,16 +1367,17 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     setFolderToDelete(null);
                 }}
                 onConfirm={() => folderToDelete && onDeleteFolder(folderToDelete)}
-                subtitle="You're about to delete this folder. Are you sure you want to delete?"
+                subtitle="You're about to delete this Group. Are you sure you want to delete?"
                 isLoading={isDeletingFolder}
             />
             <DeleteConfirmationModal
                 isOpen={isDeleteCompanyConfirmationModalOpen}
                 onClose={() => { setIsDeleteCompanyConfirmationModalOpen(false) }}
                 onConfirm={onClickDeleteCompany}
-                subtitle="This company will also be removed from all customised group."
+                subtitle="This company will also be removed from all customised Group."
                 isLoading={isDeleting}
             />
+            <ToastContainer />
         </>
     );
 };
