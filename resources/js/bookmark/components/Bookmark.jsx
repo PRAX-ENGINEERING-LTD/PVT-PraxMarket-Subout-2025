@@ -81,22 +81,68 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }, [dropdownRef]);
 
         const selectedOption = options.find(option => option.value === value);
+        const hasSelection = value && value !== '';
+
+        // Determine button styles based on state
+        const getButtonStyles = () => {
+            if (isOpen) {
+                // When dropdown is open - purple background
+                return "border border-[#7366FF] rounded-md py-2 pl-10 pr-8 bg-[#7366FF] text-sm shadow-sm appearance-none w-full text-left transition-colors duration-200";
+            } else if (hasSelection) {
+                // When item is selected - light purple background
+                return "border border-[#7366FF] rounded-md py-2 pl-10 pr-8 bg-[#f7efff] text-sm shadow-sm appearance-none w-full text-left hover:border-[#7366FF] focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] transition-colors duration-200";
+            } else {
+                // Default state - white background
+                return "border border-gray-300 rounded-md py-2 pl-10 pr-8 bg-white text-sm shadow-sm appearance-none w-full text-left hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200";
+            }
+        };
+
+        // Determine icon and text colors based on state
+        const getIconColor = () => {
+            if (isOpen) {
+                return "absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-sm pointer-events-none z-10";
+            } else if (hasSelection) {
+                return "absolute left-3 top-1/2 transform -translate-y-1/2 text-[#7366FF] text-sm pointer-events-none z-10";
+            } else {
+                return "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10";
+            }
+        };
+
+        const getTextColor = () => {
+            if (isOpen) {
+                return "text-white";
+            } else if (hasSelection) {
+                return "text-[#5B21B6] font-medium";
+            } else {
+                return "text-gray-700";
+            }
+        };
+
+        const getChevronColor = () => {
+            if (isOpen) {
+                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none transition-transform duration-200";
+            } else if (hasSelection) {
+                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-[#5B21B6] pointer-events-none transition-transform duration-200";
+            } else {
+                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200";
+            }
+        };
 
         return (
             <div className={`relative ${className}`} ref={setDropdownRef}>
                 <button
                     type="button"
-                    className="border border-gray-300 rounded-md py-2 pl-10 pr-8 bg-white text-sm shadow-sm appearance-none w-full text-left hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                    className={getButtonStyles()}
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                    <span className="text-gray-700">
+                    <Icon className={getIconColor()} />
+                    <span className={getTextColor()}>
                         {selectedOption ? selectedOption.label : placeholder}
                     </span>
                     {isOpen ? (
-                        <FiChevronUp className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200" />
+                        <FiChevronUp className={getChevronColor()} />
                     ) : (
-                        <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200" />
+                        <FiChevronDown className={getChevronColor()} />
                     )}
                 </button>
                 
