@@ -48,6 +48,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isBookmarkedLoading, setIsBookmarkedLoading] = useState(false);
     const [isApprovedLoading, setIsApprovedLoading] = useState(false);
     const [isSelectedLoading, setIsSelectedLoading] = useState(false);
+    const [isAdsLoading, setIsAdsLoading] = useState(false);
 
 
     // Filter states for bookmarked suppliers
@@ -81,22 +82,68 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }, [dropdownRef]);
 
         const selectedOption = options.find(option => option.value === value);
+        const hasSelection = value && value !== '';
+
+        // Determine button styles based on state
+        const getButtonStyles = () => {
+            if (isOpen) {
+                // When dropdown is open - purple background
+                return "border border-[#7366FF] rounded-md py-2 pl-10 pr-8 bg-[#7366FF] text-sm shadow-sm appearance-none w-full text-left transition-colors duration-200";
+            } else if (hasSelection) {
+                // When item is selected - light purple background
+                return "border border-[#7366FF] rounded-md py-2 pl-10 pr-8 bg-[#f7efff] text-sm shadow-sm appearance-none w-full text-left hover:border-[#7366FF] focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] transition-colors duration-200";
+            } else {
+                // Default state - white background
+                return "border border-gray-300 rounded-md py-2 pl-10 pr-8 bg-white text-sm shadow-sm appearance-none w-full text-left hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200";
+            }
+        };
+
+        // Determine icon and text colors based on state
+        const getIconColor = () => {
+            if (isOpen) {
+                return "absolute left-3 top-1/2 transform -translate-y-1/2 text-white text-sm pointer-events-none z-10";
+            } else if (hasSelection) {
+                return "absolute left-3 top-1/2 transform -translate-y-1/2 text-[#7366FF] text-sm pointer-events-none z-10";
+            } else {
+                return "absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10";
+            }
+        };
+
+        const getTextColor = () => {
+            if (isOpen) {
+                return "text-white";
+            } else if (hasSelection) {
+                return "text-[#5B21B6] font-medium";
+            } else {
+                return "text-gray-700";
+            }
+        };
+
+        const getChevronColor = () => {
+            if (isOpen) {
+                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none transition-transform duration-200";
+            } else if (hasSelection) {
+                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-[#5B21B6] pointer-events-none transition-transform duration-200";
+            } else {
+                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200";
+            }
+        };
 
         return (
-            <div className={`relative z-[9999] ${className}`} ref={setDropdownRef}>
+            <div className={`relative ${className}`} ref={setDropdownRef}>
                 <button
                     type="button"
-                    className="border border-gray-300 rounded-md py-2 pl-10 pr-8 bg-white text-sm shadow-sm appearance-none w-full text-left hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                    className={getButtonStyles()}
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                    <span className="text-gray-700">
+                    <Icon className={getIconColor()} />
+                    <span className={getTextColor()}>
                         {selectedOption ? selectedOption.label : placeholder}
                     </span>
                     {isOpen ? (
-                        <FiChevronUp className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200" />
+                        <FiChevronUp className={getChevronColor()} />
                     ) : (
-                        <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200" />
+                        <FiChevronDown className={getChevronColor()} />
                     )}
                 </button>
                 
@@ -188,6 +235,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 setIsSelectedLoading(false);
             }
         });
+        setIsAdsLoading(true);
         $.ajax({
             url: getBookmarkAds,
             method: 'GET',
@@ -198,6 +246,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             error: (xhr, status, error) => {
                 console.error('Error loading BookmarkADD:', error);
             },
+            complete: () => {
+                setIsAdsLoading(false);
+            }
         });
     }, [getRecommendedSuppliers, getBookmarkedCompanies, getApprovedSuppliers, getSelectedSuppliers, getBookmarkAds]);
 
@@ -975,6 +1026,18 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         </div>
     );
 
+    // Skeleton component for bookmark ads
+    const AdsSkeleton = () => (
+        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+            <div 
+                className="bg-gray-200 animate-pulse rounded-2xl w-full h-full object-cover" 
+                style={{ maxHeight: '250px', minHeight: '200px' }}
+            />
+            {/* Optional shimmer effect overlay */}
+            <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse rounded-2xl"></div>
+        </div>
+    );
+
 
     return (
         <>
@@ -1026,20 +1089,24 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     </div>
 
                     <div className="md:col-span-3 col-span-12">
-                        <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
-                            <img
-                                src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
-                                alt="Pine Forest"
-                                className="object-cover w-full h-full rounded-2xl cursor-pointer"
-                                style={{ maxHeight: '250px' }}
-                                onClick={() => {
-                                    const url = bookmarkAds?.adPointingUrl?.startsWith('http')
-                                        ? bookmarkAds.adPointingUrl
-                                        : `https://${bookmarkAds.adPointingUrl}`;
-                                    window.open(url, '_blank');
-                                }}
-                            />
-                        </div>
+                        {isAdsLoading ? (
+                            <AdsSkeleton />
+                        ) : (
+                            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+                                <img
+                                    src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
+                                    alt="Pine Forest"
+                                    className="object-cover w-full h-full rounded-2xl cursor-pointer"
+                                    style={{ maxHeight: '250px' }}
+                                    onClick={() => {
+                                        const url = bookmarkAds?.adPointingUrl?.startsWith('http')
+                                            ? bookmarkAds.adPointingUrl
+                                            : `https://${bookmarkAds.adPointingUrl}`;
+                                        window.open(url, '_blank');
+                                    }}
+                                />
+                            </div>
+                        )}
                     </div>
                 </div>
                 <div className="mt-8 text-center">
@@ -1063,7 +1130,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('catagoryID', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 transition-all duration-200 z-[9999]"
                             />
 
                             {/* Distance Filter */}
@@ -1073,7 +1140,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('distance', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 transition-all duration-200 z-[9998]"
                             />
 
                             {/* Availability Filter */}
@@ -1083,7 +1150,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('availablityStatus', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 transition-all duration-200 z-[9997]"
                             />
                         </div>
                         {isBookmarkedLoading ? (
@@ -1145,7 +1212,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleApprovedFilterChange('catagoryID', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 transition-all duration-200 z-[9999]"
                             />
 
                             {/* Distance Filter */}
@@ -1155,7 +1222,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleApprovedFilterChange('distance', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 transition-all duration-200 z-[9998]"
                             />
 
                             {/* Availability Filter */}
@@ -1165,7 +1232,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleApprovedFilterChange('availablityStatus', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 transition-all duration-200 z-[9997]"
                             />
                         </div>
                         {isApprovedLoading ? (
