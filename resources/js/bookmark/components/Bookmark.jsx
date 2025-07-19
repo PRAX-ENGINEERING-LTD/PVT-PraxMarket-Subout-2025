@@ -1130,7 +1130,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('catagoryID', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9999]"
+                                className="hover:scale-105 transition-all duration-200 z-[9999]"
                             />
 
                             {/* Distance Filter */}
@@ -1140,7 +1140,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('distance', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9998]"
+                                className="hover:scale-105 transition-all duration-200 z-[9998]"
                             />
 
                             {/* Availability Filter */}
@@ -1150,7 +1150,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('availablityStatus', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9997]"
+                                className="hover:scale-105 transition-all duration-200 z-[9997]"
                             />
                         </div>
                         {isBookmarkedLoading ? (
@@ -1212,7 +1212,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleApprovedFilterChange('catagoryID', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9999]"
+                                className="hover:scale-105 transition-all duration-200 z-[9999]"
                             />
 
                             {/* Distance Filter */}
@@ -1222,7 +1222,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleApprovedFilterChange('distance', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9998]"
+                                className="hover:scale-105 transition-all duration-200 z-[9998]"
                             />
 
                             {/* Availability Filter */}
@@ -1232,7 +1232,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleApprovedFilterChange('availablityStatus', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9997]"
+                                className="hover:scale-105 transition-all duration-200 z-[9997]"
                             />
                         </div>
                         {isApprovedLoading ? (
