@@ -13,6 +13,7 @@ import MoveGroupModal from './moveGroupModal';
 import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FaRegCalendarCheck } from "react-icons/fa";
+import { FiChevronDown, FiChevronUp } from "react-icons/fi";
 import { ToastContainer,toast } from 'react-toastify';
 
 
@@ -62,6 +63,85 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         availablityStatus: '',
         distance: ''
     });
+
+    // Custom Dropdown Component
+    const CustomDropdown = ({ icon: Icon, placeholder, value, options, onChange, className = "" }) => {
+        const [isOpen, setIsOpen] = useState(false);
+        const [dropdownRef, setDropdownRef] = useState(null);
+
+        // Close dropdown when clicking outside
+        useEffect(() => {
+            const handleClickOutside = (event) => {
+                if (dropdownRef && !dropdownRef.contains(event.target)) {
+                    setIsOpen(false);
+                }
+            };
+            document.addEventListener('mousedown', handleClickOutside);
+            return () => document.removeEventListener('mousedown', handleClickOutside);
+        }, [dropdownRef]);
+
+        const selectedOption = options.find(option => option.value === value);
+
+        return (
+            <div className={`relative z-[9999] ${className}`} ref={setDropdownRef}>
+                <button
+                    type="button"
+                    className="border border-gray-300 rounded-md py-2 pl-10 pr-8 bg-white text-sm shadow-sm appearance-none w-full text-left hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
+                    onClick={() => setIsOpen(!isOpen)}
+                >
+                    <Icon className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
+                    <span className="text-gray-700">
+                        {selectedOption ? selectedOption.label : placeholder}
+                    </span>
+                    {isOpen ? (
+                        <FiChevronUp className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200" />
+                    ) : (
+                        <FiChevronDown className="absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200" />
+                    )}
+                </button>
+                
+                {isOpen && (
+                    <div className="absolute z-[9999] w-full mt-2 bg-white border border-gray-300 rounded-md shadow-lg max-h-60 overflow-auto">
+                        {options.map((option) => (
+                            <button
+                                key={option.value}
+                                type="button"
+                                className="w-full text-left px-4 py-2 text-sm text-gray-700 hover:bg-gray-100 focus:bg-gray-100 focus:outline-none transition-colors duration-150"
+                                onClick={() => {
+                                    onChange(option.value);
+                                    setIsOpen(false);
+                                }}
+                            >
+                                {option.label}
+                            </button>
+                        ))}
+                    </div>
+                )}
+            </div>
+        );
+    };
+
+    // Filter options
+    const categoryOptions = [
+        { value: '', label: 'Category' },
+        { value: '67c85d62ffbee109920dd5e2', label: 'sample 133' },
+        { value: '67c86253179ba1a66e0a5192', label: 'sddsds' },
+        { value: '67e3bc5c0e460de8090dcbe2', label: 'Sample' }
+    ];
+
+    const distanceOptions = [
+        { value: '', label: 'Distance' },
+        { value: '1', label: 'Within 1 km' },
+        { value: '5', label: 'Within 5 km' },
+        { value: '10', label: 'Within 10 km' }
+    ];
+
+    const availabilityOptions = [
+        { value: '', label: 'Availability' },
+        { value: 'available', label: 'Available' },
+        { value: '4-6 weeks', label: '4-6 weeks' },
+        { value: '2-3 months', label: '2-3 months' }
+    ];
 
     useEffect(() => {
         setIsRecommendedLoading(true);
@@ -975,60 +1055,36 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                 <div className='grid grid-cols-12 gap-4 mt-8'>
                     <div className='col-span-12 lg:col-span-6'>
-                        <div className="flex flex-wrap gap-4 items-center justify-start mb-4">
+                        <div className="flex flex-wrap gap-4 items-center justify-start mb-6 animate-fadeInDown">
                             {/* Category Filter */}
-                            <div className="relative">
-                                <TbTriangleSquareCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                                <select
-                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
-                                    value={bookmarkedFilters.catagoryID}
-                                    onChange={(e) => handleBookmarkedFilterChange('catagoryID', e.target.value)}
-                                >
-                                    <option value="">Category</option>
-                                    <option value="67c85d62ffbee109920dd5e2">sample 133</option>
-                                    <option value="67c86253179ba1a66e0a5192">sddsds</option>
-                                    <option value="67e3bc5c0e460de8090dcbe2">Sample</option>
-                                </select>
-                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 8L2 4h8L6 8z"/>
-                                </svg>
-                            </div>
+                            <CustomDropdown
+                                icon={TbTriangleSquareCircle}
+                                placeholder="Category"
+                                value={bookmarkedFilters.catagoryID}
+                                options={categoryOptions}
+                                onChange={(value) => handleBookmarkedFilterChange('catagoryID', value)}
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                            />
 
                             {/* Distance Filter */}
-                            <div className="relative">
-                                <HiOutlineLocationMarker className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                                <select
-                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
-                                    value={bookmarkedFilters.distance}
-                                    onChange={(e) => handleBookmarkedFilterChange('distance', e.target.value)}
-                                >
-                                    <option value="">Distance</option>
-                                    <option value="1">Within 1 km</option>
-                                    <option value="5">Within 5 km</option>
-                                    <option value="10">Within 10 km</option>
-                                </select>
-                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 8L2 4h8L6 8z"/>
-                                </svg>
-                            </div>
+                            <CustomDropdown
+                                icon={HiOutlineLocationMarker}
+                                placeholder="Distance"
+                                value={bookmarkedFilters.distance}
+                                options={distanceOptions}
+                                onChange={(value) => handleBookmarkedFilterChange('distance', value)}
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                            />
 
                             {/* Availability Filter */}
-                            <div className="relative">
-                                <FaRegCalendarCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                                <select
-                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
-                                    value={bookmarkedFilters.availablityStatus}
-                                    onChange={(e) => handleBookmarkedFilterChange('availablityStatus', e.target.value)}
-                                >
-                                    <option value="">Availability</option>
-                                    <option value="available">Available</option>
-                                    <option value="4-6 weeks">4-6 weeks</option>
-                                    <option value="2-3 months">2-3 months</option>
-                                </select>
-                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 8L2 4h8L6 8z"/>
-                                </svg>
-                            </div>
+                            <CustomDropdown
+                                icon={FaRegCalendarCheck}
+                                placeholder="Availability"
+                                value={bookmarkedFilters.availablityStatus}
+                                options={availabilityOptions}
+                                onChange={(value) => handleBookmarkedFilterChange('availablityStatus', value)}
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                            />
                         </div>
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
@@ -1081,60 +1137,36 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         )}
                     </div>
                     <div className='col-span-12 lg:col-span-6'>
-                        <div className="flex flex-wrap gap-4 items-center justify-end mb-4">
+                        <div className="flex flex-wrap gap-4 items-center justify-end mb-6 animate-fadeInDown animation-delay-100">
                             {/* Category Filter */}
-                            <div className="relative">
-                                <TbTriangleSquareCircle className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                                <select
-                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
-                                    value={approvedFilters.catagoryID}
-                                    onChange={(e) => handleApprovedFilterChange('catagoryID', e.target.value)}
-                                >
-                                    <option value="">Category</option>
-                                    <option value="67c85d62ffbee109920dd5e2">sample 133</option>
-                                    <option value="67c86253179ba1a66e0a5192">sddsds</option>
-                                    <option value="67e3bc5c0e460de8090dcbe2">Sample</option>
-                                </select>
-                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 8L2 4h8L6 8z"/>
-                                </svg>
-                            </div>
+                            <CustomDropdown
+                                icon={TbTriangleSquareCircle}
+                                placeholder="Category"
+                                value={approvedFilters.catagoryID}
+                                options={categoryOptions}
+                                onChange={(value) => handleApprovedFilterChange('catagoryID', value)}
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                            />
 
                             {/* Distance Filter */}
-                            <div className="relative">
-                                <HiOutlineLocationMarker className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                                <select
-                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
-                                    value={approvedFilters.distance}
-                                    onChange={(e) => handleApprovedFilterChange('distance', e.target.value)}
-                                >
-                                    <option value="">Distance</option>
-                                    <option value="1">Within 1 km</option>
-                                    <option value="5">Within 5 km</option>
-                                    <option value="10">Within 10 km</option>
-                                </select>
-                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 8L2 4h8L6 8z"/>
-                                </svg>
-                            </div>
+                            <CustomDropdown
+                                icon={HiOutlineLocationMarker}
+                                placeholder="Distance"
+                                value={approvedFilters.distance}
+                                options={distanceOptions}
+                                onChange={(value) => handleApprovedFilterChange('distance', value)}
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                            />
 
                             {/* Availability Filter */}
-                            <div className="relative">
-                                <FaRegCalendarCheck className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 text-sm pointer-events-none z-10" />
-                                <select
-                                    className="border border-gray-300 rounded-md py-2 pl-10 pr-6 bg-white text-sm shadow-sm appearance-none"
-                                    value={approvedFilters.availablityStatus}
-                                    onChange={(e) => handleApprovedFilterChange('availablityStatus', e.target.value)}
-                                >
-                                    <option value="">Availability</option>
-                                    <option value="available">Available</option>
-                                    <option value="4-6 weeks">4-6 weeks</option>
-                                    <option value="2-3 months">2-3 months</option>
-                                </select>
-                                <svg className="absolute right-2 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none" width="12" height="12" viewBox="0 0 12 12" fill="currentColor">
-                                    <path d="M6 8L2 4h8L6 8z"/>
-                                </svg>
-                            </div>
+                            <CustomDropdown
+                                icon={FaRegCalendarCheck}
+                                placeholder="Availability"
+                                value={approvedFilters.availablityStatus}
+                                options={availabilityOptions}
+                                onChange={(value) => handleApprovedFilterChange('availablityStatus', value)}
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                            />
                         </div>
                         {isApprovedLoading ? (
                             <ApprovedSkeleton />
