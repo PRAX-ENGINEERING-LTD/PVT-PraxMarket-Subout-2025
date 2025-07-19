@@ -30,7 +30,10 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                             <LuArrowLeftRight className='text-base' />
 
                             {/* Dropdown text, initially hidden */}
-                            <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-9999'>
+                            <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-50 mt-1'>
+
+                                {/* Arrow (triangle) at the top */}
+                                <div className="absolute -top-1 left-2/3 -translate-x-1/2 w-2 h-2 bg-gray-100 rotate-45 z-[-1]" />
                                 {moveToBookmarked && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('BOOKMARKED')}>Move To Bookmarked</span>)}
                                 {moveToApproved && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('APPROVED')}>Move To Approved</span>)}
                                 {moveToSelected && (<span className='hover:text-purple-600 hover:underline cursor-pointer' onClick={() => onClickMove('SELECTED')}>Move To Selected</span>)}
