@@ -42,6 +42,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [groupTransferDetails, setGroupTransferDetails] = useState([]);
     const [isMoveTransferLoading, setIsMoveTransferLoading] = useState(false);
     const [isCustomFoldersLoading, setIsCustomFoldersLoading] = useState(false);
+    const [isRecommendedLoading, setIsRecommendedLoading] = useState(false);
+    const [isBookmarkedLoading, setIsBookmarkedLoading] = useState(false);
+    const [isApprovedLoading, setIsApprovedLoading] = useState(false);
+    const [isSelectedLoading, setIsSelectedLoading] = useState(false);
 
 
     // Filter states for bookmarked suppliers
@@ -59,6 +63,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     });
 
     useEffect(() => {
+        setIsRecommendedLoading(true);
         $.ajax({
             url: getRecommendedSuppliers,
             method: 'GET',
@@ -69,6 +74,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             error: (xhr, status, error) => {
                 console.error('Error loading RecommendedSuppliers:', error);
             },
+            complete: () => {
+                setIsRecommendedLoading(false);
+            }
         });
         $.ajax({
             url: getAvailableCustomBookmarkApis,
@@ -83,6 +91,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         });
         fetchBookmarkedCompanies();
         fetchApprovedCompanies();
+        setIsSelectedLoading(true);
         $.ajax({
             url: getSelectedSuppliers,
             method: 'GET',
@@ -94,6 +103,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             error: (xhr, status, error) => {
                 console.error('Error loading SelectedSuppliers:', error);
             },
+            complete: () => {
+                setIsSelectedLoading(false);
+            }
         });
         $.ajax({
             url: getBookmarkAds,
@@ -279,6 +291,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
         const url = queryParams.toString() ? `${getBookmarkedCompanies}?${queryParams.toString()}` : getBookmarkedCompanies;
 
+        setIsBookmarkedLoading(true);
         $.ajax({
             url: url,
             method: 'GET',
@@ -290,6 +303,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             error: (xhr, status, error) => {
                 console.error('Error loading BookmarkSuppliers:', error);
             },
+            complete: () => {
+                setIsBookmarkedLoading(false);
+            }
         });
     };
 
@@ -308,6 +324,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
         const url = queryParams.toString() ? `${getApprovedSuppliers}?${queryParams.toString()}` : getApprovedSuppliers;
 
+        setIsApprovedLoading(true);
         $.ajax({
             url: url,
             method: 'GET',
@@ -319,6 +336,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             error: (xhr, status, error) => {
                 console.error('Error loading ApprovedSuppliers:', error);
             },
+            complete: () => {
+                setIsApprovedLoading(false);
+            }
         });
     };
 
@@ -641,21 +661,141 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                     {/* Skeleton for folder name */}
-                    <div className="bg-gray-300 animate-pulse h-8 w-32 rounded-b-lg"></div>
+                    <div className="bg-gray-300 animate-pulse h-8 w-24 md:w-32 rounded-b-lg"></div>
                     {/* Skeleton for count */}
-                    <div className="bg-gray-200 animate-pulse h-8 w-12 rounded-b-lg"></div>
+                    <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
                 </div>
                 
                 {/* Skeleton for carousel content */}
-                <div className="flex gap-4 pt-6">
+                <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
+                    {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
                     {[...Array(5)].map((_, index) => (
-                        <div key={index} className="flex-shrink-0 w-48">
-                            <div className="bg-gray-200 animate-pulse rounded-lg h-32 mb-2"></div>
-                            <div className="bg-gray-200 animate-pulse rounded h-4 mb-1"></div>
-                            <div className="bg-gray-200 animate-pulse rounded h-3 w-3/4"></div>
+                        <div 
+                            key={index} 
+                            className={`flex-shrink-0 ${
+                                index >= 2 ? 'hidden lg:block' : ''
+                            } ${
+                                index >= 1 ? 'hidden md:block' : ''
+                            } w-full md:w-48`}
+                        >
+                            <div className="bg-gray-200 animate-pulse rounded-lg h-24 md:h-32 mb-2"></div>
+                            <div className="bg-gray-200 animate-pulse rounded h-3 md:h-4 mb-1"></div>
+                            <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-3/4"></div>
                         </div>
                     ))}
                 </div>
+            </div>
+        </div>
+    );
+
+    // Skeleton component for recommended suppliers
+    const RecommendedSkeleton = () => (
+        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
+            <div className="flex sm:mb-0 mb-6">
+                <div className="bg-orange-300 animate-pulse h-8 w-40 rounded-b-lg"></div>
+            </div>
+            <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
+                {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
+                {[...Array(5)].map((_, index) => (
+                    <div 
+                        key={index} 
+                        className={`flex-shrink-0 ${
+                            index >= 2 ? 'hidden lg:block' : ''
+                        } ${
+                            index >= 1 ? 'hidden md:block' : ''
+                        } w-full md:w-48`}
+                    >
+                        <div className="bg-gray-200 animate-pulse rounded-lg h-24 md:h-32 mb-2"></div>
+                        <div className="bg-gray-200 animate-pulse rounded h-3 md:h-4 mb-1"></div>
+                        <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-3/4"></div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    // Skeleton component for bookmarked suppliers
+    const BookmarkedSkeleton = () => (
+        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[270px]`}>
+            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                <div className="bg-[#7366FF] animate-pulse h-8 w-32 md:w-40 rounded-b-lg"></div>
+                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+            </div>
+            <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
+                {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
+                {[...Array(3)].map((_, index) => (
+                    <div 
+                        key={index} 
+                        className={`flex flex-col gap-4 ${
+                            index >= 2 ? 'hidden lg:flex' : ''
+                        } ${
+                            index >= 1 ? 'hidden md:flex' : ''
+                        } w-full md:w-40 lg:w-48`}
+                    >
+                            <div key={index} className="w-full">
+                                <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
+                                <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
+                                <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-2/3"></div>
+                            </div>
+
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    // Skeleton component for approved suppliers
+    const ApprovedSkeleton = () => (
+        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[270px]`}>
+            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                <div className="bg-[#22C55E] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
+                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+            </div>
+            <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
+                {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
+                {[...Array(3)].map((_, index) => (
+                    <div 
+                        key={index} 
+                        className={`flex flex-col gap-4 ${
+                            index >= 2 ? 'hidden lg:flex' : ''
+                        } ${
+                            index >= 1 ? 'hidden md:flex' : ''
+                        } w-full md:w-40 lg:w-48`}
+                    >
+                            <div key={index} className="w-full">
+                                <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
+                                <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
+                                <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-2/3"></div>
+                            </div>
+                    </div>
+                ))}
+            </div>
+        </div>
+    );
+
+    // Skeleton component for selected suppliers
+    const SelectedSkeleton = () => (
+        <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
+            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
+                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+            </div>
+            <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
+                {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
+                {[...Array(5)].map((_, index) => (
+                    <div 
+                        key={index} 
+                        className={`flex-shrink-0 ${
+                            index >= 2 ? 'hidden lg:block' : ''
+                        } ${
+                            index >= 1 ? 'hidden md:block' : ''
+                        } w-full md:w-48`}
+                    >
+                        <div className="bg-gray-200 animate-pulse rounded-lg h-24 md:h-32 mb-2"></div>
+                        <div className="bg-gray-200 animate-pulse rounded h-3 md:h-4 mb-1"></div>
+                        <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-3/4"></div>
+                    </div>
+                ))}
             </div>
         </div>
     );
@@ -666,44 +806,48 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="md:px-5 px-2 py-5 w-full">
                 <div className="grid grid-cols-12 gap-4">
                     <div className="md:col-span-9 col-span-12">
-                        <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
-                            <div className="flex sm:mb-0 mb-6">
-                                <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
-                                    Recommended Suppliers
-                                </span>
+                        {isRecommendedLoading ? (
+                            <RecommendedSkeleton />
+                        ) : (
+                            <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
+                                <div className="flex sm:mb-0 mb-6">
+                                    <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                        Recommended Suppliers
+                                    </span>
+                                </div>
+                                {recommendedSuppliers.length === 0 ? (
+                                    <EmptyItemsMessage />
+                                ) : (
+                                    <Carousel
+                                        responsive={responsive}
+                                        arrows={false}
+                                        customButtonGroup={<CustomButtonGroupAsArrows />}
+                                        infinite
+                                        autoPlaySpeed={3000}
+                                        keyBoardControl
+                                        customTransition="transform 700ms ease-in-out"
+                                        transitionDuration={500}
+                                        containerClass="relative pt-10 -mt-4"
+                                        removeArrowOnDeviceType={[]}
+                                        showDots={false}
+                                        itemClass="px-2"
+                                        swipeable
+                                    >
+                                        {(recommendedSuppliers || []).map((supplier) => (
+                                            <CompanyCard
+                                                key={supplier.id}
+                                                {...supplier}
+                                                recommended
+                                                moveToBookmarked={supplier.moveToBookmarked}
+                                                moveToApproved={supplier.moveToApproved}
+                                                moveToSelected={supplier.moveToSelected}
+                                                onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
+                                            />
+                                        ))}
+                                    </Carousel>
+                                )}
                             </div>
-                            {recommendedSuppliers.length === 0 ? (
-                                <EmptyItemsMessage />
-                            ) : (
-                                <Carousel
-                                    responsive={responsive}
-                                    arrows={false}
-                                    customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    infinite
-                                    autoPlaySpeed={3000}
-                                    keyBoardControl
-                                    customTransition="transform 700ms ease-in-out"
-                                    transitionDuration={500}
-                                    containerClass="relative pt-10 -mt-4"
-                                    removeArrowOnDeviceType={[]}
-                                    showDots={false}
-                                    itemClass="px-2"
-                                    swipeable
-                                >
-                                    {(recommendedSuppliers || []).map((supplier) => (
-                                        <CompanyCard
-                                            key={supplier.id}
-                                            {...supplier}
-                                            recommended
-                                            moveToBookmarked={supplier.moveToBookmarked}
-                                            moveToApproved={supplier.moveToApproved}
-                                            moveToSelected={supplier.moveToSelected}
-                                            onClickMove={(targetFolder) => onClickMove(supplier, targetFolder)}
-                                        />
-                                    ))}
-                                </Carousel>
-                            )}
-                        </div>
+                        )}
                     </div>
 
                     <div className="md:col-span-3 col-span-12">
@@ -791,51 +935,55 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </svg>
                             </div>
                         </div>
-                        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
-                            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
-                                    Bookmarked Suppliers
-                                </span>
-                                <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
+                        {isBookmarkedLoading ? (
+                            <BookmarkedSkeleton />
+                        ) : (
+                            <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
+                                <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                        Bookmarked Suppliers
+                                    </span>
+                                    <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
+                                </div>
+                                {bookmarkgrouped.length === 0 ? (
+                                    <EmptyItemsMessage />
+                                ) : (
+                                    <Carousel
+                                        responsive={responsive2}
+                                        arrows={false}
+                                        customButtonGroup={<CustomButtonGroupAsArrows />}
+                                        // infinite
+                                        autoPlaySpeed={3000}
+                                        keyBoardControl
+                                        customTransition="transform 700ms ease-in-out"
+                                        transitionDuration={500}
+                                        containerClass="relative pt-10 -mt-4"
+                                        removeArrowOnDeviceType={[]}
+                                        showDots={false}
+                                        itemClass="px-2"
+                                        swipeable
+                                    >
+                                        {bookmarkgrouped.map((pair, index) => (
+                                            <div key={index} className="flex flex-col gap-4">
+                                                {pair.map((bookmark) => (
+                                                    <CompanyCard
+                                                        key={bookmark.id}
+                                                        {...bookmark}
+                                                        moveToApproved={bookmark.moveToApproved}
+                                                        moveToSelected={bookmark.moveToSelected}
+                                                        onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                        onDelete={() => {
+                                                            setOnDeleteCompany(bookmark);
+                                                            setIsDeleteCompanyConfirmationModalOpen(true)
+                                                        }}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </Carousel>
+                                )}
                             </div>
-                            {bookmarkgrouped.length === 0 ? (
-                                <EmptyItemsMessage />
-                            ) : (
-                                <Carousel
-                                    responsive={responsive2}
-                                    arrows={false}
-                                    customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    // infinite
-                                    autoPlaySpeed={3000}
-                                    keyBoardControl
-                                    customTransition="transform 700ms ease-in-out"
-                                    transitionDuration={500}
-                                    containerClass="relative pt-10 -mt-4"
-                                    removeArrowOnDeviceType={[]}
-                                    showDots={false}
-                                    itemClass="px-2"
-                                    swipeable
-                                >
-                                    {bookmarkgrouped.map((pair, index) => (
-                                        <div key={index} className="flex flex-col gap-4">
-                                            {pair.map((bookmark) => (
-                                                <CompanyCard
-                                                    key={bookmark.id}
-                                                    {...bookmark}
-                                                    moveToApproved={bookmark.moveToApproved}
-                                                    moveToSelected={bookmark.moveToSelected}
-                                                    onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                    onDelete={() => {
-                                                        setOnDeleteCompany(bookmark);
-                                                        setIsDeleteCompanyConfirmationModalOpen(true)
-                                                    }}
-                                                />
-                                            ))}
-                                        </div>
-                                    ))}
-                                </Carousel>
-                            )}
-                        </div>
+                        )}
                     </div>
                     <div className='col-span-12 lg:col-span-6'>
                         <div className="flex flex-wrap gap-4 items-center justify-end mb-4">
@@ -893,21 +1041,77 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 </svg>
                             </div>
                         </div>
-                        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
-                            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
-                                    Approved Suppliers
-                                </span>
-                                <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
+                        {isApprovedLoading ? (
+                            <ApprovedSkeleton />
+                        ) : (
+                            <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
+                                <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                                    <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                        Approved Suppliers
+                                    </span>
+                                    <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
+                                </div>
+                                {approvedgrouped.length === 0 ? (
+                                    <EmptyItemsMessage />
+                                ) : (
+                                    <Carousel
+                                        responsive={responsive2}
+                                        arrows={false}
+                                        customButtonGroup={<CustomButtonGroupAsArrows />}
+                                        // infinite
+                                        autoPlaySpeed={3000}
+                                        keyBoardControl
+                                        customTransition="transform 700ms ease-in-out"
+                                        transitionDuration={500}
+                                        containerClass="relative pt-10 -mt-4"
+                                        removeArrowOnDeviceType={[]}
+                                        showDots={false}
+                                        itemClass="px-2"
+                                        swipeable
+                                    >
+                                        {approvedgrouped.map((pair, index) => (
+                                            <div key={index} className="flex flex-col gap-4">
+                                                {pair.map((bookmark) => (
+                                                    <CompanyCard
+                                                        key={bookmark.id}
+                                                        {...bookmark}
+                                                        moveToBookmarked={bookmark.moveToBookmarked}
+                                                        moveToSelected={bookmark.moveToSelected}
+                                                        onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                        onDelete={() => {
+                                                            setOnDeleteCompany(bookmark);
+                                                            setIsDeleteCompanyConfirmationModalOpen(true)
+                                                        }}
+                                                    />
+                                                ))}
+                                            </div>
+                                        ))}
+                                    </Carousel>
+                                )}
                             </div>
-                            {approvedgrouped.length === 0 ? (
+                        )}
+                    </div>
+                </div>
+
+                <div className='w-full mt-5'>
+                    {isSelectedLoading ? (
+                        <SelectedSkeleton />
+                    ) : (
+                        <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
+                            <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                                <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                    Selected Suppliers
+                                </span>
+                                <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
+                            </div>
+                            {(selectedSuppliers || []).length === 0 ? (
                                 <EmptyItemsMessage />
                             ) : (
                                 <Carousel
-                                    responsive={responsive2}
+                                    responsive={responsive}
                                     arrows={false}
                                     customButtonGroup={<CustomButtonGroupAsArrows />}
-                                    // infinite
+                                    infinite
                                     autoPlaySpeed={3000}
                                     keyBoardControl
                                     customTransition="transform 700ms ease-in-out"
@@ -918,73 +1122,25 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     itemClass="px-2"
                                     swipeable
                                 >
-                                    {approvedgrouped.map((pair, index) => (
+                                    {(selectedSuppliers || []).map((bookmark, index) => (
                                         <div key={index} className="flex flex-col gap-4">
-                                            {pair.map((bookmark) => (
-                                                <CompanyCard
-                                                    key={bookmark.id}
-                                                    {...bookmark}
-                                                    moveToBookmarked={bookmark.moveToBookmarked}
-                                                    moveToSelected={bookmark.moveToSelected}
-                                                    onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                    onDelete={() => {
-                                                        setOnDeleteCompany(bookmark);
-                                                        setIsDeleteCompanyConfirmationModalOpen(true)
-                                                    }}
-                                                />
-                                            ))}
+                                            <CompanyCard
+                                                key={bookmark.id}
+                                                {...bookmark}
+                                                moveToBookmarked={bookmark.moveToBookmarked}
+                                                moveToApproved={bookmark.moveToApproved}
+                                                onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                onDelete={() => {
+                                                    setOnDeleteCompany(bookmark);
+                                                    setIsDeleteCompanyConfirmationModalOpen(true)
+                                                }}
+                                            />
                                         </div>
                                     ))}
                                 </Carousel>
                             )}
                         </div>
-                    </div>
-                </div>
-
-                <div className='w-full mt-5'>
-                    <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
-                        <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                            <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
-                                Selected Suppliers
-                            </span>
-                            <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
-                        </div>
-                        {(selectedSuppliers || []).length === 0 ? (
-                            <EmptyItemsMessage />
-                        ) : (
-                            <Carousel
-                                responsive={responsive}
-                                arrows={false}
-                                customButtonGroup={<CustomButtonGroupAsArrows />}
-                                infinite
-                                autoPlaySpeed={3000}
-                                keyBoardControl
-                                customTransition="transform 700ms ease-in-out"
-                                transitionDuration={500}
-                                containerClass="relative pt-10 -mt-4"
-                                removeArrowOnDeviceType={[]}
-                                showDots={false}
-                                itemClass="px-2"
-                                swipeable
-                            >
-                                {(selectedSuppliers || []).map((bookmark, index) => (
-                                    <div key={index} className="flex flex-col gap-4">
-                                        <CompanyCard
-                                            key={bookmark.id}
-                                            {...bookmark}
-                                            moveToBookmarked={bookmark.moveToBookmarked}
-                                            moveToApproved={bookmark.moveToApproved}
-                                            onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                            onDelete={() => {
-                                                setOnDeleteCompany(bookmark);
-                                                setIsDeleteCompanyConfirmationModalOpen(true)
-                                            }}
-                                        />
-                                    </div>
-                                ))}
-                            </Carousel>
-                        )}
-                    </div>
+                    )}
                 </div>
 
                 <div className='w-full flex justify-between items-center mt-5'>
