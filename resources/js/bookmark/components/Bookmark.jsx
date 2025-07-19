@@ -41,6 +41,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isMoveGroupModalOpen, setIsMoveGroupModalOpen] = useState(false);
     const [groupTransferDetails, setGroupTransferDetails] = useState([]);
     const [isMoveTransferLoading, setIsMoveTransferLoading] = useState(false);
+    const [isCustomFoldersLoading, setIsCustomFoldersLoading] = useState(false);
 
 
     // Filter states for bookmarked suppliers
@@ -433,9 +434,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             // Add null check for customFolder
             if (!customFolder || !Array.isArray(customFolder) || customFolder.length === 0) {
                 setCustomFolderData([]);
+                setIsCustomFoldersLoading(false);
                 return;
             }
 
+            setIsCustomFoldersLoading(true);
+            
             const folderPromises = customFolder.map(url =>
                 new Promise((resolve, reject) => {
                     $.ajax({
@@ -463,13 +467,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             setCustomFolderData(folderData);
         } catch (error) {
             console.error('Error fetching custom folders:', error);
+        } finally {
+            setIsCustomFoldersLoading(false);
         }
-    };
-
-    // Effect to fetch custom folder data when customFolder URLs change
+    };    // Effect to fetch custom folder data when customFolder URLs change
     useEffect(() => {
         if (customFolder && customFolder.length > 0) {
+            setIsCustomFoldersLoading(true);
             fetchCustomFolders();
+        } else {
+            setIsCustomFoldersLoading(false);
         }
     }, [customFolder]);
 
@@ -627,6 +634,31 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             setIsDeletingFolder(false);
         }
     };
+
+    // Skeleton component for custom groups loading
+    const CustomGroupSkeleton = () => (
+        <div className='w-full mt-5'>
+            <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
+                <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                    {/* Skeleton for folder name */}
+                    <div className="bg-gray-300 animate-pulse h-8 w-32 rounded-b-lg"></div>
+                    {/* Skeleton for count */}
+                    <div className="bg-gray-200 animate-pulse h-8 w-12 rounded-b-lg"></div>
+                </div>
+                
+                {/* Skeleton for carousel content */}
+                <div className="flex gap-4 pt-6">
+                    {[...Array(5)].map((_, index) => (
+                        <div key={index} className="flex-shrink-0 w-48">
+                            <div className="bg-gray-200 animate-pulse rounded-lg h-32 mb-2"></div>
+                            <div className="bg-gray-200 animate-pulse rounded h-4 mb-1"></div>
+                            <div className="bg-gray-200 animate-pulse rounded h-3 w-3/4"></div>
+                        </div>
+                    ))}
+                </div>
+            </div>
+        </div>
+    );
 
 
     return (
@@ -970,83 +1002,92 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     </button>
                 </div>
 
-                {/* Map the custom folders */}
-                {(customFolderData || []).map((folder, folderIndex) => {
-                    const folderSuppliers = folder?.suppliers || [];
-                    const folderUrl = (customFolder && customFolder[folderIndex]) || ''; // Get the corresponding URL with safety check
+                {/* Show skeleton loading for custom groups */}
+                {isCustomFoldersLoading ? (
+                    <>
+                        {[...Array(2)].map((_, index) => (
+                            <CustomGroupSkeleton key={index} />
+                        ))}
+                    </>
+                ) : (
+                    /* Map the custom folders */
+                    (customFolderData || []).map((folder, folderIndex) => {
+                        const folderSuppliers = folder?.suppliers || [];
+                        const folderUrl = (customFolder && customFolder[folderIndex]) || ''; // Get the corresponding URL with safety check
 
-                    return (
-                        <div key={folderIndex} className='w-full mt-5'>
-                            <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
-                                <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                    <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
-                                        {folder?.folderName || 'Unnamed Folder'}
-                                    </p>
-                                    <div className='bg-[#f7efff] px-3 h-8 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
-                                        {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
+                        return (
+                            <div key={folderIndex} className='w-full mt-5'>
+                                <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
+                                    <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
+                                        <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
+                                            {folder?.folderName || 'Unnamed Folder'}
+                                        </p>
+                                        <div className='bg-[#f7efff] px-3 h-8 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
+                                            {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
+                                        </div>
                                     </div>
-                                </div>
-                                <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
-                                    <div
-                                        className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
-                                        onClick={() => {
-                                            setFolderToUpdate({
-                                                folderUrl: folderUrl,
-                                                folderName: folder?.folderName || ''
-                                            });
-                                            setModalMode('update');
-                                            setIsCreateFolderModalOpen(true);
-                                        }}
-                                    >
-                                        <FiEdit className='text-sm' />
+                                    <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
+                                        <div
+                                            className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
+                                            onClick={() => {
+                                                setFolderToUpdate({
+                                                    folderUrl: folderUrl,
+                                                    folderName: folder?.folderName || ''
+                                                });
+                                                setModalMode('update');
+                                                setIsCreateFolderModalOpen(true);
+                                            }}
+                                        >
+                                            <FiEdit className='text-sm' />
+                                        </div>
+                                        <div
+                                            className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
+                                            onClick={() => {
+                                                setFolderToDelete(folderUrl);
+                                                setIsDeleteConfirmationModalOpen(true);
+                                            }}
+                                        >
+                                            <AiOutlineDelete className='text-sm' />
+                                        </div>
                                     </div>
-                                    <div
-                                        className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
-                                        onClick={() => {
-                                            setFolderToDelete(folderUrl);
-                                            setIsDeleteConfirmationModalOpen(true);
-                                        }}
-                                    >
-                                        <AiOutlineDelete className='text-sm' />
-                                    </div>
-                                </div>
-                                {folderSuppliers.length === 0 ? (
-                                    <EmptyItemsMessage />
-                                ) : (
-                                    <Carousel
-                                        responsive={responsive}
-                                        arrows={false}
-                                        customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        infinite
-                                        autoPlaySpeed={3000}
-                                        keyBoardControl
-                                        customTransition="transform 700ms ease-in-out"
-                                        transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-8"
-                                        removeArrowOnDeviceType={[]}
-                                        showDots={false}
-                                        itemClass="px-2"
-                                        swipeable
-                                    >
-                                        {(folderSuppliers || []).map((supplier, index) => (
-                                            <div key={index} className="flex flex-col gap-4">
+                                    {folderSuppliers.length === 0 ? (
+                                        <EmptyItemsMessage />
+                                    ) : (
+                                        <Carousel
+                                            responsive={responsive}
+                                            arrows={false}
+                                            customButtonGroup={<CustomButtonGroupAsArrows />}
+                                            infinite
+                                            autoPlaySpeed={3000}
+                                            keyBoardControl
+                                            customTransition="transform 700ms ease-in-out"
+                                            transitionDuration={500}
+                                            containerClass="relative pt-10 -mt-8"
+                                            removeArrowOnDeviceType={[]}
+                                            showDots={false}
+                                            itemClass="px-2"
+                                            swipeable
+                                        >
+                                            {(folderSuppliers || []).map((supplier, index) => (
+                                                <div key={index} className="flex flex-col gap-4">
 
-                                                <CompanyCard
-                                                    key={supplier.id}
-                                                    {...supplier}
-                                                    onDelete={() => {
-                                                        setOnDeleteCompany(supplier);
-                                                        setIsDeleteCompanyConfirmationModalOpen(true)
-                                                    }}
-                                                />
-                                            </div>
-                                        ))}
-                                    </Carousel>
-                                )}
+                                                    <CompanyCard
+                                                        key={supplier.id}
+                                                        {...supplier}
+                                                        onDelete={() => {
+                                                            setOnDeleteCompany(supplier);
+                                                            setIsDeleteCompanyConfirmationModalOpen(true)
+                                                        }}
+                                                    />
+                                                </div>
+                                            ))}
+                                        </Carousel>
+                                    )}
+                                </div>
                             </div>
-                        </div>
-                    );
-                })}
+                        );
+                    })
+                )}
             </div>
             <CreateFolderModal
                 isOpen={isCreateFolderModalOpen}
