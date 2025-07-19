@@ -83,7 +83,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         const selectedOption = options.find(option => option.value === value);
 
         return (
-            <div className={`relative z-[9999] ${className}`} ref={setDropdownRef}>
+            <div className={`relative ${className}`} ref={setDropdownRef}>
                 <button
                     type="button"
                     className="border border-gray-300 rounded-md py-2 pl-10 pr-8 bg-white text-sm shadow-sm appearance-none w-full text-left hover:border-gray-400 focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
@@ -1063,7 +1063,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('catagoryID', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9999]"
                             />
 
                             {/* Distance Filter */}
@@ -1073,7 +1073,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('distance', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9998]"
                             />
 
                             {/* Availability Filter */}
@@ -1083,7 +1083,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('availablityStatus', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9997]"
                             />
                         </div>
                         {isBookmarkedLoading ? (
@@ -1145,7 +1145,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleApprovedFilterChange('catagoryID', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9999]"
                             />
 
                             {/* Distance Filter */}
@@ -1155,7 +1155,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleApprovedFilterChange('distance', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9998]"
                             />
 
                             {/* Availability Filter */}
@@ -1165,7 +1165,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleApprovedFilterChange('availablityStatus', value)}
-                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200"
+                                className="hover:scale-105 focus-within:ring-2 focus-within:ring-blue-400 transition-all duration-200 z-[9997]"
                             />
                         </div>
                         {isApprovedLoading ? (
