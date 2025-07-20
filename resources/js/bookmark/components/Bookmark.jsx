@@ -340,29 +340,32 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             grouped.push(pair);
         }
 
-        // Process remaining items (after first 6) in the same pattern
+        // Process remaining items (after first 6) in alternating pattern
+        // 7th -> column 4 top, 8th -> column 4 bottom, 9th -> column 5 top, 10th -> column 5 bottom, etc.
         const remainingItems = array.slice(6);
-        const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
-
-        for (let i = 0; i < remainingItems.length; i += itemsPerColumn) {
-            const columnItems = remainingItems.slice(i, i + itemsPerColumn);
-
-            // Split into top row (first 3) and bottom row (next 3)
-            const topRow = columnItems.slice(0, 3);
-            const bottomRow = columnItems.slice(3, 6);
-
-            // Create pairs for each row position
-            const pairs = [];
-            const maxLength = Math.max(topRow.length, bottomRow.length);
-
-            for (let j = 0; j < maxLength; j++) {
-                const pair = [];
-                if (topRow[j]) pair.push(topRow[j]);
-                if (bottomRow[j]) pair.push(bottomRow[j]);
-                if (pair.length > 0) pairs.push(pair);
+        
+        for (let i = 0; i < remainingItems.length; i++) {
+            const item = remainingItems[i];
+            const columnIndex = Math.floor(i / 2) + 3; // Start from column 3 (4th column)
+            const isTopRow = i % 2 === 0; // Even indices go to top row, odd go to bottom row
+            
+            // Ensure the column exists
+            while (grouped.length <= columnIndex) {
+                grouped.push([]);
             }
-
-            grouped.push(...pairs);
+            
+            if (isTopRow) {
+                // Add to top row (beginning of pair)
+                if (grouped[columnIndex].length === 0) {
+                    grouped[columnIndex].push(item);
+                } else {
+                    // Insert at beginning if bottom row item already exists
+                    grouped[columnIndex].unshift(item);
+                }
+            } else {
+                // Add to bottom row (end of pair)
+                grouped[columnIndex].push(item);
+            }
         }
 
         return grouped;
@@ -375,8 +378,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
 
+    const multipleBookmarkedSuppliers= [...bookmarkSuppliers, ...bookmarkSuppliers];
     
-    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
+    const bookmarkgrouped = groupArrayInTwoRows(multipleBookmarkedSuppliers || []);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
@@ -391,10 +395,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Placeholder card for empty slots
     const PlaceholderCard = ({ type = 'bookmark' }) => (
-        <div className="h-24 md:h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
-            <FaPlus className="text-lg mb-1" />
+        <div className="h-24 md:h-[188px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
             <span className="text-xs text-center px-2">
-                Add {type === 'bookmark' ? 'Bookmark' : 'Approved'} Here
+                {type === 'bookmark' ? 'Bookmark' : 'Approved'} Suppliers is empty you can saved here
             </span>
         </div>
     )
@@ -1211,7 +1214,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 {Array.from({ length: 2 }, (_, slotIndex) => {
                                                     const bookmark = pair[slotIndex];
                                                     
-                                                    if (bookmark) {
+                                                    if (bookmark && bookmark !== null) {
                                                         return (
                                                             <CompanyCard
                                                                 key={bookmark.id}
@@ -1308,7 +1311,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 {Array.from({ length: 2 }, (_, slotIndex) => {
                                                     const approved = pair[slotIndex];
                                                     
-                                                    if (approved) {
+                                                    if (approved && approved !== null) {
                                                         return (
                                                             <CompanyCard
                                                                 key={approved.id}
