@@ -357,9 +357,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
 
-    // Multiply bookmarkSuppliers array 3 times
-    const multipliedBookmarkSuppliers = [...(bookmarkSuppliers || []), ...(bookmarkSuppliers || []), ...(bookmarkSuppliers || [])];
-    const bookmarkgrouped = groupArrayInTwoRows(multipliedBookmarkSuppliers);
+    
+    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
