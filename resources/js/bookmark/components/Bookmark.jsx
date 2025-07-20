@@ -357,7 +357,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
 
-    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
+    // Multiply bookmarkSuppliers array 3 times
+    const multipliedBookmarkSuppliers = [...(bookmarkSuppliers || []), ...(bookmarkSuppliers || []), ...(bookmarkSuppliers || [])];
+    const bookmarkgrouped = groupArrayInTwoRows(multipliedBookmarkSuppliers);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
@@ -1113,11 +1115,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     <img
                         src="/images/logo.webp"
                         alt="Prax Engineering Ltd"
-                        className="mx-auto w-40"
+                        className="mx-auto w-[239px] h-[64px]"
                     />
-                    <p className="text-sm italic text-gray-500 mt-2">
-                        Trust is our quality and reputation
-                    </p>
                 </div>
 
                 <div className='grid grid-cols-12 gap-4 mt-8'>
@@ -1156,7 +1155,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
                         ) : (
-                            <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
+                            <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[500px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         Bookmarked Suppliers
@@ -1238,7 +1237,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isApprovedLoading ? (
                             <ApprovedSkeleton />
                         ) : (
-                            <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
+                            <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[500px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         Approved Suppliers
