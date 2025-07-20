@@ -1062,7 +1062,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
             <div 
                 className="bg-gray-200 animate-pulse rounded-2xl w-full h-full object-cover" 
-                style={{ maxHeight: '250px', minHeight: '200px' }}
+                style={{ maxHeight: '260px', minHeight: '200px' }}
             />
             {/* Optional shimmer effect overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse rounded-2xl"></div>
@@ -1073,14 +1073,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     return (
         <>
             <div className="md:px-5 px-2 py-5 w-full">
-                <div className="grid grid-cols-12 gap-4">
+                <div className="grid grid-cols-12 gap-[10px]">
                     <div className="md:col-span-9 col-span-12">
                         {isRecommendedLoading ? (
                             <RecommendedSkeleton />
                         ) : (
-                            <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
+                            <div className="relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                                 <div className="flex sm:mb-0 mb-6">
-                                    <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                    <span className="bg-orange-500 text-white text-sm font-bold px-2 py-[6px] rounded-b-lg">
                                         Recommended Suppliers
                                     </span>
                                 </div>
@@ -1123,12 +1123,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isAdsLoading ? (
                             <AdsSkeleton />
                         ) : (
-                            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+                            <div className="relative w-full h-full rounded-[8px] overflow-hidden bg-gray-100">
                                 <img
                                     src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
                                     alt="Pine Forest"
-                                    className="object-cover w-full h-full rounded-2xl cursor-pointer"
-                                    style={{ maxHeight: '250px' }}
+                                    className="object-cover w-full h-full rounded-[8px] cursor-pointer"
+                                    style={{ maxHeight: '260px' }}
                                     onClick={() => {
                                         const url = bookmarkAds?.adPointingUrl?.startsWith('http')
                                             ? bookmarkAds.adPointingUrl
@@ -1140,7 +1140,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         )}
                     </div>
                 </div>
-                <div className="mt-8 text-center">
+                <div className="mt-[14px] text-center">
                     <img
                         src="/images/logo.webp"
                         alt="Prax Engineering Ltd"

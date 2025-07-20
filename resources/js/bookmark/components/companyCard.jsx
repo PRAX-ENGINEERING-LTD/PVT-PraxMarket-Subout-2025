@@ -6,9 +6,9 @@ import { LuArrowLeftRight } from "react-icons/lu";
 const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked, moveToApproved, moveToSelected, onClickMove, customBookMarkFolder = [] }) => {
     return (
         <div
-            className="group border border-gray-200 rounded-xl shadow-sm bg-white transform transition duration-300 hover:-translate-y-1 cursor-pointer"
+            className="group border-[1px] border-[#d4d4d4] rounded-[8px] shadow-sm bg-white transform transition duration-300 hover:-translate-y-1.5 cursor-pointer"
         >
-            <div className="relative h-[132px] w-full overflow-hidden rounded-t-xl">
+            <div className="relative h-[132px] w-full overflow-hidden rounded-t-[8px]">
                 <img
                     src={path}
                     alt={name}
@@ -44,7 +44,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
 
                 </div>
             </div>
-            <div className="p-3 font-bold text-base line-clamp-1 truncate">
+            <div className="p-[12px] font-bold text-base line-clamp-1 truncate text-black">
                 {name}
             </div>
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 mb-2 z-50 px-3 py-1 bg-purple-600 text-white text-base rounded shadow hidden group-hover:block transition-opacity duration-300 whitespace-nowrap pointer-events-none">
