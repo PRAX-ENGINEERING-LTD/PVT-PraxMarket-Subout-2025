@@ -363,7 +363,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
-    const customheight = (bookmarkgrouped.length < 4 ) && (approvedgrouped.length < 4);
 
     const EmptyItemsMessage = () => (
         <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
