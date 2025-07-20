@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import CompanyCard from './companyCard';
 import { FaRegHandshake } from "react-icons/fa6";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -316,18 +316,36 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         );
     };
 
-    // New function for 2-row grouping pattern: 1,2,3 / 4,5,6 | 7,8,9 / 10,11,12 | etc.
+    // New function for 2-row grouping pattern: Always show first 6 cards in two rows
     const groupArrayInTwoRows = (array) => {
         // Add null check to prevent undefined errors
         if (!array || !Array.isArray(array)) {
-            return [];
+            return [[], [], []]; // Always return 3 empty pairs for first 6 slots
         }
 
         const grouped = [];
+        
+        // Always process the first 6 items in two rows of 3 each
+        const first6Items = array.slice(0, 6);
+        const topRow = first6Items.slice(0, 3);
+        const bottomRow = first6Items.slice(3, 6);
+
+        // Create pairs for the first 6 items (positions 1,4 | 2,5 | 3,6)
+        for (let j = 0; j < 3; j++) { // Always create 3 pairs for first 6 items
+            const pair = [];
+            if (topRow[j]) pair.push(topRow[j]);
+            if (bottomRow[j]) pair.push(bottomRow[j]);
+            
+            // Always add the pair (even if empty) to maintain structure
+            grouped.push(pair);
+        }
+
+        // Process remaining items (after first 6) in the same pattern
+        const remainingItems = array.slice(6);
         const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
 
-        for (let i = 0; i < array.length; i += itemsPerColumn) {
-            const columnItems = array.slice(i, i + itemsPerColumn);
+        for (let i = 0; i < remainingItems.length; i += itemsPerColumn) {
+            const columnItems = remainingItems.slice(i, i + itemsPerColumn);
 
             // Split into top row (first 3) and bottom row (next 3)
             const topRow = columnItems.slice(0, 3);
@@ -358,7 +376,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
 
     
-    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers);
+    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
@@ -368,6 +386,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <FaRegHandshake className='text-black text-2xl' />
             <h3 className='text-black text-lg font-bold'>No Suppliers Added Yet</h3>
             <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
+        </div>
+    )
+
+    // Placeholder card for empty slots
+    const PlaceholderCard = ({ type = 'bookmark' }) => (
+        <div className="h-24 md:h-32 border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+            <FaPlus className="text-lg mb-1" />
+            <span className="text-xs text-center px-2">
+                Add {type === 'bookmark' ? 'Bookmark' : 'Approved'} Here
+            </span>
         </div>
     )
 
@@ -1160,7 +1188,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     </span>
                                     <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
-                                {bookmarkgrouped.length === 0 ? (
+                                {(bookmarkSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
@@ -1180,19 +1208,34 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     >
                                         {bookmarkgrouped.map((pair, index) => (
                                             <div key={index} className="flex flex-col gap-4">
-                                                {pair.map((bookmark) => (
-                                                    <CompanyCard
-                                                        key={bookmark.id}
-                                                        {...bookmark}
-                                                        moveToApproved={bookmark.moveToApproved}
-                                                        moveToSelected={bookmark.moveToSelected}
-                                                        onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                        onDelete={() => {
-                                                            setOnDeleteCompany(bookmark);
-                                                            setIsDeleteCompanyConfirmationModalOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
+                                                {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                    const bookmark = pair[slotIndex];
+                                                    
+                                                    if (bookmark) {
+                                                        return (
+                                                            <CompanyCard
+                                                                key={bookmark.id}
+                                                                {...bookmark}
+                                                                moveToApproved={bookmark.moveToApproved}
+                                                                moveToSelected={bookmark.moveToSelected}
+                                                                onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                                onDelete={() => {
+                                                                    setOnDeleteCompany(bookmark);
+                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
+                                                                }}
+                                                            />
+                                                        );
+                                                    } else if (index < 3) {
+                                                        // Show placeholder only for first 3 columns (first 6 slots)
+                                                        return (
+                                                            <PlaceholderCard 
+                                                                key={`placeholder-${index}-${slotIndex}`}
+                                                                type="bookmark"
+                                                            />
+                                                        );
+                                                    }
+                                                    return null;
+                                                })}
                                             </div>
                                         ))}
                                     </Carousel>
@@ -1242,7 +1285,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     </span>
                                     <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                                 </div>
-                                {approvedgrouped.length === 0 ? (
+                                {(approvedSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
@@ -1262,19 +1305,34 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     >
                                         {approvedgrouped.map((pair, index) => (
                                             <div key={index} className="flex flex-col gap-4">
-                                                {pair.map((bookmark) => (
-                                                    <CompanyCard
-                                                        key={bookmark.id}
-                                                        {...bookmark}
-                                                        moveToBookmarked={bookmark.moveToBookmarked}
-                                                        moveToSelected={bookmark.moveToSelected}
-                                                        onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                        onDelete={() => {
-                                                            setOnDeleteCompany(bookmark);
-                                                            setIsDeleteCompanyConfirmationModalOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
+                                                {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                    const approved = pair[slotIndex];
+                                                    
+                                                    if (approved) {
+                                                        return (
+                                                            <CompanyCard
+                                                                key={approved.id}
+                                                                {...approved}
+                                                                moveToBookmarked={approved.moveToBookmarked}
+                                                                moveToSelected={approved.moveToSelected}
+                                                                onClickMove={(targetFolder) => onClickMove(approved, targetFolder)}
+                                                                onDelete={() => {
+                                                                    setOnDeleteCompany(approved);
+                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
+                                                                }}
+                                                            />
+                                                        );
+                                                    } else if (index < 3) {
+                                                        // Show placeholder only for first 3 columns (first 6 slots)
+                                                        return (
+                                                            <PlaceholderCard 
+                                                                key={`placeholder-${index}-${slotIndex}`}
+                                                                type="approved"
+                                                            />
+                                                        );
+                                                    }
+                                                    return null;
+                                                })}
                                             </div>
                                         ))}
                                     </Carousel>
