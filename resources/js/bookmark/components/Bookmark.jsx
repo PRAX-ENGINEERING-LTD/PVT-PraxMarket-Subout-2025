@@ -49,6 +49,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isApprovedLoading, setIsApprovedLoading] = useState(false);
     const [isSelectedLoading, setIsSelectedLoading] = useState(false);
     const [isAdsLoading, setIsAdsLoading] = useState(false);
+    const [isLogoLoading, setIsLogoLoading] = useState(true);
 
 
     // Filter states for bookmarked suppliers
@@ -1069,6 +1070,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         </div>
     );
 
+    // Skeleton component for logo
+    const LogoSkeleton = () => (
+        <div className="mt-[14px] text-center">
+            <div className="bg-gray-200 animate-pulse mx-auto w-[239px] h-[64px] rounded-lg"></div>
+        </div>
+    );
+
 
     return (
         <>
@@ -1080,7 +1088,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         ) : (
                             <div className="relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                                 <div className="flex sm:mb-0 mb-6">
-                                    <span className="bg-orange-500 text-white text-sm font-bold px-2 py-[6px] rounded-b-lg">
+                                    <span className="bg-orange-500 text-white text-sm font-bold px-2 py-[6px] rounded-b-[8px]">
                                         Recommended Suppliers
                                     </span>
                                 </div>
@@ -1145,10 +1153,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         src="/images/logo.webp"
                         alt="Prax Engineering Ltd"
                         className="mx-auto w-[239px] h-[64px]"
+                        loading="lazy"
                     />
                 </div>
 
-                <div className='grid grid-cols-12 gap-4 mt-8'>
+                <div className='grid grid-cols-12 gap-4 mt-[24px]'>
                     <div className='col-span-12 lg:col-span-6'>
                         <div className="flex flex-wrap gap-4 items-center justify-start mb-6 animate-fadeInDown">
                             {/* Category Filter */}
@@ -1186,10 +1195,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         ) : (
                             <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[500px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-2 py-[6px] rounded-b-[8px]">
                                         Bookmarked Suppliers
                                     </span>
-                                    <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
+                                    <div className='bg-[#f4f4ff] px-[8px] flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-[8px] text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
                                 {(bookmarkSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
