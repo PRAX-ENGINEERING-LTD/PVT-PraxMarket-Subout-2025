@@ -379,9 +379,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
 
-    const multipleBookmarkedSuppliers= [...bookmarkSuppliers, ...bookmarkSuppliers];
-    
-    const bookmarkgrouped = groupArrayInTwoRows(multipleBookmarkedSuppliers || []);
+  
+    const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
