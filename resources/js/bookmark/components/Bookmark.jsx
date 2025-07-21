@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 import Carousel from 'react-multi-carousel';
 import 'react-multi-carousel/lib/styles.css';
-import { FaChevronLeft, FaChevronRight } from 'react-icons/fa';
+import { FaChevronLeft, FaChevronRight, FaPlus } from 'react-icons/fa';
 import CompanyCard from './companyCard';
 import { FaRegHandshake } from "react-icons/fa6";
 import { AiOutlineDelete } from "react-icons/ai";
@@ -49,6 +49,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const [isApprovedLoading, setIsApprovedLoading] = useState(false);
     const [isSelectedLoading, setIsSelectedLoading] = useState(false);
     const [isAdsLoading, setIsAdsLoading] = useState(false);
+    const [isLogoLoading, setIsLogoLoading] = useState(true);
 
 
     // Filter states for bookmarked suppliers
@@ -316,35 +317,56 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         );
     };
 
-    // New function for 2-row grouping pattern: 1,2,3 / 4,5,6 | 7,8,9 / 10,11,12 | etc.
+    // New function for 2-row grouping pattern: Always show first 6 cards in two rows
     const groupArrayInTwoRows = (array) => {
         // Add null check to prevent undefined errors
         if (!array || !Array.isArray(array)) {
-            return [];
+            return [[], [], []]; // Always return 3 empty pairs for first 6 slots
         }
 
         const grouped = [];
-        const itemsPerColumn = 6; // 3 items in top row + 3 items in bottom row
+        
+        // Always process the first 6 items in two rows of 3 each
+        const first6Items = array.slice(0, 6);
+        const topRow = first6Items.slice(0, 3);
+        const bottomRow = first6Items.slice(3, 6);
 
-        for (let i = 0; i < array.length; i += itemsPerColumn) {
-            const columnItems = array.slice(i, i + itemsPerColumn);
+        // Create pairs for the first 6 items (positions 1,4 | 2,5 | 3,6)
+        for (let j = 0; j < 3; j++) { // Always create 3 pairs for first 6 items
+            const pair = [];
+            if (topRow[j]) pair.push(topRow[j]);
+            if (bottomRow[j]) pair.push(bottomRow[j]);
+            
+            // Always add the pair (even if empty) to maintain structure
+            grouped.push(pair);
+        }
 
-            // Split into top row (first 3) and bottom row (next 3)
-            const topRow = columnItems.slice(0, 3);
-            const bottomRow = columnItems.slice(3, 6);
-
-            // Create pairs for each row position
-            const pairs = [];
-            const maxLength = Math.max(topRow.length, bottomRow.length);
-
-            for (let j = 0; j < maxLength; j++) {
-                const pair = [];
-                if (topRow[j]) pair.push(topRow[j]);
-                if (bottomRow[j]) pair.push(bottomRow[j]);
-                if (pair.length > 0) pairs.push(pair);
+        // Process remaining items (after first 6) in alternating pattern
+        // 7th -> column 4 top, 8th -> column 4 bottom, 9th -> column 5 top, 10th -> column 5 bottom, etc.
+        const remainingItems = array.slice(6);
+        
+        for (let i = 0; i < remainingItems.length; i++) {
+            const item = remainingItems[i];
+            const columnIndex = Math.floor(i / 2) + 3; // Start from column 3 (4th column)
+            const isTopRow = i % 2 === 0; // Even indices go to top row, odd go to bottom row
+            
+            // Ensure the column exists
+            while (grouped.length <= columnIndex) {
+                grouped.push([]);
             }
-
-            grouped.push(...pairs);
+            
+            if (isTopRow) {
+                // Add to top row (beginning of pair)
+                if (grouped[columnIndex].length === 0) {
+                    grouped[columnIndex].push(item);
+                } else {
+                    // Insert at beginning if bottom row item already exists
+                    grouped[columnIndex].unshift(item);
+                }
+            } else {
+                // Add to bottom row (end of pair)
+                grouped[columnIndex].push(item);
+            }
         }
 
         return grouped;
@@ -357,17 +379,26 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
 
+  
     const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
 
-    const customheight = (bookmarkgrouped.length < 4 ) && (approvedgrouped.length < 4);
 
     const EmptyItemsMessage = () => (
         <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
             <FaRegHandshake className='text-black text-2xl' />
             <h3 className='text-black text-lg font-bold'>No Suppliers Added Yet</h3>
             <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
+        </div>
+    )
+
+    // Placeholder card for empty slots
+    const PlaceholderCard = ({ type = 'bookmark' }) => (
+        <div className="h-24 md:h-[188px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+            <span className="text-xs text-center px-2">
+                {type === 'bookmark' ? 'Bookmark' : 'Approved'} Suppliers is empty you can saved here
+            </span>
         </div>
     )
 
@@ -1031,10 +1062,17 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
             <div 
                 className="bg-gray-200 animate-pulse rounded-2xl w-full h-full object-cover" 
-                style={{ maxHeight: '250px', minHeight: '200px' }}
+                style={{ maxHeight: '260px', minHeight: '200px' }}
             />
             {/* Optional shimmer effect overlay */}
             <div className="absolute inset-0 bg-gradient-to-r from-transparent via-white/20 to-transparent animate-pulse rounded-2xl"></div>
+        </div>
+    );
+
+    // Skeleton component for logo
+    const LogoSkeleton = () => (
+        <div className="mt-[14px] text-center">
+            <div className="bg-gray-200 animate-pulse mx-auto w-[239px] h-[64px] rounded-lg"></div>
         </div>
     );
 
@@ -1042,14 +1080,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     return (
         <>
             <div className="md:px-5 px-2 py-5 w-full">
-                <div className="grid grid-cols-12 gap-4">
+                <div className="grid grid-cols-12 gap-[10px]">
                     <div className="md:col-span-9 col-span-12">
                         {isRecommendedLoading ? (
                             <RecommendedSkeleton />
                         ) : (
-                            <div className="relative bg-white border border-gray-300 rounded-lg px-4 pb-4 md:h-[260px]">
+                            <div className="relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                                 <div className="flex sm:mb-0 mb-6">
-                                    <span className="bg-orange-500 text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                    <span className="bg-orange-500 text-white text-sm font-bold px-2 py-[6px] rounded-b-[8px]">
                                         Recommended Suppliers
                                     </span>
                                 </div>
@@ -1092,12 +1130,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isAdsLoading ? (
                             <AdsSkeleton />
                         ) : (
-                            <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
+                            <div className="relative w-full h-full rounded-[8px] overflow-hidden bg-gray-100">
                                 <img
                                     src={bookmarkAds.adAssetUrl ? bookmarkAds.adAssetUrl : "/images/ad.avif"}
                                     alt="Pine Forest"
-                                    className="object-cover w-full h-full rounded-2xl cursor-pointer"
-                                    style={{ maxHeight: '250px' }}
+                                    className="object-cover w-full h-full rounded-[8px] cursor-pointer"
+                                    style={{ maxHeight: '260px' }}
                                     onClick={() => {
                                         const url = bookmarkAds?.adPointingUrl?.startsWith('http')
                                             ? bookmarkAds.adPointingUrl
@@ -1109,18 +1147,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         )}
                     </div>
                 </div>
-                <div className="mt-8 text-center">
+                <div className="mt-[14px] text-center">
                     <img
                         src="/images/logo.webp"
                         alt="Prax Engineering Ltd"
-                        className="mx-auto w-40"
+                        className="mx-auto w-[239px] h-[64px]"
+                        loading="lazy"
                     />
-                    <p className="text-sm italic text-gray-500 mt-2">
-                        Trust is our quality and reputation
-                    </p>
                 </div>
 
-                <div className='grid grid-cols-12 gap-4 mt-8'>
+                <div className='grid grid-cols-12 gap-4 mt-[24px]'>
                     <div className='col-span-12 lg:col-span-6'>
                         <div className="flex flex-wrap gap-4 items-center justify-start mb-6 animate-fadeInDown">
                             {/* Category Filter */}
@@ -1156,14 +1192,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
                         ) : (
-                            <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
+                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[500px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Bookmarked Suppliers
                                     </span>
-                                    <div className='bg-[#f4f4ff] px-3 flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-lg text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
+                                    <div className='bg-[#f4f4ff] border-x-[1px] border-[#7366FF] text-[#7366FF] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px] '>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
-                                {bookmarkgrouped.length === 0 ? (
+                                {(bookmarkSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
@@ -1182,20 +1218,35 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         swipeable
                                     >
                                         {bookmarkgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-4">
-                                                {pair.map((bookmark) => (
-                                                    <CompanyCard
-                                                        key={bookmark.id}
-                                                        {...bookmark}
-                                                        moveToApproved={bookmark.moveToApproved}
-                                                        moveToSelected={bookmark.moveToSelected}
-                                                        onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                        onDelete={() => {
-                                                            setOnDeleteCompany(bookmark);
-                                                            setIsDeleteCompanyConfirmationModalOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
+                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
+                                                {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                    const bookmark = pair[slotIndex];
+                                                    
+                                                    if (bookmark && bookmark !== null) {
+                                                        return (
+                                                            <CompanyCard
+                                                                key={bookmark.id}
+                                                                {...bookmark}
+                                                                moveToApproved={bookmark.moveToApproved}
+                                                                moveToSelected={bookmark.moveToSelected}
+                                                                onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                                onDelete={() => {
+                                                                    setOnDeleteCompany(bookmark);
+                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
+                                                                }}
+                                                            />
+                                                        );
+                                                    } else if (index < 3) {
+                                                        // Show placeholder only for first 3 columns (first 6 slots)
+                                                        return (
+                                                            <PlaceholderCard 
+                                                                key={`placeholder-${index}-${slotIndex}`}
+                                                                type="bookmark"
+                                                            />
+                                                        );
+                                                    }
+                                                    return null;
+                                                })}
                                             </div>
                                         ))}
                                     </Carousel>
@@ -1238,14 +1289,14 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isApprovedLoading ? (
                             <ApprovedSkeleton />
                         ) : (
-                            <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 ${customheight ? 'md:h-[270px]':'md:h-[458px]'}`}>
+                            <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[500px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         Approved Suppliers
                                     </span>
-                                    <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
+                                    <div className='bg-[#f1fff6 border-x-[1px] border-[#22C55E]  text-[#22C55E] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                                 </div>
-                                {approvedgrouped.length === 0 ? (
+                                {(approvedSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
                                 ) : (
                                     <Carousel
@@ -1264,20 +1315,35 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         swipeable
                                     >
                                         {approvedgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-4">
-                                                {pair.map((bookmark) => (
-                                                    <CompanyCard
-                                                        key={bookmark.id}
-                                                        {...bookmark}
-                                                        moveToBookmarked={bookmark.moveToBookmarked}
-                                                        moveToSelected={bookmark.moveToSelected}
-                                                        onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                        onDelete={() => {
-                                                            setOnDeleteCompany(bookmark);
-                                                            setIsDeleteCompanyConfirmationModalOpen(true)
-                                                        }}
-                                                    />
-                                                ))}
+                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
+                                                {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                    const approved = pair[slotIndex];
+                                                    
+                                                    if (approved && approved !== null) {
+                                                        return (
+                                                            <CompanyCard
+                                                                key={approved.id}
+                                                                {...approved}
+                                                                moveToBookmarked={approved.moveToBookmarked}
+                                                                moveToSelected={approved.moveToSelected}
+                                                                onClickMove={(targetFolder) => onClickMove(approved, targetFolder)}
+                                                                onDelete={() => {
+                                                                    setOnDeleteCompany(approved);
+                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
+                                                                }}
+                                                            />
+                                                        );
+                                                    } else if (index < 3) {
+                                                        // Show placeholder only for first 3 columns (first 6 slots)
+                                                        return (
+                                                            <PlaceholderCard 
+                                                                key={`placeholder-${index}-${slotIndex}`}
+                                                                type="approved"
+                                                            />
+                                                        );
+                                                    }
+                                                    return null;
+                                                })}
                                             </div>
                                         ))}
                                     </Carousel>
