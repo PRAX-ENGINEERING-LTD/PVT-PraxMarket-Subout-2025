@@ -1193,12 +1193,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
                         ) : (
-                            <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[500px]`}>
+                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[500px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-2 py-[6px] rounded-b-[8px]">
+                                    <span className="bg-[#7366FF] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Bookmarked Suppliers
                                     </span>
-                                    <div className='bg-[#f4f4ff] px-[8px] flex items-center justify-center border-b border-x border-[#7366FF] rounded-b-[8px] text-[#7366FF] font-bold text-sm'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
+                                    <div className='bg-[#f4f4ff] border-x-[1px] border-[#7366FF] text-[#7366FF] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px] '>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
                                 {(bookmarkSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
@@ -1219,7 +1219,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         swipeable
                                     >
                                         {bookmarkgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-4">
+                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
                                                 {Array.from({ length: 2 }, (_, slotIndex) => {
                                                     const bookmark = pair[slotIndex];
                                                     
@@ -1295,7 +1295,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
                                         Approved Suppliers
                                     </span>
-                                    <div className='bg-[#f1fff6] px-3 flex items-center justify-center border-b border-x border-[#22C55E] rounded-b-lg text-[#22C55E] font-bold text-sm'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
+                                    <div className='bg-[#f1fff6 border-x-[1px] border-[#22C55E]  text-[#22C55E] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                                 </div>
                                 {(approvedSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
@@ -1316,7 +1316,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         swipeable
                                     >
                                         {approvedgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-4">
+                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
                                                 {Array.from({ length: 2 }, (_, slotIndex) => {
                                                     const approved = pair[slotIndex];
                                                     
