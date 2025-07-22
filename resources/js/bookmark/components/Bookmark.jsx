@@ -918,7 +918,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                     {/* Skeleton for folder name */}
-                    <div className="bg-gray-300 animate-pulse h-8 w-24 md:w-32 rounded-b-lg"></div>
+                   <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
                     {/* Skeleton for count */}
                     <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
                 </div>
@@ -973,7 +973,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Skeleton component for bookmarked suppliers
     const BookmarkedSkeleton = () => (
-        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[270px]`}>
+        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[470px]`}>
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#7366FF] animate-pulse h-8 w-32 md:w-40 rounded-b-lg"></div>
                 <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
@@ -989,12 +989,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             index >= 1 ? 'hidden md:flex' : ''
                         } w-full md:w-40 lg:w-48`}
                     >
-                            <div key={index} className="w-full">
+                         {[...Array(2)].map((_, index2) => (
+                            <div key={index2} className="w-full">
                                 <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-2/3"></div>
                             </div>
-
+                        ))}
                     </div>
                 ))}
             </div>
@@ -1003,7 +1004,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Skeleton component for approved suppliers
     const ApprovedSkeleton = () => (
-        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[270px]`}>
+        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[470px]`}>
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#22C55E] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
                 <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
@@ -1019,11 +1020,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             index >= 1 ? 'hidden md:flex' : ''
                         } w-full md:w-40 lg:w-48`}
                     >
-                            <div key={index} className="w-full">
+                        {[...Array(2)].map((_, index2) => (
+                            <div key={index2} className="w-full">
                                 <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-2/3"></div>
                             </div>
+                        ))}
                     </div>
                 ))}
             </div>
@@ -1069,12 +1072,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         </div>
     );
 
-    // Skeleton component for logo
-    const LogoSkeleton = () => (
-        <div className="mt-[14px] text-center">
-            <div className="bg-gray-200 animate-pulse mx-auto w-[239px] h-[64px] rounded-lg"></div>
-        </div>
-    );
 
 
     return (
