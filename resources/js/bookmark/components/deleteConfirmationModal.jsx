@@ -5,7 +5,7 @@ const DeleteConfirmationModal = ({ isOpen, onClose, onConfirm, subtitle, isLoadi
   if (!isOpen) return null;
 
   return (
-    <div className="fixed inset-0 z-[99999] flex items-center justify-center bg-black/70 bg-opacity-50">
+    <div className="fixed inset-0 z-[49] flex items-center justify-center bg-black/70 bg-opacity-50">
       <div className="bg-white rounded-2xl shadow-lg w-96 p-6 relative">
     
         <IoMdInformationCircleOutline className="text-red-600 w-8 h-8 mx-auto mb-4" />
