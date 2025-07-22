@@ -920,7 +920,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     {/* Skeleton for folder name */}
                    <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
                     {/* Skeleton for count */}
-                    <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                    <div className="bg-[#eef4ff] animate-pulse h-8 w-8 rounded-b-lg border-x-[1px] border-[#3B82F6] border-b-[1px]"></div>
                 </div>
                 
                 {/* Skeleton for carousel content */}
@@ -976,7 +976,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[470px]`}>
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#7366FF] animate-pulse h-8 w-32 md:w-40 rounded-b-lg"></div>
-                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                <div className="bg-[#f4f4ff] animate-pulse h-8 w-8 border-x-[1px] border-[#7366FF] border-b-[1px] rounded-b-lg"></div>
             </div>
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
@@ -1007,7 +1007,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[470px]`}>
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#22C55E] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
-                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                <div className="bg-[#f1fff6] border-x-[1px] border-[#22C55E] animate-pulse h-8 w-8 border-b-[1px] rounded-b-lg"></div>
             </div>
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
@@ -1038,7 +1038,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
-                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                <div className="bg-[#eef4ff] animate-pulse h-8 w-8 rounded-b-lg border-x-[1px] border-[#3B82F6] border-b-[1px]"></div>
             </div>
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
