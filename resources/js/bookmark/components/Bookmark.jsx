@@ -395,7 +395,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Placeholder card for empty slots
     const PlaceholderCard = ({ type = 'bookmark' }) => (
-        <div className="h-24 md:h-[188px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
+        <div className="h-[180px] border-2 border-dashed border-gray-300 rounded-lg flex flex-col items-center justify-center text-gray-400 bg-gray-50 hover:bg-gray-100 transition-colors duration-200">
             <span className="text-xs text-center px-2">
                 {type === 'bookmark' ? 'Bookmark' : 'Approved'} Suppliers is empty you can saved here
             </span>
@@ -681,7 +681,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             );
 
             const folderPromisesWithReplacedUrls = customFolder.map(url => {
-                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://localhost/PVT-PraxMarket-Subout-2025');
+                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://127.0.0.1:8000');
                 console.log('Replaced URL:', replacedUrl);
                 return new Promise((resolve, reject) => {
                     $.ajax({
@@ -918,9 +918,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                     {/* Skeleton for folder name */}
-                    <div className="bg-gray-300 animate-pulse h-8 w-24 md:w-32 rounded-b-lg"></div>
+                   <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
                     {/* Skeleton for count */}
-                    <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                    <div className="bg-[#eef4ff] animate-pulse h-8 w-8 rounded-b-lg border-x-[1px] border-[#3B82F6] border-b-[1px]"></div>
                 </div>
                 
                 {/* Skeleton for carousel content */}
@@ -973,10 +973,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Skeleton component for bookmarked suppliers
     const BookmarkedSkeleton = () => (
-        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[270px]`}>
+        <div className={`relative border border-gray-300 rounded-lg px-4 pb-4 gradient-bg md:h-[470px]`}>
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#7366FF] animate-pulse h-8 w-32 md:w-40 rounded-b-lg"></div>
-                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                <div className="bg-[#f4f4ff] animate-pulse h-8 w-8 border-x-[1px] border-[#7366FF] border-b-[1px] rounded-b-lg"></div>
             </div>
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
@@ -989,12 +989,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             index >= 1 ? 'hidden md:flex' : ''
                         } w-full md:w-40 lg:w-48`}
                     >
-                            <div key={index} className="w-full">
+                         {[...Array(2)].map((_, index2) => (
+                            <div key={index2} className="w-full">
                                 <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-2/3"></div>
                             </div>
-
+                        ))}
                     </div>
                 ))}
             </div>
@@ -1003,10 +1004,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Skeleton component for approved suppliers
     const ApprovedSkeleton = () => (
-        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[270px]`}>
+        <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[470px]`}>
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#22C55E] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
-                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                <div className="bg-[#f1fff6] border-x-[1px] border-[#22C55E] animate-pulse h-8 w-8 border-b-[1px] rounded-b-lg"></div>
             </div>
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
@@ -1019,11 +1020,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             index >= 1 ? 'hidden md:flex' : ''
                         } w-full md:w-40 lg:w-48`}
                     >
-                            <div key={index} className="w-full">
+                        {[...Array(2)].map((_, index2) => (
+                            <div key={index2} className="w-full">
                                 <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 w-2/3"></div>
                             </div>
+                        ))}
                     </div>
                 ))}
             </div>
@@ -1035,7 +1038,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                 <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
-                <div className="bg-gray-200 animate-pulse h-8 w-8 md:w-12 rounded-b-lg"></div>
+                <div className="bg-[#eef4ff] animate-pulse h-8 w-8 rounded-b-lg border-x-[1px] border-[#3B82F6] border-b-[1px]"></div>
             </div>
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
@@ -1069,12 +1072,6 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         </div>
     );
 
-    // Skeleton component for logo
-    const LogoSkeleton = () => (
-        <div className="mt-[14px] text-center">
-            <div className="bg-gray-200 animate-pulse mx-auto w-[239px] h-[64px] rounded-lg"></div>
-        </div>
-    );
 
 
     return (
@@ -1192,12 +1189,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
                         ) : (
-                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[500px]`}>
+                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[470px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#7366FF] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Bookmarked Suppliers
                                     </span>
-                                    <div className='bg-[#f4f4ff] border-x-[1px] border-[#7366FF] text-[#7366FF] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px] '>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
+                                    <div className='bg-[#f4f4ff] border-x-[1px] border-[#7366FF] text-[#7366FF] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
                                 {(bookmarkSuppliers || []).length === 0 ? (
                                     <EmptyItemsMessage />
@@ -1289,9 +1286,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isApprovedLoading ? (
                             <ApprovedSkeleton />
                         ) : (
-                            <div className={`relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[500px]`}>
+                            <div className={`relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[470px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                    <span className="bg-[#22C55E] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                    <span className="bg-[#22C55E] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Approved Suppliers
                                     </span>
                                     <div className='bg-[#f1fff6 border-x-[1px] border-[#22C55E]  text-[#22C55E] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
@@ -1357,12 +1354,12 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     {isSelectedLoading ? (
                         <SelectedSkeleton />
                     ) : (
-                        <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[271px]">
+                        <div className="group/main relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[271px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                <span className="bg-[#3B82F6] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg">
+                                <span className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                     Selected Suppliers
                                 </span>
-                                <div className='bg-[#eef4ff] px-3 flex items-center justify-center border-b border-x border-[#3B82F6] rounded-b-lg text-[#3B82F6] font-bold text-sm'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
+                                <div className='bg-[#eef4ff] flex items-center justify-center border-x-[1px] border-[#3B82F6] text-[#3B82F6] font-bold text-sm px-[8px] border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
                             </div>
                             {(selectedSuppliers || []).length === 0 ? (
                                 <EmptyItemsMessage />
@@ -1406,15 +1403,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 <div className='w-full flex justify-between items-center mt-5'>
                     <h2 className='md:text-2xl text-xl font-bold'>Custom Groups</h2>
                     <button
-                        className="bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer"
+                        className="bg-[#7366FF] text-white px-[16px] py-[8px] rounded-lg hover:bg-[#5a21b6] transition-colors flex items-center gap-2 cursor-pointer"
                         onClick={() => {
                             setModalMode('create');
                             setFolderToUpdate(null);
                             setIsCreateFolderModalOpen(true);
                         }}
                     >
-                        <LuPlus className="text-lg" />
-                        <p className="!mb-0 text-white">Create Folder</p>
+                        <LuPlus className="text-xl" />
+                        <p className="!mb-0 text-white text-base">Create Folder</p>
                     </button>
                 </div>
 
@@ -1433,18 +1430,18 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                         return (
                             <div key={folderIndex} className='w-full mt-5'>
-                                <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
+                                <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[280px]">
                                     <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                        <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
+                                        <p className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px] truncate max-w-[150px]">
                                             {folder?.folderName || 'Unnamed Folder'}
                                         </p>
-                                        <div className='bg-[#f7efff] px-3 h-8 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
+                                        <div className='bg-[#eef4ff] flex items-center justify-center border-x-[1px] border-[#3B82F6] text-[#3B82F6] font-bold text-sm px-[8px] h-8 border-b-[1px] rounded-b-[8px]'>
                                             {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
                                         </div>
                                     </div>
                                     <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
                                         <div
-                                            className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
+                                            className='border-[1px] border-[#22C55E] bg-[#f7fffa] rounded-lg px-[4px] py-[4px] text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                             onClick={() => {
                                                 setFolderToUpdate({
                                                     folderUrl: folderUrl,
@@ -1454,16 +1451,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 setIsCreateFolderModalOpen(true);
                                             }}
                                         >
-                                            <FiEdit className='text-sm' />
+                                            <FiEdit className='!text-2xl' />
                                         </div>
                                         <div
-                                            className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
+                                            className='border-[1px] border-red-500 bg-[#fff3f3] rounded-lg px-[4px] py-[4px] text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
                                             onClick={() => {
                                                 setFolderToDelete(folderUrl);
                                                 setIsDeleteConfirmationModalOpen(true);
                                             }}
                                         >
-                                            <AiOutlineDelete className='text-sm' />
+                                            <AiOutlineDelete className='!text-2xl' />
                                         </div>
                                     </div>
                                     {folderSuppliers.length === 0 ? (
