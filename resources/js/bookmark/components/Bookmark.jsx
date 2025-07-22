@@ -1433,9 +1433,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                         return (
                             <div key={folderIndex} className='w-full mt-5'>
-                                <div className="group/main relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
+                                <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[280px]">
                                     <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                        <p className="bg-[#9333EA] text-white text-sm font-semibold px-3 py-1 pb-2 rounded-b-lg truncate max-w-[150px]">
+                                        <p className="bg-[#9333EA] text-white text-sm font-semibold px-2 py-[6px] rounded-b-[8px] truncate max-w-[150px]">
                                             {folder?.folderName || 'Unnamed Folder'}
                                         </p>
                                         <div className='bg-[#f7efff] px-3 h-8 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
