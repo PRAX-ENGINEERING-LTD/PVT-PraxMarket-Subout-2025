@@ -681,7 +681,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             );
 
             const folderPromisesWithReplacedUrls = customFolder.map(url => {
-                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://localhost/PVT-PraxMarket-Subout-2025');
+                const replacedUrl = url.replace('http://localhost/PVT-PraxMarket-Subout-2025', 'http://127.0.0.1:8000');
                 console.log('Replaced URL:', replacedUrl);
                 return new Promise((resolve, reject) => {
                     $.ajax({
@@ -1362,7 +1362,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 <span className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                     Selected Suppliers
                                 </span>
-                                <div className='bg-[#eef4ff] flex items-center justify-center border-x-[1px] border-[#3B82F6] text-[#3B82F6] font-bold text-sm px-[8px] border-b-[1px] rounded-b-[8px] '>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
+                                <div className='bg-[#eef4ff] flex items-center justify-center border-x-[1px] border-[#3B82F6] text-[#3B82F6] font-bold text-sm px-[8px] border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(selectedSuppliersCount || 0)}</div>
                             </div>
                             {(selectedSuppliers || []).length === 0 ? (
                                 <EmptyItemsMessage />
@@ -1406,15 +1406,15 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 <div className='w-full flex justify-between items-center mt-5'>
                     <h2 className='md:text-2xl text-xl font-bold'>Custom Groups</h2>
                     <button
-                        className="bg-[#5B21B6] text-white px-4 py-2 rounded-lg hover:bg-[#5a21b6da] transition-colors flex items-center gap-2 cursor-pointer"
+                        className="bg-[#7366FF] text-white px-[16px] py-[8px] rounded-lg hover:bg-[#5a21b6] transition-colors flex items-center gap-2 cursor-pointer"
                         onClick={() => {
                             setModalMode('create');
                             setFolderToUpdate(null);
                             setIsCreateFolderModalOpen(true);
                         }}
                     >
-                        <LuPlus className="text-lg" />
-                        <p className="!mb-0 text-white">Create Folder</p>
+                        <LuPlus className="text-xl" />
+                        <p className="!mb-0 text-white text-base">Create Folder</p>
                     </button>
                 </div>
 
@@ -1435,16 +1435,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             <div key={folderIndex} className='w-full mt-5'>
                                 <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[280px]">
                                     <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
-                                        <p className="bg-[#9333EA] text-white text-sm font-semibold px-2 py-[6px] rounded-b-[8px] truncate max-w-[150px]">
+                                        <p className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px] truncate max-w-[150px]">
                                             {folder?.folderName || 'Unnamed Folder'}
                                         </p>
-                                        <div className='bg-[#f7efff] px-3 h-8 flex items-center justify-center border-b border-x border-[#9333EA] rounded-b-lg text-[#9333EA] font-bold text-sm'>
+                                        <div className='bg-[#eef4ff] flex items-center justify-center border-x-[1px] border-[#3B82F6] text-[#3B82F6] font-bold text-sm px-[8px] h-8 border-b-[1px] rounded-b-[8px]'>
                                             {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
                                         </div>
                                     </div>
                                     <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
                                         <div
-                                            className='border-2 border-[#22C55E] bg-[#f7fffa] rounded-lg px-2 py-2 text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
+                                            className='border-[1px] border-[#22C55E] bg-[#f7fffa] rounded-lg px-[4px] py-[4px] text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                             onClick={() => {
                                                 setFolderToUpdate({
                                                     folderUrl: folderUrl,
@@ -1454,16 +1454,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 setIsCreateFolderModalOpen(true);
                                             }}
                                         >
-                                            <FiEdit className='text-sm' />
+                                            <FiEdit className='!text-2xl' />
                                         </div>
                                         <div
-                                            className='border-2 border-red-500 bg-[#fff3f3] rounded-lg px-2 py-2 text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
+                                            className='border-[1px] border-red-500 bg-[#fff3f3] rounded-lg px-[4px] py-[4px] text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
                                             onClick={() => {
                                                 setFolderToDelete(folderUrl);
                                                 setIsDeleteConfirmationModalOpen(true);
                                             }}
                                         >
-                                            <AiOutlineDelete className='text-sm' />
+                                            <AiOutlineDelete className='!text-2xl' />
                                         </div>
                                     </div>
                                     {folderSuppliers.length === 0 ? (
