@@ -149,7 +149,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </button>
                 
                 {isOpen && (
-                    <div className="absolute z-[9999] w-full mt-2 bg-white border border-[#a3a3a3] rounded-md shadow-lg max-h-60 overflow-auto">
+                    <div className="absolute z-[48] w-full mt-2 bg-white border border-[#a3a3a3] rounded-md shadow-lg max-h-60 overflow-auto">
                         {options.map((option) => (
                             <button
                                 key={option.value}
@@ -1163,7 +1163,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('catagoryID', value)}
-                                className="z-[9999]"
+                                className="z-[48]"
                             />
 
                             {/* Distance Filter */}
@@ -1173,7 +1173,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('distance', value)}
-                                className="z-[9998]"
+                                className="z-[47]"
                             />
 
                             {/* Availability Filter */}
@@ -1183,7 +1183,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleBookmarkedFilterChange('availablityStatus', value)}
-                                className="z-[9997]"
+                                className="z-[46]"
                             />
                         </div>
                         {isBookmarkedLoading ? (
@@ -1260,7 +1260,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
                                 onChange={(value) => handleApprovedFilterChange('catagoryID', value)}
-                                className="z-[9999]"
+                                className="z-[48]"
                             />
 
                             {/* Distance Filter */}
@@ -1270,7 +1270,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
                                 onChange={(value) => handleApprovedFilterChange('distance', value)}
-                                className="z-[9998]"
+                                className="z-[47]"
                             />
 
                             {/* Availability Filter */}
@@ -1280,7 +1280,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
                                 onChange={(value) => handleApprovedFilterChange('availablityStatus', value)}
-                                className="z-[9997]"
+                                className="z-[46]"
                             />
                         </div>
                         {isApprovedLoading ? (
