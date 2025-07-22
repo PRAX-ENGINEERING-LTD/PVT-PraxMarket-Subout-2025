@@ -7,6 +7,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
     return (
         <div
             className="group border-[1px] border-[#d4d4d4] rounded-[8px] shadow-sm bg-white transform transition duration-300 hover:-translate-y-1.5 cursor-pointer"
+            onClick={() => window.open(`https://praxmarket.com/home?id=${id}`, '_blank')}
         >
             <div className="relative h-[132px] w-full overflow-hidden rounded-t-[8px]">
                 <img
@@ -19,14 +20,21 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                 </div>
                 <div className="hidden group-hover:flex absolute top-2 items-center justify-between gap-1 font-medium px-3 w-full">
                     {!recommended ? (
-                        <div className='flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center' onClick={onDelete}>
+                        <div className='flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center' onClick={(e) => {
+                            e.stopPropagation();
+                            onDelete()
+                        }}
+                        >
                             <RiDeleteBin5Line className='text-base' />
                         </div>
                     ) : (
                         <div></div>
                     )}
                     {onClickMove && (
-                        <div className='relative group/sub flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center cursor-pointer'>
+                        <div className='relative group/sub flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center cursor-pointer'
+                            onClick={(e) => {
+                                e.stopPropagation();
+                            }}>
                             <LuArrowLeftRight className='text-base' />
 
                             {/* Dropdown text, initially hidden */}
