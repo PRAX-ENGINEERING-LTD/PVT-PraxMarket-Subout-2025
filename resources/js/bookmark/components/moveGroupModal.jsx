@@ -29,7 +29,7 @@ const MoveGroupModal = ({
   };
 
   return (
-    <div className="fixed inset-0 z-[49] flex items-center justify-center bg-black/70">
+    <div className="fixed inset-0 z-[100] flex items-center justify-center bg-black/70">
       <div className="bg-white rounded-2xl shadow-lg w-96 max-h-[80vh] p-6 relative">
         {/* Close Button */}
         <button
