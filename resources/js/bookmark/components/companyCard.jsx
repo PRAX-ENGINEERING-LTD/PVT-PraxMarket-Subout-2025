@@ -6,7 +6,7 @@ import { LuArrowLeftRight } from "react-icons/lu";
 const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, moveToBookmarked, moveToApproved, moveToSelected, onClickMove, customBookMarkFolder = [] }) => {
     return (
         <div
-            className="group border-[1px] border-[#d4d4d4] rounded-[8px] shadow-sm bg-white transform transition duration-300 hover:-translate-y-1.5 cursor-pointer"
+            className="group border-[1px] border-[#d4d4d4] rounded-[8px] card-box-shadow bg-white transform transition duration-300 hover:-translate-y-1.5 cursor-pointer"
             onClick={() => window.open(`https://praxmarket.com/home?id=${id}`, '_blank')}
         >
             <div className="relative h-[132px] w-full overflow-hidden rounded-t-[8px]">
