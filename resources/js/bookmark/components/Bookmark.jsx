@@ -14,7 +14,7 @@ import { TbTriangleSquareCircle } from "react-icons/tb";
 import { HiOutlineLocationMarker } from "react-icons/hi";
 import { FaRegCalendarCheck } from "react-icons/fa";
 import { FiChevronDown, FiChevronUp } from "react-icons/fi";
-import { ToastContainer,toast } from 'react-toastify';
+import { ToastContainer, toast } from 'react-toastify';
 
 
 
@@ -89,24 +89,24 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         const getButtonStyles = () => {
             if (isOpen) {
                 // When dropdown is open - purple background
-                return "border-[1px] border-[#7366FF] rounded-md py-1 px-[30px] bg-[#7366FF] text-sm shadow-sm appearance-none w-full text-left transition-colors duration-200";
+                return "border-[1px] border-[#7366FF] rounded-md py-1 px-[10px] bg-[#7366FF] text-sm shadow-sm appearance-none w-full text-left transition-colors duration-200";
             } else if (hasSelection) {
                 // When item is selected - light purple background
-                return "border-[1px] border-[#7366FF] rounded-md py-1 px-[30px] bg-[#f7efff] text-sm shadow-sm appearance-none w-full text-left hover:border-[#7366FF] focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] transition-colors duration-200";
+                return "border-[1px] border-[#7366FF] rounded-md py-1 px-[10px] bg-[#f7efff] text-sm shadow-sm appearance-none w-full text-left hover:border-[#7366FF] focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] transition-colors duration-200";
             } else {
                 // Default state - white background
-                return "border-[1px] border-[#a3a3a3] rounded-md py-1 px-[30px] bg-white text-sm text-[#737373] shadow-sm appearance-none w-full text-left focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 hover:!bg-[#f7efff] hover:!border-[#7366FF] hover:!text-[#7366FF] focus:!text-[#7366FF] focus:!outline-none";
+                return "border-[1px] border-[#a3a3a3] rounded-md py-1 px-[10px] bg-white text-sm text-[#737373] shadow-sm appearance-none w-full text-left focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 hover:!bg-[#f7efff] hover:!border-[#7366FF] hover:!text-[#7366FF] focus:!text-[#7366FF] focus:!outline-none";
             }
         };
 
         // Determine icon and text colors based on state
         const getIconColor = () => {
             if (isOpen) {
-                return "absolute left-2 top-1/2 transform -translate-y-1/2 text-white text-lg pointer-events-none z-10";
+                return "text-white text-lg pointer-events-none z-10";
             } else if (hasSelection) {
-                return "absolute left-2 top-1/2 transform -translate-y-1/2 text-[#7366FF] text-lg pointer-events-none z-10";
+                return "text-[#7366FF] text-lg pointer-events-none z-10";
             } else {
-                return "absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg pointer-events-none z-10 group-hover:!text-[#7366FF] transition-colors duration-200";
+                return " text-gray-500 text-lg pointer-events-none z-10 group-hover:!text-[#7366FF] transition-colors duration-200";
             }
         };
 
@@ -122,32 +122,34 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
         const getChevronColor = () => {
             if (isOpen) {
-                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-white pointer-events-none transition-transform duration-200";
+                return " text-white pointer-events-none transition-transform duration-200";
             } else if (hasSelection) {
-                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-[#5B21B6] pointer-events-none transition-transform duration-200";
+                return "text-[#5B21B6] pointer-events-none transition-transform duration-200";
             } else {
-                return "absolute right-3 top-1/2 transform -translate-y-1/2 text-gray-500 pointer-events-none transition-transform duration-200";
+                return "text-gray-500 pointer-events-none transition-transform duration-200";
             }
         };
 
         return (
             <div className={`relative ${className}`} ref={setDropdownRef}>
                 <button
-                    type="button group flex items-center"
-                    className={getButtonStyles()}
+                    type="button"
+                    className={`group flex items-center justify-between ${getButtonStyles()}`}
                     onClick={() => setIsOpen(!isOpen)}
                 >
-                    <Icon className={getIconColor()} />
-                    <span className={getTextColor()}>
-                        {selectedOption ? selectedOption.label : placeholder}
-                    </span>
-                    {isOpen ? (
-                        <FiChevronUp className={getChevronColor()} />
-                    ) : (
-                        <FiChevronDown className={getChevronColor()} />
-                    )}
+                    <div className="flex items-center gap-2 w-full">
+                        {Icon && <img src={Icon} alt="" className="w-4 h-4 pointer-events-none z-10" />}
+                        <span className={`flex-1 truncate ${getTextColor()}`}>
+                            {selectedOption ? selectedOption.label : placeholder}
+                        </span>
+                        {isOpen ? (
+                            <FiChevronUp className={getChevronColor()} />
+                        ) : (
+                            <FiChevronDown className={getChevronColor()} />
+                        )}
+                    </div>
                 </button>
-                
+
                 {isOpen && (
                     <div className="absolute z-[48] w-full mt-2 bg-white border border-[#a3a3a3] rounded-md shadow-lg max-h-60 overflow-auto">
                         {options.map((option) => (
@@ -325,7 +327,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         }
 
         const grouped = [];
-        
+
         // Always process the first 6 items in two rows of 3 each
         const first6Items = array.slice(0, 6);
         const topRow = first6Items.slice(0, 3);
@@ -336,7 +338,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             const pair = [];
             if (topRow[j]) pair.push(topRow[j]);
             if (bottomRow[j]) pair.push(bottomRow[j]);
-            
+
             // Always add the pair (even if empty) to maintain structure
             grouped.push(pair);
         }
@@ -344,17 +346,17 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         // Process remaining items (after first 6) in alternating pattern
         // 7th -> column 4 top, 8th -> column 4 bottom, 9th -> column 5 top, 10th -> column 5 bottom, etc.
         const remainingItems = array.slice(6);
-        
+
         for (let i = 0; i < remainingItems.length; i++) {
             const item = remainingItems[i];
             const columnIndex = Math.floor(i / 2) + 3; // Start from column 3 (4th column)
             const isTopRow = i % 2 === 0; // Even indices go to top row, odd go to bottom row
-            
+
             // Ensure the column exists
             while (grouped.length <= columnIndex) {
                 grouped.push([]);
             }
-            
+
             if (isTopRow) {
                 // Add to top row (beginning of pair)
                 if (grouped[columnIndex].length === 0) {
@@ -379,7 +381,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     };
 
 
-  
+
     const bookmarkgrouped = groupArrayInTwoRows(bookmarkSuppliers || []);
     const approvedgrouped = groupArrayInTwoRows(approvedSuppliers || []);
 
@@ -387,7 +389,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const EmptyItemsMessage = () => (
         <div className="flex flex-col gap-2 w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
-            <FaRegHandshake className='text-black text-2xl' />
+            <img src={'images/Hand.svg'} alt="No Bookmark" className='w-[24px] h-[24px]' />
             <h3 className='text-black text-xl font-[500]'>No Suppliers Added Yet</h3>
             <p className='text-black text-base font-normal xl:max-w-[600px] lg:max-w-lg md:max-w-md max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
         </div>
@@ -668,7 +670,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             }
 
             setIsCustomFoldersLoading(true);
-            
+
             const folderPromises = customFolder.map(url =>
                 new Promise((resolve, reject) => {
                     $.ajax({
@@ -918,22 +920,20 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                     {/* Skeleton for folder name */}
-                   <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
+                    <div className="bg-[#3B82F6] animate-pulse h-8 w-28 md:w-36 rounded-b-lg"></div>
                     {/* Skeleton for count */}
                     <div className="bg-[#eef4ff] animate-pulse h-8 w-8 rounded-b-lg border-x-[1px] border-[#3B82F6] border-b-[1px]"></div>
                 </div>
-                
+
                 {/* Skeleton for carousel content */}
                 <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                     {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
                     {[...Array(5)].map((_, index) => (
-                        <div 
-                            key={index} 
-                            className={`flex-shrink-0 ${
-                                index >= 2 ? 'hidden lg:block' : ''
-                            } ${
-                                index >= 1 ? 'hidden md:block' : ''
-                            } w-full md:w-48`}
+                        <div
+                            key={index}
+                            className={`flex-shrink-0 ${index >= 2 ? 'hidden lg:block' : ''
+                                } ${index >= 1 ? 'hidden md:block' : ''
+                                } w-full md:w-48`}
                         >
                             <div className="bg-gray-200 animate-pulse rounded-lg h-24 md:h-32 mb-2"></div>
                             <div className="bg-gray-200 animate-pulse rounded h-3 md:h-4 mb-1"></div>
@@ -954,13 +954,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
                 {[...Array(5)].map((_, index) => (
-                    <div 
-                        key={index} 
-                        className={`flex-shrink-0 ${
-                            index >= 2 ? 'hidden lg:block' : ''
-                        } ${
-                            index >= 1 ? 'hidden md:block' : ''
-                        } w-full md:w-48`}
+                    <div
+                        key={index}
+                        className={`flex-shrink-0 ${index >= 2 ? 'hidden lg:block' : ''
+                            } ${index >= 1 ? 'hidden md:block' : ''
+                            } w-full md:w-48`}
                     >
                         <div className="bg-gray-200 animate-pulse rounded-lg h-24 md:h-32 mb-2"></div>
                         <div className="bg-gray-200 animate-pulse rounded h-3 md:h-4 mb-1"></div>
@@ -981,15 +979,13 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
                 {[...Array(3)].map((_, index) => (
-                    <div 
-                        key={index} 
-                        className={`flex flex-col gap-4 ${
-                            index >= 2 ? 'hidden lg:flex' : ''
-                        } ${
-                            index >= 1 ? 'hidden md:flex' : ''
-                        } w-full md:w-40 lg:w-48`}
+                    <div
+                        key={index}
+                        className={`flex flex-col gap-4 ${index >= 2 ? 'hidden lg:flex' : ''
+                            } ${index >= 1 ? 'hidden md:flex' : ''
+                            } w-full md:w-40 lg:w-48`}
                     >
-                         {[...Array(2)].map((_, index2) => (
+                        {[...Array(2)].map((_, index2) => (
                             <div key={index2} className="w-full">
                                 <div className="bg-gray-200 animate-pulse rounded-lg h-20 md:h-24 mb-2"></div>
                                 <div className="bg-gray-200 animate-pulse rounded h-2 md:h-3 mb-1"></div>
@@ -1012,13 +1008,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 3 columns, Tablet: 2 columns, Mobile: 1 column */}
                 {[...Array(3)].map((_, index) => (
-                    <div 
-                        key={index} 
-                        className={`flex flex-col gap-4 ${
-                            index >= 2 ? 'hidden lg:flex' : ''
-                        } ${
-                            index >= 1 ? 'hidden md:flex' : ''
-                        } w-full md:w-40 lg:w-48`}
+                    <div
+                        key={index}
+                        className={`flex flex-col gap-4 ${index >= 2 ? 'hidden lg:flex' : ''
+                            } ${index >= 1 ? 'hidden md:flex' : ''
+                            } w-full md:w-40 lg:w-48`}
                     >
                         {[...Array(2)].map((_, index2) => (
                             <div key={index2} className="w-full">
@@ -1043,13 +1037,11 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
             <div className="flex gap-2 md:gap-4 pt-6 overflow-hidden">
                 {/* Desktop: 5 items, Tablet: 2 items, Mobile: 1 item */}
                 {[...Array(5)].map((_, index) => (
-                    <div 
-                        key={index} 
-                        className={`flex-shrink-0 ${
-                            index >= 2 ? 'hidden lg:block' : ''
-                        } ${
-                            index >= 1 ? 'hidden md:block' : ''
-                        } w-full md:w-48`}
+                    <div
+                        key={index}
+                        className={`flex-shrink-0 ${index >= 2 ? 'hidden lg:block' : ''
+                            } ${index >= 1 ? 'hidden md:block' : ''
+                            } w-full md:w-48`}
                     >
                         <div className="bg-gray-200 animate-pulse rounded-lg h-24 md:h-32 mb-2"></div>
                         <div className="bg-gray-200 animate-pulse rounded h-3 md:h-4 mb-1"></div>
@@ -1063,8 +1055,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     // Skeleton component for bookmark ads
     const AdsSkeleton = () => (
         <div className="relative w-full h-full rounded-2xl overflow-hidden bg-gray-100">
-            <div 
-                className="bg-gray-200 animate-pulse rounded-2xl w-full h-full object-cover" 
+            <div
+                className="bg-gray-200 animate-pulse rounded-2xl w-full h-full object-cover"
                 style={{ maxHeight: '260px', minHeight: '200px' }}
             />
             {/* Optional shimmer effect overlay */}
@@ -1158,7 +1150,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         <div className="flex flex-wrap gap-3 items-center justify-start mb-3 animate-fadeInDown">
                             {/* Category Filter */}
                             <CustomDropdown
-                                icon={TbTriangleSquareCircle}
+                                icon={'images/Category.svg'}
                                 placeholder="Category"
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
@@ -1168,7 +1160,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Distance Filter */}
                             <CustomDropdown
-                                icon={HiOutlineLocationMarker}
+                                icon={'images/Distance.svg'}
                                 placeholder="Distance"
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
@@ -1178,7 +1170,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Availability Filter */}
                             <CustomDropdown
-                                icon={FaRegCalendarCheck}
+                                icon={'images/Availability.svg'}
                                 placeholder="Availability"
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
@@ -1215,7 +1207,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         <div key={index} className="flex flex-col gap-x-4 gap-y-2">
                                             {Array.from({ length: 2 }, (_, slotIndex) => {
                                                 const bookmark = pair[slotIndex];
-                                                
+
                                                 if (bookmark && bookmark !== null) {
                                                     return (
                                                         <CompanyCard
@@ -1233,7 +1225,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 } else if (index < 3) {
                                                     // Show placeholder only for first 3 columns (first 6 slots)
                                                     return (
-                                                        <PlaceholderCard 
+                                                        <PlaceholderCard
                                                             key={`placeholder-${index}-${slotIndex}`}
                                                             type="bookmark"
                                                         />
@@ -1251,7 +1243,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         <div className="flex flex-wrap gap-3 items-center justify-end mb-3 animate-fadeInDown animation-delay-100">
                             {/* Category Filter */}
                             <CustomDropdown
-                                icon={TbTriangleSquareCircle}
+                                icon={'images/Category.svg'}
                                 placeholder="Category"
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
@@ -1261,7 +1253,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Distance Filter */}
                             <CustomDropdown
-                                icon={HiOutlineLocationMarker}
+                                icon={'images/Distance.svg'}
                                 placeholder="Distance"
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
@@ -1271,7 +1263,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Availability Filter */}
                             <CustomDropdown
-                                icon={FaRegCalendarCheck}
+                                icon={'images/Availability.svg'}
                                 placeholder="Availability"
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
@@ -1308,7 +1300,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                         <div key={index} className="flex flex-col gap-x-4 gap-y-2">
                                             {Array.from({ length: 2 }, (_, slotIndex) => {
                                                 const approved = pair[slotIndex];
-                                                
+
                                                 if (approved && approved !== null) {
                                                     return (
                                                         <CompanyCard
@@ -1326,7 +1318,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 } else if (index < 3) {
                                                     // Show placeholder only for first 3 columns (first 6 slots)
                                                     return (
-                                                        <PlaceholderCard 
+                                                        <PlaceholderCard
                                                             key={`placeholder-${index}-${slotIndex}`}
                                                             type="approved"
                                                         />
@@ -1431,9 +1423,9 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                             {formatCountWithLeadingZero(folder?.totalSupplierCount || 0)}
                                         </div>
                                     </div>
-                                    <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ':'right-5' } gap-2`}>
+                                    <div className={`group-hover/main:flex hidden absolute z-50 sm:top-4 top-10 ${folderSuppliers?.length > 0 ? 'right-32 ' : 'right-5'} gap-2`}>
                                         <div
-                                            className='border-[1px] border-[#22C55E] bg-[#f7fffa] rounded-lg px-[4px] py-[4px] text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
+                                            className='border-[1px] border-[#22C55E] bg-[#f7fffa] rounded-[4px] px-[4px] py-[4px] text-[#22C55E] hover:text-[#22C55F] cursor-pointer hover:bg-[#f9fffb] hover:scale-105'
                                             onClick={() => {
                                                 setFolderToUpdate({
                                                     folderUrl: folderUrl,
@@ -1443,16 +1435,16 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 setIsCreateFolderModalOpen(true);
                                             }}
                                         >
-                                            <FiEdit className='!text-2xl' />
+                                            <img src="/images/Edit.svg" alt="Edit" className='!w-5 !h-5' />
                                         </div>
                                         <div
-                                            className='border-[1px] border-red-500 bg-[#fff3f3] rounded-lg px-[4px] py-[4px] text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
+                                            className='border-[1px] border-red-500 bg-[#fff3f3] rounded-[4px] px-[4px] py-[4px] text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
                                             onClick={() => {
                                                 setFolderToDelete(folderUrl);
                                                 setIsDeleteConfirmationModalOpen(true);
                                             }}
                                         >
-                                            <AiOutlineDelete className='!text-2xl' />
+                                            <img src="/images/Delete-2.svg" alt="Delete" className='!w-5 !h-5' />
                                         </div>
                                     </div>
                                     {folderSuppliers.length === 0 ? (

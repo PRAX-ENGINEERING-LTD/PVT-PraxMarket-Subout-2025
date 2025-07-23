@@ -16,16 +16,16 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                     className="w-full h-full object-cover"
                 />
                 <div className="group-hover:hidden absolute top-2 left-2 bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow flex items-center gap-1 font-medium">
-                    <MdOutlineLocationOn /> {distanceFromYou}
+                    <img src={'images/Location.svg'} alt="Location Icon" className='w-4 h-4' /> {distanceFromYou}
                 </div>
                 <div className="hidden group-hover:flex absolute top-2 items-center justify-between gap-1 font-medium px-3 w-full">
                     {!recommended ? (
-                        <div className='flex bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow items-center' onClick={(e) => {
+                        <div className='flex bg-white/80 text-gray-800 text-xs px-1 py-1 rounded shadow items-center' onClick={(e) => {
                             e.stopPropagation();
                             onDelete()
                         }}
                         >
-                            <RiDeleteBin5Line className='text-base' />
+                            <img src={'images/Delete.svg'} alt="Delete Icon" className='w-5 h-5' />
                         </div>
                     ) : (
                         <div></div>
@@ -35,7 +35,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                             onClick={(e) => {
                                 e.stopPropagation();
                             }}>
-                            <LuArrowLeftRight className='text-base' />
+                            <img src={'images/Move-Arrow.svg'} alt="Move Icon" className='w-4 h-4' />
 
                             {/* Dropdown text, initially hidden */}
                             <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-50 mt-1'>
