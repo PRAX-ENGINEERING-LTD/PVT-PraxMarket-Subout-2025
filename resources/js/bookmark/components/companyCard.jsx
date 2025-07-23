@@ -52,7 +52,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
 
                 </div>
             </div>
-            <div className="p-[12px] font-bold text-base line-clamp-1 truncate text-black">
+            <div className="p-[12px] font-[500] text-base line-clamp-1 truncate text-black">
                 {name}
             </div>
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 mb-2 z-50 px-3 py-1 bg-purple-600 text-white text-base rounded shadow hidden group-hover:block transition-opacity duration-300 whitespace-nowrap pointer-events-none">

@@ -89,24 +89,24 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         const getButtonStyles = () => {
             if (isOpen) {
                 // When dropdown is open - purple background
-                return "border-[1px] border-[#7366FF] rounded-md py-2 pl-10 pr-8 bg-[#7366FF] text-sm shadow-sm appearance-none w-full text-left transition-colors duration-200";
+                return "border-[1px] border-[#7366FF] rounded-md py-1 px-[30px] bg-[#7366FF] text-sm shadow-sm appearance-none w-full text-left transition-colors duration-200";
             } else if (hasSelection) {
                 // When item is selected - light purple background
-                return "border-[1px] border-[#7366FF] rounded-md py-2 pl-10 pr-8 bg-[#f7efff] text-sm shadow-sm appearance-none w-full text-left hover:border-[#7366FF] focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] transition-colors duration-200";
+                return "border-[1px] border-[#7366FF] rounded-md py-1 px-[30px] bg-[#f7efff] text-sm shadow-sm appearance-none w-full text-left hover:border-[#7366FF] focus:border-[#7366FF] focus:ring-1 focus:ring-[#7366FF] transition-colors duration-200";
             } else {
                 // Default state - white background
-                return "border-[1px] border-[#a3a3a3] rounded-md py-2 pl-10 pr-8 bg-white text-sm text-[#737373] shadow-sm appearance-none w-full text-left focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 hover:!bg-[#f7efff] hover:!border-[#7366FF] hover:!text-[#7366FF] focus:!text-[#7366FF] focus:!outline-none";
+                return "border-[1px] border-[#a3a3a3] rounded-md py-1 px-[30px] bg-white text-sm text-[#737373] shadow-sm appearance-none w-full text-left focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200 hover:!bg-[#f7efff] hover:!border-[#7366FF] hover:!text-[#7366FF] focus:!text-[#7366FF] focus:!outline-none";
             }
         };
 
         // Determine icon and text colors based on state
         const getIconColor = () => {
             if (isOpen) {
-                return "absolute left-5 top-1/2 transform -translate-y-1/2 text-white text-lg pointer-events-none z-10";
+                return "absolute left-2 top-1/2 transform -translate-y-1/2 text-white text-lg pointer-events-none z-10";
             } else if (hasSelection) {
-                return "absolute left-5 top-1/2 transform -translate-y-1/2 text-[#7366FF] text-lg pointer-events-none z-10";
+                return "absolute left-2 top-1/2 transform -translate-y-1/2 text-[#7366FF] text-lg pointer-events-none z-10";
             } else {
-                return "absolute left-5 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg pointer-events-none z-10 group-hover:!text-[#7366FF] transition-colors duration-200";
+                return "absolute left-2 top-1/2 transform -translate-y-1/2 text-gray-500 text-lg pointer-events-none z-10 group-hover:!text-[#7366FF] transition-colors duration-200";
             }
         };
 
@@ -386,10 +386,10 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
 
     const EmptyItemsMessage = () => (
-        <div className="flex flex-col w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
+        <div className="flex flex-col gap-2 w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
             <FaRegHandshake className='text-black text-2xl' />
-            <h3 className='text-black text-lg font-bold'>No Suppliers Added Yet</h3>
-            <p className='text-black text-sm font-normal max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
+            <h3 className='text-black text-lg font-[500]'>No Suppliers Added Yet</h3>
+            <p className='text-black text-sm font-normal lg:max-w-lg md:max-w-md max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
         </div>
     )
 
@@ -914,7 +914,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     // Skeleton component for custom groups loading
     const CustomGroupSkeleton = () => (
-        <div className='w-full mt-5'>
+        <div className='w-full mt-4'>
             <div className="relative border bg-white border-gray-300 rounded-lg px-4 pb-4 md:h-[280px]">
                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                     {/* Skeleton for folder name */}
@@ -1155,7 +1155,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                 <div className='grid grid-cols-12 gap-4 mt-[24px]'>
                     <div className='col-span-12 lg:col-span-6'>
-                        <div className="flex flex-wrap gap-4 items-center justify-start mb-6 animate-fadeInDown">
+                        <div className="flex flex-wrap gap-3 items-center justify-start mb-3 animate-fadeInDown">
                             {/* Category Filter */}
                             <CustomDropdown
                                 icon={TbTriangleSquareCircle}
@@ -1189,70 +1189,66 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
                         ) : (
-                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[470px]`}>
+                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[450px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#7366FF] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Bookmarked Suppliers
                                     </span>
                                     <div className='bg-[#f4f4ff] border-x-[1px] border-[#7366FF] text-[#7366FF] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
-                                {(bookmarkSuppliers || []).length === 0 ? (
-                                    <EmptyItemsMessage />
-                                ) : (
-                                    <Carousel
-                                        responsive={responsive2}
-                                        arrows={false}
-                                        customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        // infinite
-                                        autoPlaySpeed={3000}
-                                        keyBoardControl
-                                        customTransition="transform 700ms ease-in-out"
-                                        transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-4"
-                                        removeArrowOnDeviceType={[]}
-                                        showDots={false}
-                                        itemClass="px-2"
-                                        swipeable
-                                    >
-                                        {bookmarkgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
-                                                {Array.from({ length: 2 }, (_, slotIndex) => {
-                                                    const bookmark = pair[slotIndex];
-                                                    
-                                                    if (bookmark && bookmark !== null) {
-                                                        return (
-                                                            <CompanyCard
-                                                                key={bookmark.id}
-                                                                {...bookmark}
-                                                                moveToApproved={bookmark.moveToApproved}
-                                                                moveToSelected={bookmark.moveToSelected}
-                                                                onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                                onDelete={() => {
-                                                                    setOnDeleteCompany(bookmark);
-                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
-                                                                }}
-                                                            />
-                                                        );
-                                                    } else if (index < 3) {
-                                                        // Show placeholder only for first 3 columns (first 6 slots)
-                                                        return (
-                                                            <PlaceholderCard 
-                                                                key={`placeholder-${index}-${slotIndex}`}
-                                                                type="bookmark"
-                                                            />
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-                                            </div>
-                                        ))}
-                                    </Carousel>
-                                )}
+                                <Carousel
+                                    responsive={responsive2}
+                                    arrows={false}
+                                    customButtonGroup={<CustomButtonGroupAsArrows />}
+                                    // infinite
+                                    autoPlaySpeed={3000}
+                                    keyBoardControl
+                                    customTransition="transform 700ms ease-in-out"
+                                    transitionDuration={500}
+                                    containerClass="relative pt-10 -mt-4"
+                                    removeArrowOnDeviceType={[]}
+                                    showDots={false}
+                                    itemClass="px-2"
+                                    swipeable
+                                >
+                                    {bookmarkgrouped.map((pair, index) => (
+                                        <div key={index} className="flex flex-col gap-x-4 gap-y-2">
+                                            {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                const bookmark = pair[slotIndex];
+                                                
+                                                if (bookmark && bookmark !== null) {
+                                                    return (
+                                                        <CompanyCard
+                                                            key={bookmark.id}
+                                                            {...bookmark}
+                                                            moveToApproved={bookmark.moveToApproved}
+                                                            moveToSelected={bookmark.moveToSelected}
+                                                            onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                            onDelete={() => {
+                                                                setOnDeleteCompany(bookmark);
+                                                                setIsDeleteCompanyConfirmationModalOpen(true)
+                                                            }}
+                                                        />
+                                                    );
+                                                } else if (index < 3) {
+                                                    // Show placeholder only for first 3 columns (first 6 slots)
+                                                    return (
+                                                        <PlaceholderCard 
+                                                            key={`placeholder-${index}-${slotIndex}`}
+                                                            type="bookmark"
+                                                        />
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
+                                    ))}
+                                </Carousel>
                             </div>
                         )}
                     </div>
                     <div className='col-span-12 lg:col-span-6'>
-                        <div className="flex flex-wrap gap-4 items-center justify-end mb-6 animate-fadeInDown animation-delay-100">
+                        <div className="flex flex-wrap gap-3 items-center justify-end mb-3 animate-fadeInDown animation-delay-100">
                             {/* Category Filter */}
                             <CustomDropdown
                                 icon={TbTriangleSquareCircle}
@@ -1286,75 +1282,71 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isApprovedLoading ? (
                             <ApprovedSkeleton />
                         ) : (
-                            <div className={`relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[470px]`}>
+                            <div className={`relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[450px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#22C55E] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Approved Suppliers
                                     </span>
                                     <div className='bg-[#f1fff6 border-x-[1px] border-[#22C55E]  text-[#22C55E] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                                 </div>
-                                {(approvedSuppliers || []).length === 0 ? (
-                                    <EmptyItemsMessage />
-                                ) : (
-                                    <Carousel
-                                        responsive={responsive2}
-                                        arrows={false}
-                                        customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        // infinite
-                                        autoPlaySpeed={3000}
-                                        keyBoardControl
-                                        customTransition="transform 700ms ease-in-out"
-                                        transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-4"
-                                        removeArrowOnDeviceType={[]}
-                                        showDots={false}
-                                        itemClass="px-2"
-                                        swipeable
-                                    >
-                                        {approvedgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
-                                                {Array.from({ length: 2 }, (_, slotIndex) => {
-                                                    const approved = pair[slotIndex];
-                                                    
-                                                    if (approved && approved !== null) {
-                                                        return (
-                                                            <CompanyCard
-                                                                key={approved.id}
-                                                                {...approved}
-                                                                moveToBookmarked={approved.moveToBookmarked}
-                                                                moveToSelected={approved.moveToSelected}
-                                                                onClickMove={(targetFolder) => onClickMove(approved, targetFolder)}
-                                                                onDelete={() => {
-                                                                    setOnDeleteCompany(approved);
-                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
-                                                                }}
-                                                            />
-                                                        );
-                                                    } else if (index < 3) {
-                                                        // Show placeholder only for first 3 columns (first 6 slots)
-                                                        return (
-                                                            <PlaceholderCard 
-                                                                key={`placeholder-${index}-${slotIndex}`}
-                                                                type="approved"
-                                                            />
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-                                            </div>
-                                        ))}
-                                    </Carousel>
-                                )}
+                                <Carousel
+                                    responsive={responsive2}
+                                    arrows={false}
+                                    customButtonGroup={<CustomButtonGroupAsArrows />}
+                                    // infinite
+                                    autoPlaySpeed={3000}
+                                    keyBoardControl
+                                    customTransition="transform 700ms ease-in-out"
+                                    transitionDuration={500}
+                                    containerClass="relative pt-10 -mt-4"
+                                    removeArrowOnDeviceType={[]}
+                                    showDots={false}
+                                    itemClass="px-2"
+                                    swipeable
+                                >
+                                    {approvedgrouped.map((pair, index) => (
+                                        <div key={index} className="flex flex-col gap-x-4 gap-y-2">
+                                            {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                const approved = pair[slotIndex];
+                                                
+                                                if (approved && approved !== null) {
+                                                    return (
+                                                        <CompanyCard
+                                                            key={approved.id}
+                                                            {...approved}
+                                                            moveToBookmarked={approved.moveToBookmarked}
+                                                            moveToSelected={approved.moveToSelected}
+                                                            onClickMove={(targetFolder) => onClickMove(approved, targetFolder)}
+                                                            onDelete={() => {
+                                                                setOnDeleteCompany(approved);
+                                                                setIsDeleteCompanyConfirmationModalOpen(true)
+                                                            }}
+                                                        />
+                                                    );
+                                                } else if (index < 3) {
+                                                    // Show placeholder only for first 3 columns (first 6 slots)
+                                                    return (
+                                                        <PlaceholderCard 
+                                                            key={`placeholder-${index}-${slotIndex}`}
+                                                            type="approved"
+                                                        />
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
+                                    ))}
+                                </Carousel>
                             </div>
                         )}
                     </div>
                 </div>
 
-                <div className='w-full mt-5'>
+                <div className='w-full mt-[8px]'>
                     {isSelectedLoading ? (
                         <SelectedSkeleton />
                     ) : (
-                        <div className="group/main relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[271px]">
+                        <div className="group/main relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                     Selected Suppliers
@@ -1401,7 +1393,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                 </div>
 
                 <div className='w-full flex justify-between items-center mt-5'>
-                    <h2 className='md:text-2xl text-xl font-bold'>Custom Groups</h2>
+                    <h2 className='md:text-2xl text-xl font-[500]'>Custom Groups</h2>
                     <button
                         className="bg-[#7366FF] text-white px-[16px] py-[8px] rounded-lg hover:bg-[#5a21b6] transition-colors flex items-center gap-2 cursor-pointer"
                         onClick={() => {
@@ -1411,7 +1403,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         }}
                     >
                         <LuPlus className="text-xl" />
-                        <p className="!mb-0 text-white text-base">Create Folder</p>
+                        <p className="!mb-0 text-white text-sm">Create Folder</p>
                     </button>
                 </div>
 
@@ -1429,8 +1421,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         const folderUrl = (customFolder && customFolder[folderIndex]) || ''; // Get the corresponding URL with safety check
 
                         return (
-                            <div key={folderIndex} className='w-full mt-5'>
-                                <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[280px]">
+                            <div key={folderIndex} className='w-full mt-4'>
+                                <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                                     <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                         <p className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px] truncate max-w-[150px]">
                                             {folder?.folderName || 'Unnamed Folder'}
