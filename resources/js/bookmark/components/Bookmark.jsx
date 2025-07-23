@@ -1189,7 +1189,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isBookmarkedLoading ? (
                             <BookmarkedSkeleton />
                         ) : (
-                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[470px]`}>
+                            <div className={`relative border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] gradient-bg md:h-[450px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#7366FF] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Bookmarked Suppliers
@@ -1282,7 +1282,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         {isApprovedLoading ? (
                             <ApprovedSkeleton />
                         ) : (
-                            <div className={`relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[470px]`}>
+                            <div className={`relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[450px]`}>
                                 <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                     <span className="bg-[#22C55E] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                         Approved Suppliers
@@ -1346,7 +1346,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     {isSelectedLoading ? (
                         <SelectedSkeleton />
                     ) : (
-                        <div className="group/main relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[271px]">
+                        <div className="group/main relative bg-white border-[1px] border-[#d4d4d4] rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                             <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                 <span className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px]">
                                     Selected Suppliers
@@ -1422,7 +1422,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                         return (
                             <div key={folderIndex} className='w-full mt-4'>
-                                <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[280px]">
+                                <div className="group/main relative border-[1px] border-[#d4d4d4] bg-white rounded-lg px-[16px] pb-[16px] md:h-[260px]">
                                     <div className="flex sm:gap-5 gap-3 sm:mb-0 mb-6">
                                         <p className="bg-[#3B82F6] text-white text-sm font-semibold px-[8px] py-[6px] rounded-b-[8px] truncate max-w-[150px]">
                                             {folder?.folderName || 'Unnamed Folder'}
