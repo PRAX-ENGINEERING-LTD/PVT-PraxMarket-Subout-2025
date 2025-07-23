@@ -133,7 +133,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         return (
             <div className={`relative ${className}`} ref={setDropdownRef}>
                 <button
-                    type="button group"
+                    type="button group flex items-center"
                     className={getButtonStyles()}
                     onClick={() => setIsOpen(!isOpen)}
                 >
