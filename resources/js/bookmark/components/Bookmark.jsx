@@ -67,7 +67,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     });
 
     // Custom Dropdown Component
-    const CustomDropdown = ({ icon: Icon, placeholder, value, options, onChange, className = "" }) => {
+    const CustomDropdown = ({ icon: Icon, whiteicon, placeholder, value, options, onChange, className = "" }) => {
         const [isOpen, setIsOpen] = useState(false);
         const [dropdownRef, setDropdownRef] = useState(null);
 
@@ -138,7 +138,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                     onClick={() => setIsOpen(!isOpen)}
                 >
                     <div className="flex items-center gap-2 w-full">
-                        {Icon && <img src={Icon} alt="" className="w-4 h-4 pointer-events-none z-10" />}
+                        {Icon && <img src={isOpen ? whiteicon : Icon} alt="" className="w-4 h-4 pointer-events-none z-10" />}
                         <span className={`flex-1 truncate ${getTextColor()}`}>
                             {selectedOption ? selectedOption.label : placeholder}
                         </span>
@@ -1151,6 +1151,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             {/* Category Filter */}
                             <CustomDropdown
                                 icon={'images/Category.webp'}
+                                whiteicon={'images/category-white.webp'}
                                 placeholder="Category"
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
@@ -1161,6 +1162,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             {/* Distance Filter */}
                             <CustomDropdown
                                 icon={'images/Distance.webp'}
+                                whiteicon={'images/distance-white.webp'}
                                 placeholder="Distance"
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
@@ -1171,6 +1173,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             {/* Availability Filter */}
                             <CustomDropdown
                                 icon={'images/Availability.webp'}
+                                whiteicon={'images/availability-white.webp'}
                                 placeholder="Availability"
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
@@ -1244,6 +1247,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             {/* Category Filter */}
                             <CustomDropdown
                                 icon={'images/Category.webp'}
+                                whiteicon={'images/category-white.webp'}
                                 placeholder="Category"
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
@@ -1254,6 +1258,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             {/* Distance Filter */}
                             <CustomDropdown
                                 icon={'images/Distance.webp'}
+                                whiteicon={'images/distance-white.webp'}
                                 placeholder="Distance"
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
@@ -1264,6 +1269,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                             {/* Availability Filter */}
                             <CustomDropdown
                                 icon={'images/Availability.webp'}
+                                whiteicon={'images/availability-white.webp'}
                                 placeholder="Availability"
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
