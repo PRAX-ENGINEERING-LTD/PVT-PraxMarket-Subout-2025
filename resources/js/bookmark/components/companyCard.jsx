@@ -16,7 +16,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                     className="w-full h-full object-cover"
                 />
                 <div className="group-hover:hidden absolute top-2 left-2 bg-white/80 text-gray-800 text-xs px-2 py-1 rounded shadow flex items-center gap-1 font-medium">
-                    <img src={'images/Location.svg'} alt="Location Icon" className='w-4 h-4' /> {distanceFromYou}
+                    <img src={'images/Location.webp'} alt="Location Icon" className='w-4 h-4' /> {distanceFromYou}
                 </div>
                 <div className="hidden group-hover:flex absolute top-2 items-center justify-between gap-1 font-medium px-3 w-full">
                     {!recommended ? (
@@ -25,7 +25,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                             onDelete()
                         }}
                         >
-                            <img src={'images/Delete.svg'} alt="Delete Icon" className='w-5 h-5' />
+                            <img src={'images/Delete.webp'} alt="Delete Icon" className='w-5 h-5' />
                         </div>
                     ) : (
                         <div></div>
@@ -35,7 +35,7 @@ const CompanyCard = ({ path, name, distanceFromYou, id, onDelete, recommended, m
                             onClick={(e) => {
                                 e.stopPropagation();
                             }}>
-                            <img src={'images/Move-Arrow.svg'} alt="Move Icon" className='w-4 h-4' />
+                            <img src={'images/Move-Arrow.webp'} alt="Move Icon" className='w-4 h-4' />
 
                             {/* Dropdown text, initially hidden */}
                             <div className='absolute top-full -left-16 w-max px-2 py-1 bg-gray-100 text-black text-[10px] rounded shadow-lg hidden pointer-events-none group-hover/sub:flex flex-col group-hover:pointer-events-auto transition-opacity duration-200 whitespace-nowrap z-50 mt-1'>

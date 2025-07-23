@@ -389,7 +389,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
     const EmptyItemsMessage = () => (
         <div className="flex flex-col gap-2 w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
-            <img src={'images/Hand.svg'} alt="No Bookmark" className='w-[24px] h-[24px]' />
+            <img src={'images/Hand.webp'} alt="No Bookmark" className='w-[24px] h-[24px]' />
             <h3 className='text-black text-xl font-[500]'>No Suppliers Added Yet</h3>
             <p className='text-black text-base font-normal xl:max-w-[600px] lg:max-w-lg md:max-w-md max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
         </div>
@@ -1150,7 +1150,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         <div className="flex flex-wrap gap-3 items-center justify-start mb-3 animate-fadeInDown">
                             {/* Category Filter */}
                             <CustomDropdown
-                                icon={'images/Category.svg'}
+                                icon={'images/Category.webp'}
                                 placeholder="Category"
                                 value={bookmarkedFilters.catagoryID}
                                 options={categoryOptions}
@@ -1160,7 +1160,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Distance Filter */}
                             <CustomDropdown
-                                icon={'images/Distance.svg'}
+                                icon={'images/Distance.webp'}
                                 placeholder="Distance"
                                 value={bookmarkedFilters.distance}
                                 options={distanceOptions}
@@ -1170,7 +1170,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Availability Filter */}
                             <CustomDropdown
-                                icon={'images/Availability.svg'}
+                                icon={'images/Availability.webp'}
                                 placeholder="Availability"
                                 value={bookmarkedFilters.availablityStatus}
                                 options={availabilityOptions}
@@ -1243,7 +1243,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                         <div className="flex flex-wrap gap-3 items-center justify-end mb-3 animate-fadeInDown animation-delay-100">
                             {/* Category Filter */}
                             <CustomDropdown
-                                icon={'images/Category.svg'}
+                                icon={'images/Category.webp'}
                                 placeholder="Category"
                                 value={approvedFilters.catagoryID}
                                 options={categoryOptions}
@@ -1253,7 +1253,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Distance Filter */}
                             <CustomDropdown
-                                icon={'images/Distance.svg'}
+                                icon={'images/Distance.webp'}
                                 placeholder="Distance"
                                 value={approvedFilters.distance}
                                 options={distanceOptions}
@@ -1263,7 +1263,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
 
                             {/* Availability Filter */}
                             <CustomDropdown
-                                icon={'images/Availability.svg'}
+                                icon={'images/Availability.webp'}
                                 placeholder="Availability"
                                 value={approvedFilters.availablityStatus}
                                 options={availabilityOptions}
@@ -1435,7 +1435,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 setIsCreateFolderModalOpen(true);
                                             }}
                                         >
-                                            <img src="/images/Edit.svg" alt="Edit" className='!w-5 !h-5' />
+                                            <img src="/images/Edit.webp" alt="Edit" className='!w-5 !h-5' />
                                         </div>
                                         <div
                                             className='border-[1px] border-red-500 bg-[#fff3f3] rounded-[4px] px-[4px] py-[4px] text-red-500 hover:text-red-600 cursor-pointer hover:bg-[#fff8f8] hover:scale-105'
@@ -1444,7 +1444,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                                 setIsDeleteConfirmationModalOpen(true);
                                             }}
                                         >
-                                            <img src="/images/Delete-2.svg" alt="Delete" className='!w-5 !h-5' />
+                                            <img src="/images/Delete-2.webp" alt="Delete" className='!w-5 !h-5' />
                                         </div>
                                     </div>
                                     {folderSuppliers.length === 0 ? (
