@@ -133,7 +133,7 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
         return (
             <div className={`relative ${className}`} ref={setDropdownRef}>
                 <button
-                    type="button group"
+                    type="button group flex items-center"
                     className={getButtonStyles()}
                     onClick={() => setIsOpen(!isOpen)}
                 >
@@ -388,8 +388,8 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
     const EmptyItemsMessage = () => (
         <div className="flex flex-col gap-2 w-full items-center justify-center text-center text-gray-500 h-[calc(100%-48px)]">
             <FaRegHandshake className='text-black text-2xl' />
-            <h3 className='text-black text-lg font-[500]'>No Suppliers Added Yet</h3>
-            <p className='text-black text-sm font-normal lg:max-w-lg md:max-w-md max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
+            <h3 className='text-black text-xl font-[500]'>No Suppliers Added Yet</h3>
+            <p className='text-black text-base font-normal xl:max-w-[600px] lg:max-w-lg md:max-w-md max-w-xs'>Start adding profiles to keep track of the suppliers you’re interested in.</p>
         </div>
     )
 
