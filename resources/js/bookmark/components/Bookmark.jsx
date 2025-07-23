@@ -1196,58 +1196,54 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     </span>
                                     <div className='bg-[#f4f4ff] border-x-[1px] border-[#7366FF] text-[#7366FF] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(bookmarkSuppliersCount || 0)}</div>
                                 </div>
-                                {(bookmarkSuppliers || []).length === 0 ? (
-                                    <EmptyItemsMessage />
-                                ) : (
-                                    <Carousel
-                                        responsive={responsive2}
-                                        arrows={false}
-                                        customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        // infinite
-                                        autoPlaySpeed={3000}
-                                        keyBoardControl
-                                        customTransition="transform 700ms ease-in-out"
-                                        transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-4"
-                                        removeArrowOnDeviceType={[]}
-                                        showDots={false}
-                                        itemClass="px-2"
-                                        swipeable
-                                    >
-                                        {bookmarkgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
-                                                {Array.from({ length: 2 }, (_, slotIndex) => {
-                                                    const bookmark = pair[slotIndex];
-                                                    
-                                                    if (bookmark && bookmark !== null) {
-                                                        return (
-                                                            <CompanyCard
-                                                                key={bookmark.id}
-                                                                {...bookmark}
-                                                                moveToApproved={bookmark.moveToApproved}
-                                                                moveToSelected={bookmark.moveToSelected}
-                                                                onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
-                                                                onDelete={() => {
-                                                                    setOnDeleteCompany(bookmark);
-                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
-                                                                }}
-                                                            />
-                                                        );
-                                                    } else if (index < 3) {
-                                                        // Show placeholder only for first 3 columns (first 6 slots)
-                                                        return (
-                                                            <PlaceholderCard 
-                                                                key={`placeholder-${index}-${slotIndex}`}
-                                                                type="bookmark"
-                                                            />
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-                                            </div>
-                                        ))}
-                                    </Carousel>
-                                )}
+                                <Carousel
+                                    responsive={responsive2}
+                                    arrows={false}
+                                    customButtonGroup={<CustomButtonGroupAsArrows />}
+                                    // infinite
+                                    autoPlaySpeed={3000}
+                                    keyBoardControl
+                                    customTransition="transform 700ms ease-in-out"
+                                    transitionDuration={500}
+                                    containerClass="relative pt-10 -mt-4"
+                                    removeArrowOnDeviceType={[]}
+                                    showDots={false}
+                                    itemClass="px-2"
+                                    swipeable
+                                >
+                                    {bookmarkgrouped.map((pair, index) => (
+                                        <div key={index} className="flex flex-col gap-x-4 gap-y-2">
+                                            {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                const bookmark = pair[slotIndex];
+                                                
+                                                if (bookmark && bookmark !== null) {
+                                                    return (
+                                                        <CompanyCard
+                                                            key={bookmark.id}
+                                                            {...bookmark}
+                                                            moveToApproved={bookmark.moveToApproved}
+                                                            moveToSelected={bookmark.moveToSelected}
+                                                            onClickMove={(targetFolder) => onClickMove(bookmark, targetFolder)}
+                                                            onDelete={() => {
+                                                                setOnDeleteCompany(bookmark);
+                                                                setIsDeleteCompanyConfirmationModalOpen(true)
+                                                            }}
+                                                        />
+                                                    );
+                                                } else if (index < 3) {
+                                                    // Show placeholder only for first 3 columns (first 6 slots)
+                                                    return (
+                                                        <PlaceholderCard 
+                                                            key={`placeholder-${index}-${slotIndex}`}
+                                                            type="bookmark"
+                                                        />
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
+                                    ))}
+                                </Carousel>
                             </div>
                         )}
                     </div>
@@ -1293,58 +1289,54 @@ const Bookmark = ({ getRecommendedSuppliers, getBookmarkedCompanies, getApproved
                                     </span>
                                     <div className='bg-[#f1fff6 border-x-[1px] border-[#22C55E]  text-[#22C55E] font-bold text-sm px-[8px] flex items-center justify-center border-b-[1px] rounded-b-[8px]'>{formatCountWithLeadingZero(approvedSuppliersCount || 0)}</div>
                                 </div>
-                                {(approvedSuppliers || []).length === 0 ? (
-                                    <EmptyItemsMessage />
-                                ) : (
-                                    <Carousel
-                                        responsive={responsive2}
-                                        arrows={false}
-                                        customButtonGroup={<CustomButtonGroupAsArrows />}
-                                        // infinite
-                                        autoPlaySpeed={3000}
-                                        keyBoardControl
-                                        customTransition="transform 700ms ease-in-out"
-                                        transitionDuration={500}
-                                        containerClass="relative pt-10 -mt-4"
-                                        removeArrowOnDeviceType={[]}
-                                        showDots={false}
-                                        itemClass="px-2"
-                                        swipeable
-                                    >
-                                        {approvedgrouped.map((pair, index) => (
-                                            <div key={index} className="flex flex-col gap-x-4 gap-y-2">
-                                                {Array.from({ length: 2 }, (_, slotIndex) => {
-                                                    const approved = pair[slotIndex];
-                                                    
-                                                    if (approved && approved !== null) {
-                                                        return (
-                                                            <CompanyCard
-                                                                key={approved.id}
-                                                                {...approved}
-                                                                moveToBookmarked={approved.moveToBookmarked}
-                                                                moveToSelected={approved.moveToSelected}
-                                                                onClickMove={(targetFolder) => onClickMove(approved, targetFolder)}
-                                                                onDelete={() => {
-                                                                    setOnDeleteCompany(approved);
-                                                                    setIsDeleteCompanyConfirmationModalOpen(true)
-                                                                }}
-                                                            />
-                                                        );
-                                                    } else if (index < 3) {
-                                                        // Show placeholder only for first 3 columns (first 6 slots)
-                                                        return (
-                                                            <PlaceholderCard 
-                                                                key={`placeholder-${index}-${slotIndex}`}
-                                                                type="approved"
-                                                            />
-                                                        );
-                                                    }
-                                                    return null;
-                                                })}
-                                            </div>
-                                        ))}
-                                    </Carousel>
-                                )}
+                                <Carousel
+                                    responsive={responsive2}
+                                    arrows={false}
+                                    customButtonGroup={<CustomButtonGroupAsArrows />}
+                                    // infinite
+                                    autoPlaySpeed={3000}
+                                    keyBoardControl
+                                    customTransition="transform 700ms ease-in-out"
+                                    transitionDuration={500}
+                                    containerClass="relative pt-10 -mt-4"
+                                    removeArrowOnDeviceType={[]}
+                                    showDots={false}
+                                    itemClass="px-2"
+                                    swipeable
+                                >
+                                    {approvedgrouped.map((pair, index) => (
+                                        <div key={index} className="flex flex-col gap-x-4 gap-y-2">
+                                            {Array.from({ length: 2 }, (_, slotIndex) => {
+                                                const approved = pair[slotIndex];
+                                                
+                                                if (approved && approved !== null) {
+                                                    return (
+                                                        <CompanyCard
+                                                            key={approved.id}
+                                                            {...approved}
+                                                            moveToBookmarked={approved.moveToBookmarked}
+                                                            moveToSelected={approved.moveToSelected}
+                                                            onClickMove={(targetFolder) => onClickMove(approved, targetFolder)}
+                                                            onDelete={() => {
+                                                                setOnDeleteCompany(approved);
+                                                                setIsDeleteCompanyConfirmationModalOpen(true)
+                                                            }}
+                                                        />
+                                                    );
+                                                } else if (index < 3) {
+                                                    // Show placeholder only for first 3 columns (first 6 slots)
+                                                    return (
+                                                        <PlaceholderCard 
+                                                            key={`placeholder-${index}-${slotIndex}`}
+                                                            type="approved"
+                                                        />
+                                                    );
+                                                }
+                                                return null;
+                                            })}
+                                        </div>
+                                    ))}
+                                </Carousel>
                             </div>
                         )}
                     </div>
